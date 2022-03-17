@@ -1,0 +1,115 @@
+object fmMain: TfmMain
+  Left = 623
+  Height = 401
+  Top = 298
+  Width = 683
+  BorderStyle = bsSingle
+  Caption = 'USB Devices Monitor'
+  ClientHeight = 401
+  ClientWidth = 683
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '2.2.0.4'
+  object btEnum: TButton
+    Left = 8
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Enumerate'
+    OnClick = btEnumClick
+    TabOrder = 0
+  end
+  object lvDevices: TListView
+    Left = 8
+    Height = 150
+    Top = 40
+    Width = 665
+    Columns = <    
+      item
+        Caption = 'Friendly name'
+        Width = 150
+      end    
+      item
+        Caption = 'Hardware ID'
+        Width = 100
+      end    
+      item
+        Caption = 'Manufacturer'
+        Width = 100
+      end    
+      item
+        Caption = 'Instance string'
+        Width = 200
+      end    
+      item
+        Caption = 'Class GUID'
+        Width = 250
+      end    
+      item
+        Caption = 'Enabled'
+      end>
+    GridLines = True
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 1
+    ViewStyle = vsReport
+  end
+  object btStart: TButton
+    Left = 8
+    Height = 25
+    Top = 200
+    Width = 105
+    Caption = 'Start monitoring'
+    OnClick = btStartClick
+    TabOrder = 2
+  end
+  object btStop: TButton
+    Left = 120
+    Height = 25
+    Top = 200
+    Width = 105
+    Caption = 'Stop monitoring'
+    OnClick = btStopClick
+    TabOrder = 3
+  end
+  object lbEvents: TListBox
+    Left = 8
+    Height = 161
+    Top = 232
+    Width = 665
+    ItemHeight = 0
+    TabOrder = 4
+  end
+  object btClear: TButton
+    Left = 592
+    Height = 25
+    Top = 200
+    Width = 75
+    Caption = 'Clear'
+    OnClick = btClearClick
+    TabOrder = 5
+  end
+  object btEnable: TButton
+    Left = 120
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Enable'
+    OnClick = btEnableClick
+    TabOrder = 6
+  end
+  object btDisable: TButton
+    Left = 208
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Disable'
+    OnClick = btDisableClick
+    TabOrder = 7
+  end
+end
