@@ -1,0 +1,508 @@
+object fmMain: TfmMain
+  Left = 508
+  Height = 694
+  Top = 161
+  Width = 781
+  BorderStyle = bsSingle
+  Caption = 'Bluetooth GATT Client Demo'
+  ClientHeight = 694
+  ClientWidth = 781
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '2.2.0.4'
+  object laCharVal: TLabel
+    Left = 264
+    Height = 13
+    Top = 240
+    Width = 119
+    Caption = 'Characteristic value (hex)'
+  end
+  object laOperationFlag: TLabel
+    Left = 552
+    Height = 13
+    Top = 16
+    Width = 66
+    Caption = 'Operation flag'
+  end
+  object laProtection: TLabel
+    Left = 320
+    Height = 13
+    Top = 16
+    Width = 48
+    Caption = 'Protection'
+  end
+  object btDiscover: TButton
+    Left = 8
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Discover'
+    OnClick = btDiscoverClick
+    TabOrder = 0
+  end
+  object lvDevices: TListView
+    Left = 8
+    Height = 69
+    Top = 40
+    Width = 762
+    Columns = <    
+      item
+        Caption = 'Address'
+        Width = 150
+      end    
+      item
+        Caption = 'Name'
+        Width = 150
+      end    
+      item
+        Caption = 'Device type'
+        Width = 150
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 1
+    ViewStyle = vsReport
+  end
+  object lvEvents: TListView
+    Left = 8
+    Height = 97
+    Top = 560
+    Width = 762
+    Columns = <    
+      item
+        Caption = 'Address'
+        Width = 100
+      end    
+      item
+        Caption = 'Event'
+        Width = 150
+      end    
+      item
+        Caption = 'Param'
+        Width = 150
+      end    
+      item
+        Caption = 'Value'
+        Width = 150
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 2
+    ViewStyle = vsReport
+  end
+  object btClearEvents: TButton
+    Left = 695
+    Height = 25
+    Top = 664
+    Width = 75
+    Caption = 'Clear'
+    OnClick = btClearEventsClick
+    TabOrder = 3
+  end
+  object btConnect: TButton
+    Left = 8
+    Height = 25
+    Top = 112
+    Width = 73
+    Caption = 'Connect'
+    OnClick = btConnectClick
+    TabOrder = 4
+  end
+  object btDisconnect: TButton
+    Left = 88
+    Height = 25
+    Top = 112
+    Width = 73
+    Caption = 'Disconnect'
+    OnClick = btDisconnectClick
+    TabOrder = 5
+  end
+  object lvServices: TListView
+    Left = 8
+    Height = 81
+    Top = 144
+    Width = 762
+    Columns = <    
+      item
+        Caption = 'UUID'
+        Width = 200
+      end    
+      item
+        Caption = 'Is short UUID'
+        Width = 80
+      end    
+      item
+        Caption = 'Handle'
+        Width = 100
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 6
+    ViewStyle = vsReport
+  end
+  object btGetServices: TButton
+    Left = 576
+    Height = 25
+    Top = 112
+    Width = 73
+    Caption = 'Get services'
+    OnClick = btGetServicesClick
+    TabOrder = 7
+  end
+  object btGetIncludedServices: TButton
+    Left = 656
+    Height = 25
+    Top = 112
+    Width = 113
+    Caption = 'Get included services'
+    OnClick = btGetIncludedServicesClick
+    TabOrder = 8
+  end
+  object btGetCharacteristics: TButton
+    Left = 8
+    Height = 25
+    Top = 232
+    Width = 121
+    Caption = 'Get characteristics'
+    OnClick = btGetCharacteristicsClick
+    TabOrder = 9
+  end
+  object lvCharacteristics: TListView
+    Left = 8
+    Height = 81
+    Top = 264
+    Width = 762
+    Columns = <    
+      item
+        Caption = 'UUID'
+        Width = 200
+      end    
+      item
+        Caption = 'Is short UUID'
+        Width = 80
+      end    
+      item
+        Caption = 'Service handle'
+        Width = 90
+      end    
+      item
+        Caption = 'Handle'
+        Width = 100
+      end    
+      item
+        Caption = 'Value handle'
+        Width = 100
+      end    
+      item
+        Caption = 'Is broadcastable'
+        Width = 80
+      end    
+      item
+        Caption = 'Is readable'
+        Width = 80
+      end    
+      item
+        Caption = 'Is writable'
+        Width = 80
+      end    
+      item
+        Caption = 'Is writable without response'
+        Width = 80
+      end    
+      item
+        Caption = 'Is signed writable'
+        Width = 80
+      end    
+      item
+        Caption = 'Is notifiable'
+        Width = 80
+      end    
+      item
+        Caption = 'Is indicatable'
+        Width = 80
+      end    
+      item
+        Caption = 'Has extended properties'
+        Width = 80
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 10
+    ViewStyle = vsReport
+  end
+  object btGetCharValue: TButton
+    Left = 184
+    Height = 25
+    Top = 232
+    Width = 75
+    Caption = 'Get value'
+    OnClick = btGetCharValueClick
+    TabOrder = 11
+  end
+  object btGetDescriptors: TButton
+    Left = 8
+    Height = 25
+    Top = 352
+    Width = 97
+    Caption = 'Get descriptors'
+    OnClick = btGetDescriptorsClick
+    TabOrder = 12
+  end
+  object lvDescriptors: TListView
+    Left = 8
+    Height = 81
+    Top = 384
+    Width = 762
+    Columns = <    
+      item
+        Caption = 'UUID'
+        Width = 200
+      end    
+      item
+        Caption = 'Is short UUID'
+        Width = 80
+      end    
+      item
+        Caption = 'Service handle'
+        Width = 80
+      end    
+      item
+        Caption = 'Characteristic handle'
+        Width = 80
+      end    
+      item
+        Caption = 'Handle'
+        Width = 100
+      end    
+      item
+        Caption = 'Type'
+        Width = 100
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 13
+    ViewStyle = vsReport
+  end
+  object btGetDescValue: TButton
+    Left = 112
+    Height = 25
+    Top = 352
+    Width = 75
+    Caption = 'Get value'
+    OnClick = btGetDescValueClick
+    TabOrder = 14
+  end
+  object lvDescriptorValue: TListView
+    Left = 8
+    Height = 81
+    Top = 472
+    Width = 762
+    Columns = <    
+      item
+        Caption = 'Property name'
+        Width = 200
+      end    
+      item
+        Caption = 'Property value'
+        Width = 200
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 15
+    ViewStyle = vsReport
+  end
+  object btSetValue: TButton
+    Left = 696
+    Height = 25
+    Top = 232
+    Width = 75
+    Caption = 'Set value'
+    OnClick = btSetValueClick
+    TabOrder = 16
+  end
+  object edCharVal: TEdit
+    Left = 392
+    Height = 21
+    Top = 232
+    Width = 297
+    TabOrder = 17
+    Text = '00FFAA00'
+  end
+  object btSubscribe: TButton
+    Left = 200
+    Height = 25
+    Top = 352
+    Width = 75
+    Caption = 'Subscribe'
+    OnClick = btSubscribeClick
+    TabOrder = 18
+  end
+  object btUnsubscribe: TButton
+    Left = 560
+    Height = 25
+    Top = 352
+    Width = 75
+    Caption = 'Unsubscribe'
+    OnClick = btUnsubscribeClick
+    TabOrder = 19
+  end
+  object cbOperationFlag: TComboBox
+    Left = 624
+    Height = 21
+    Top = 8
+    Width = 145
+    ItemHeight = 13
+    Items.Strings = (
+      'None'
+      'Force Read From Device'
+      'Force Read From Cache'
+    )
+    Style = csDropDownList
+    TabOrder = 20
+  end
+  object btCCCDSubscribe: TButton
+    Left = 280
+    Height = 25
+    Top = 352
+    Width = 129
+    Caption = 'Write CCCD subscribe'
+    OnClick = btCCCDSubscribeClick
+    TabOrder = 21
+  end
+  object btCCCDUnsubscribe: TButton
+    Left = 416
+    Height = 25
+    Top = 352
+    Width = 137
+    Caption = 'Write CCCD unsubscribe'
+    OnClick = btCCCDUnsubscribeClick
+    TabOrder = 22
+  end
+  object btTerminate: TButton
+    Left = 88
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Terminate'
+    OnClick = btTerminateClick
+    TabOrder = 23
+  end
+  object cbProtection: TComboBox
+    Left = 376
+    Height = 21
+    Top = 8
+    Width = 161
+    ItemHeight = 13
+    ItemIndex = 0
+    Items.Strings = (
+      'None'
+      'Authentication'
+      'Encryption'
+      'Encryption And Authentication'
+    )
+    Style = csDropDownList
+    TabOrder = 24
+    Text = 'None'
+  end
+  object btGetRssi: TButton
+    Left = 176
+    Height = 25
+    Top = 8
+    Width = 65
+    Caption = 'Get RSSI'
+    OnClick = btGetRssiClick
+    TabOrder = 25
+  end
+  object cbConnectOnRead: TCheckBox
+    Left = 168
+    Height = 19
+    Top = 128
+    Width = 99
+    Caption = 'Connect on read'
+    TabOrder = 26
+  end
+  object btPair: TButton
+    Left = 248
+    Height = 25
+    Top = 8
+    Width = 65
+    Caption = 'Pair'
+    OnClick = btPairClick
+    TabOrder = 27
+  end
+  object cbFastSubscribe: TCheckBox
+    Left = 648
+    Height = 19
+    Top = 360
+    Width = 88
+    Caption = 'Fast subscribe'
+    OnClick = cbFastSubscribeClick
+    TabOrder = 28
+  end
+  object cbForceIndications: TCheckBox
+    Left = 168
+    Height = 19
+    Top = 112
+    Width = 100
+    Caption = 'Force indications'
+    TabOrder = 29
+  end
+  object btGetParams: TButton
+    Left = 280
+    Height = 25
+    Top = 112
+    Width = 75
+    Caption = 'Get params'
+    OnClick = btGetParamsClick
+    TabOrder = 30
+  end
+  object btSetParams: TButton
+    Left = 488
+    Height = 25
+    Top = 112
+    Width = 75
+    Caption = 'Set params'
+    OnClick = btSetParamsClick
+    TabOrder = 31
+  end
+  object cbParams: TComboBox
+    Left = 360
+    Height = 22
+    Top = 112
+    Width = 121
+    ItemHeight = 16
+    ItemIndex = 0
+    Items.Strings = (
+      'Balanced'
+      'PowerOptimized'
+      'ThroughputOptimized'
+      'Custom'
+    )
+    Style = csOwnerDrawFixed
+    TabOrder = 32
+    Text = 'Balanced'
+  end
+end

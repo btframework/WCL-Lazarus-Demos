@@ -1,0 +1,249 @@
+object fmMain: TfmMain
+  Left = 697
+  Height = 685
+  Top = 170
+  Width = 459
+  BorderStyle = bsSingle
+  Caption = 'OBEX FTP Client Demo'
+  ClientHeight = 685
+  ClientWidth = 459
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '2.2.0.4'
+  object laNewDirName: TLabel
+    Left = 8
+    Height = 13
+    Top = 264
+    Width = 65
+    Caption = 'New dir name'
+  end
+  object laDesc: TLabel
+    Left = 8
+    Height = 13
+    Top = 320
+    Width = 214
+    Caption = 'Double Click to change dir or download a file.'
+  end
+  object btDiscover: TButton
+    Left = 8
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Discover'
+    OnClick = btDiscoverClick
+    TabOrder = 0
+  end
+  object btConnect: TButton
+    Left = 280
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Connect'
+    OnClick = btConnectClick
+    TabOrder = 1
+  end
+  object btDisconnect: TButton
+    Left = 368
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Disconnect'
+    OnClick = btDisconnectClick
+    TabOrder = 2
+  end
+  object lvDevices: TListView
+    Left = 8
+    Height = 121
+    Top = 40
+    Width = 441
+    Columns = <    
+      item
+        Caption = 'Address'
+        Width = 150
+      end    
+      item
+        Caption = 'Name'
+        Width = 150
+      end>
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 3
+    ViewStyle = vsReport
+  end
+  object btOpenSession: TButton
+    Left = 8
+    Height = 25
+    Top = 168
+    Width = 75
+    Caption = 'Open Session'
+    OnClick = btOpenSessionClick
+    TabOrder = 4
+  end
+  object btCloseSession: TButton
+    Left = 88
+    Height = 25
+    Top = 168
+    Width = 75
+    Caption = 'Close Session'
+    OnClick = btCloseSessionClick
+    TabOrder = 5
+  end
+  object btClear: TButton
+    Left = 368
+    Height = 25
+    Top = 504
+    Width = 75
+    Caption = 'Clear'
+    OnClick = btClearClick
+    TabOrder = 6
+  end
+  object lbLog: TListBox
+    Left = 8
+    Height = 145
+    Top = 536
+    Width = 441
+    ItemHeight = 0
+    TabOrder = 7
+  end
+  object btSelectFile: TButton
+    Left = 8
+    Height = 25
+    Top = 224
+    Width = 75
+    Caption = 'Select file'
+    OnClick = btSelectFileClick
+    TabOrder = 8
+  end
+  object edFileName: TEdit
+    Left = 88
+    Height = 21
+    Top = 224
+    Width = 281
+    TabOrder = 9
+  end
+  object btSendFile: TButton
+    Left = 376
+    Height = 25
+    Top = 224
+    Width = 75
+    Caption = 'Send File'
+    OnClick = btSendFileClick
+    TabOrder = 10
+  end
+  object btAbort: TButton
+    Left = 376
+    Height = 25
+    Top = 288
+    Width = 75
+    Caption = 'Abort'
+    OnClick = btAbortClick
+    TabOrder = 11
+  end
+  object ProgressBar: TProgressBar
+    Left = 8
+    Height = 17
+    Top = 200
+    Width = 441
+    TabOrder = 12
+  end
+  object btMkDir: TButton
+    Left = 376
+    Height = 25
+    Top = 256
+    Width = 75
+    Caption = 'MkDir'
+    OnClick = btMkDirClick
+    TabOrder = 13
+  end
+  object btDelete: TButton
+    Left = 88
+    Height = 25
+    Top = 288
+    Width = 75
+    Caption = 'Delete'
+    OnClick = btDeleteClick
+    TabOrder = 14
+  end
+  object edNewDirName: TEdit
+    Left = 88
+    Height = 21
+    Top = 256
+    Width = 281
+    TabOrder = 15
+  end
+  object btDir: TButton
+    Left = 8
+    Height = 25
+    Top = 288
+    Width = 75
+    Caption = 'Dir'
+    OnClick = btDirClick
+    TabOrder = 16
+  end
+  object lvFiles: TListView
+    Left = 8
+    Height = 161
+    Top = 336
+    Width = 441
+    Columns = <    
+      item
+        Caption = 'Object name'
+        Width = 150
+      end    
+      item
+        Caption = 'Type'
+        Width = 80
+      end    
+      item
+        Caption = 'Size'
+        Width = 100
+      end    
+      item
+        Caption = 'Permissions'
+        Width = 80
+      end    
+      item
+        Caption = 'Modified'
+        Width = 80
+      end    
+      item
+        Caption = 'Created'
+        Width = 80
+      end    
+      item
+        Caption = 'Accessed'
+        Width = 80
+      end    
+      item
+        Caption = 'Description'
+        Width = 100
+      end>
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 17
+    ViewStyle = vsReport
+    OnDblClick = lvFilesDblClick
+  end
+  object btRoot: TButton
+    Left = 184
+    Height = 25
+    Top = 288
+    Width = 75
+    Caption = 'Root'
+    OnClick = btRootClick
+    TabOrder = 18
+  end
+  object OpenDialog: TOpenDialog
+    Left = 320
+    Top = 104
+  end
+end
