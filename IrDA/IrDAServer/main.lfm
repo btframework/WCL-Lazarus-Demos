@@ -1,0 +1,175 @@
+object fmMain: TfmMain
+  Left = 606
+  Top = 191
+  BorderStyle = bsSingle
+  Caption = 'IrDA Server Demo'
+  ClientHeight = 478
+  ClientWidth = 630
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  PixelsPerInch = 96
+  object laReadBuffer: TLabel
+    Left = 136
+    Top = 200
+    Width = 56
+    Height = 13
+    Caption = 'Read buffer'
+  end
+  object laWriteBuffer: TLabel
+    Left = 296
+    Top = 200
+    Width = 55
+    Height = 13
+    Caption = 'Write buffer'
+  end
+  object laIasValueType: TLabel
+    Left = 8
+    Top = 232
+    Width = 75
+    Height = 13
+    Caption = 'IAS value type::'
+  end
+  object btListen: TButton
+    Left = 8
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Listen'
+    TabOrder = 0
+    OnClick = btListenClick
+  end
+  object btClose: TButton
+    Left = 88
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Close'
+    TabOrder = 1
+    OnClick = btCloseClick
+  end
+  object lbEvents: TListBox
+    Left = 8
+    Top = 256
+    Width = 609
+    Height = 217
+    ItemHeight = 13
+    TabOrder = 2
+  end
+  object btClear: TButton
+    Left = 544
+    Top = 192
+    Width = 75
+    Height = 25
+    Caption = 'Clear'
+    TabOrder = 3
+    OnClick = btClearClick
+  end
+  object lvClients: TListView
+    Left = 8
+    Top = 40
+    Width = 609
+    Height = 113
+    Columns = <
+      item
+        Caption = 'Address'
+        Width = 200
+      end
+      item
+        Caption = 'Name'
+        Width = 200
+      end>
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 4
+    ViewStyle = vsReport
+  end
+  object btDisconnect: TButton
+    Left = 208
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Disconnect'
+    TabOrder = 5
+    OnClick = btDisconnectClick
+  end
+  object edText: TEdit
+    Left = 8
+    Top = 160
+    Width = 529
+    Height = 21
+    TabOrder = 6
+    Text = 'Send this text to selected client'
+  end
+  object btSend: TButton
+    Left = 544
+    Top = 160
+    Width = 75
+    Height = 25
+    Caption = 'Send'
+    TabOrder = 7
+    OnClick = btSendClick
+  end
+  object btGetBuffers: TButton
+    Left = 8
+    Top = 192
+    Width = 57
+    Height = 25
+    Caption = 'Get'
+    TabOrder = 8
+    OnClick = btGetBuffersClick
+  end
+  object btSetBuffers: TButton
+    Left = 72
+    Top = 192
+    Width = 57
+    Height = 25
+    Caption = 'Set'
+    TabOrder = 9
+    OnClick = btSetBuffersClick
+  end
+  object edReadBuffer: TEdit
+    Left = 200
+    Top = 192
+    Width = 89
+    Height = 21
+    TabOrder = 10
+  end
+  object edWriteBuffer: TEdit
+    Left = 360
+    Top = 192
+    Width = 89
+    Height = 21
+    TabOrder = 11
+  end
+  object cbIasValueType: TComboBox
+    Left = 88
+    Top = 224
+    Width = 145
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 12
+    Items.Strings = (
+      'Integer'
+      'Octet sequence'
+      'ASCII string')
+  end
+  object btAddIasRecord: TButton
+    Left = 240
+    Top = 224
+    Width = 75
+    Height = 25
+    Caption = 'Add record'
+    TabOrder = 13
+    OnClick = btAddIasRecordClick
+  end
+end

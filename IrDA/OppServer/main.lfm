@@ -1,0 +1,57 @@
+object fmMain: TfmMain
+  Left = 192
+  Top = 117
+  BorderStyle = bsDialog
+  Caption = 'OBEX Object Push Profile Server Demo'
+  ClientHeight = 436
+  ClientWidth = 778
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  PixelsPerInch = 96
+  object btListen: TButton
+    Left = 8
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Listen'
+    TabOrder = 0
+    OnClick = btListenClick
+  end
+  object btClose: TButton
+    Left = 88
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Close'
+    TabOrder = 1
+    OnClick = btCloseClick
+  end
+  object btClear: TButton
+    Left = 688
+    Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Clear'
+    TabOrder = 2
+    OnClick = btClearClick
+  end
+  object lbLog: TListBox
+    Left = 8
+    Top = 40
+    Width = 761
+    Height = 393
+    ItemHeight = 13
+    TabOrder = 3
+  end
+  object SaveDialog: TSaveDialog
+    Left = 408
+    Top = 152
+  end
+end

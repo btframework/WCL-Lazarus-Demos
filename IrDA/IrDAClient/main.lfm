@@ -1,0 +1,163 @@
+object fmMain: TfmMain
+  Left = 440
+  Height = 412
+  Top = 161
+  Width = 525
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
+  Caption = 'IrDA Client Demo'
+  ClientHeight = 412
+  ClientWidth = 525
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '2.2.0.4'
+  object laTimeout: TLabel
+    Left = 176
+    Height = 13
+    Top = 152
+    Width = 38
+    Caption = 'Timeout'
+  end
+  object laMilliseconds: TLabel
+    Left = 304
+    Height = 13
+    Top = 152
+    Width = 62
+    Caption = '(milliseconds)'
+  end
+  object laReadBuffer: TLabel
+    Left = 8
+    Height = 13
+    Top = 216
+    Width = 56
+    Caption = 'Read buffer'
+  end
+  object laWriteBuffer: TLabel
+    Left = 160
+    Height = 13
+    Top = 216
+    Width = 55
+    Caption = 'Write buffer'
+  end
+  object btDiscover: TButton
+    Left = 8
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Discover'
+    OnClick = btDiscoverClick
+    TabOrder = 0
+  end
+  object lvDevices: TListView
+    Left = 8
+    Height = 97
+    Top = 40
+    Width = 505
+    Columns = <    
+      item
+        Caption = 'Address'
+        Width = 200
+      end    
+      item
+        Caption = 'Name'
+        Width = 200
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 1
+    ViewStyle = vsReport
+  end
+  object btConnect: TButton
+    Left = 8
+    Height = 25
+    Top = 144
+    Width = 75
+    Caption = 'Connect'
+    OnClick = btConnectClick
+    TabOrder = 2
+  end
+  object btDisconnect: TButton
+    Left = 88
+    Height = 25
+    Top = 144
+    Width = 75
+    Caption = 'Disconnect'
+    OnClick = btDisconnectClick
+    TabOrder = 3
+  end
+  object lbEvents: TListBox
+    Left = 8
+    Height = 169
+    Top = 240
+    Width = 505
+    ItemHeight = 0
+    TabOrder = 4
+  end
+  object btClear: TButton
+    Left = 440
+    Height = 25
+    Top = 208
+    Width = 75
+    Caption = 'Clear'
+    OnClick = btClearClick
+    TabOrder = 5
+  end
+  object btSend: TButton
+    Left = 440
+    Height = 25
+    Top = 176
+    Width = 75
+    Caption = 'Send'
+    OnClick = btSendClick
+    TabOrder = 6
+  end
+  object edText: TEdit
+    Left = 8
+    Height = 21
+    Top = 176
+    Width = 425
+    TabOrder = 7
+    Text = 'Send this text to selected client'
+  end
+  object edTimeout: TEdit
+    Left = 224
+    Height = 21
+    Top = 144
+    Width = 73
+    TabOrder = 8
+    Text = '10000'
+  end
+  object edReadBuffer: TEdit
+    Left = 72
+    Height = 21
+    Top = 208
+    Width = 81
+    TabOrder = 9
+    Text = '0'
+  end
+  object edWriteBuffer: TEdit
+    Left = 224
+    Height = 21
+    Top = 208
+    Width = 81
+    TabOrder = 10
+    Text = '0'
+  end
+  object btSetBuffers: TButton
+    Left = 320
+    Height = 25
+    Top = 208
+    Width = 75
+    Caption = 'Set buffers'
+    OnClick = btSetBuffersClick
+    TabOrder = 11
+  end
+end
