@@ -1,0 +1,10 @@
+/**/build
+
+*.ppu
+*.o
+*.a
+*.lps
+*.or
+*.rst
+*.compiled
+*.exe
