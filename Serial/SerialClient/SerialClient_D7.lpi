@@ -40,66 +40,6 @@
         <IsPartOfProject Value="True"/>
         <HasResources Value="True"/>
       </Unit>
-      <Unit>
-        <Filename Value="..\..\msxml.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\wcl.inc"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclErrors.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclHelpers.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclMessaging.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclPowerEvents.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclThread.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclWinAPI.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclWinUsb.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Communication\wclConnectionErrors.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Communication\wclConnections.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Communication\wclObex.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Serial\wclSerialClients.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Serial\wclSerialDevices.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Serial\wclSerialErrors.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
