@@ -1,0 +1,250 @@
+object fmMain: TfmMain
+  Left = 540
+  Height = 333
+  Top = 305
+  Width = 476
+  BorderStyle = bsSingle
+  Caption = 'Mobile Hotspot Demo'
+  ClientHeight = 333
+  ClientWidth = 476
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '2.2.0.4'
+  object laSsid: TLabel
+    Left = 16
+    Height = 13
+    Top = 56
+    Width = 25
+    Caption = 'SSID'
+  end
+  object laPassword: TLabel
+    Left = 16
+    Height = 13
+    Top = 88
+    Width = 46
+    Caption = 'Password'
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 13
+    Top = 120
+    Width = 25
+    Caption = 'Band'
+  end
+  object btOpen: TButton
+    Left = 8
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Open'
+    OnClick = btOpenClick
+    TabOrder = 0
+  end
+  object btClose: TButton
+    Left = 96
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Close'
+    OnClick = btCloseClick
+    TabOrder = 1
+  end
+  object btStart: TButton
+    Left = 200
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Start'
+    OnClick = btStartClick
+    TabOrder = 2
+  end
+  object btStop: TButton
+    Left = 280
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Stop'
+    OnClick = btStopClick
+    TabOrder = 3
+  end
+  object btGetState: TButton
+    Left = 392
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Get state'
+    OnClick = btGetStateClick
+    TabOrder = 4
+  end
+  object edSsid: TEdit
+    Left = 72
+    Height = 21
+    Top = 48
+    Width = 121
+    TabOrder = 5
+  end
+  object btGetSsid: TButton
+    Left = 200
+    Height = 25
+    Top = 48
+    Width = 75
+    Caption = 'Get SSID'
+    OnClick = btGetSsidClick
+    TabOrder = 6
+  end
+  object btSetSsid: TButton
+    Left = 280
+    Height = 25
+    Top = 48
+    Width = 75
+    Caption = 'Set SSID'
+    OnClick = btSetSsidClick
+    TabOrder = 7
+  end
+  object edPassword: TEdit
+    Left = 72
+    Height = 21
+    Top = 80
+    Width = 121
+    TabOrder = 8
+  end
+  object btGetPwd: TButton
+    Left = 200
+    Height = 25
+    Top = 80
+    Width = 75
+    Caption = 'Get pwd'
+    OnClick = btGetPwdClick
+    TabOrder = 9
+  end
+  object btSetPwd: TButton
+    Left = 280
+    Height = 25
+    Top = 80
+    Width = 75
+    Caption = 'Set pwd'
+    OnClick = btSetPwdClick
+    TabOrder = 10
+  end
+  object btGetMaxClients: TButton
+    Left = 392
+    Height = 25
+    Top = 48
+    Width = 75
+    Caption = 'Max clients'
+    OnClick = btGetMaxClientsClick
+    TabOrder = 11
+  end
+  object btGetConnected: TButton
+    Left = 392
+    Height = 25
+    Top = 80
+    Width = 75
+    Caption = 'Connected'
+    OnClick = btGetConnectedClick
+    TabOrder = 12
+  end
+  object cbBand: TComboBox
+    Left = 72
+    Height = 21
+    Top = 112
+    Width = 121
+    ItemHeight = 13
+    ItemIndex = 0
+    Items.Strings = (
+      'Auto'
+      '2.4'
+      '5.8'
+    )
+    Style = csDropDownList
+    TabOrder = 13
+    Text = 'Auto'
+  end
+  object btIsSupported: TButton
+    Left = 200
+    Height = 25
+    Top = 112
+    Width = 75
+    Caption = 'Is supported'
+    OnClick = btIsSupportedClick
+    TabOrder = 14
+  end
+  object btSetBand: TButton
+    Left = 280
+    Height = 25
+    Top = 112
+    Width = 75
+    Caption = 'Set Band'
+    OnClick = btSetBandClick
+    TabOrder = 15
+  end
+  object btGetBand: TButton
+    Left = 360
+    Height = 25
+    Top = 112
+    Width = 75
+    Caption = 'Get Band'
+    OnClick = btGetBandClick
+    TabOrder = 16
+  end
+  object btConnectedClients: TButton
+    Left = 16
+    Height = 25
+    Top = 144
+    Width = 113
+    Caption = 'Connected clients'
+    OnClick = btConnectedClientsClick
+    TabOrder = 17
+  end
+  object lvConnectedClients: TListView
+    Left = 16
+    Height = 150
+    Top = 176
+    Width = 449
+    Columns = <    
+      item
+        Caption = 'Mac'
+        Width = 150
+      end    
+      item
+        Caption = 'Host name'
+        Width = 250
+      end>
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 18
+    ViewStyle = vsReport
+  end
+  object btCheckTimeout: TButton
+    Left = 144
+    Height = 25
+    Top = 144
+    Width = 105
+    Caption = 'Check Timeout'
+    OnClick = btCheckTimeoutClick
+    TabOrder = 19
+  end
+  object btEnableTimeout: TButton
+    Left = 256
+    Height = 25
+    Top = 144
+    Width = 89
+    Caption = 'Enable Timeout'
+    OnClick = btEnableTimeoutClick
+    TabOrder = 20
+  end
+  object btDisableTimeout: TButton
+    Left = 352
+    Height = 25
+    Top = 144
+    Width = 97
+    Caption = 'Disable timeout'
+    OnClick = btDisableTimeoutClick
+    TabOrder = 21
+  end
+end

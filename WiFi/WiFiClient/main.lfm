@@ -1,0 +1,640 @@
+object fmMain: TfmMain
+  Left = 254
+  Height = 619
+  Top = 105
+  Width = 870
+  BorderStyle = bsSingle
+  Caption = 'WiFi Client Demo'
+  ClientHeight = 619
+  ClientWidth = 870
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '2.2.0.4'
+  object laClientScanSSID: TLabel
+    Left = 512
+    Height = 13
+    Top = 152
+    Width = 25
+    Caption = 'SSID'
+  end
+  object laClientBssType: TLabel
+    Left = 168
+    Height = 13
+    Top = 264
+    Width = 44
+    Caption = 'BSS type'
+  end
+  object laClientAcmSettings: TLabel
+    Left = 8
+    Height = 13
+    Top = 528
+    Width = 75
+    Caption = 'ACM settings'
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object laClientPasskey: TLabel
+    Left = 312
+    Height = 13
+    Top = 496
+    Width = 141
+    Caption = 'Passkey (for temporary profile)'
+  end
+  object btClientOpen: TButton
+    Left = 8
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Open'
+    OnClick = btClientOpenClick
+    TabOrder = 0
+  end
+  object btClientClose: TButton
+    Left = 88
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Close'
+    OnClick = btClientCloseClick
+    TabOrder = 1
+  end
+  object btClientEnumInterfaces: TButton
+    Left = 176
+    Height = 25
+    Top = 8
+    Width = 105
+    Caption = 'Enum interfaces'
+    OnClick = btClientEnumInterfacesClick
+    TabOrder = 2
+  end
+  object lvClientInterfaces: TListView
+    Left = 8
+    Height = 65
+    Top = 72
+    Width = 849
+    Columns = <    
+      item
+        Caption = 'Interface ID'
+        Width = 350
+      end    
+      item
+        Caption = 'Description'
+        Width = 350
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 3
+    ViewStyle = vsReport
+  end
+  object btClientEnumNetworks: TButton
+    Left = 8
+    Height = 25
+    Top = 144
+    Width = 113
+    Caption = 'Enum networks'
+    OnClick = btClientEnumNetworksClick
+    TabOrder = 4
+  end
+  object lvClientNetworks: TListView
+    Left = 8
+    Height = 73
+    Top = 176
+    Width = 849
+    Columns = <    
+      item
+        Caption = 'Profile name'
+        Width = 150
+      end    
+      item
+        Caption = 'SSID'
+        Width = 150
+      end    
+      item
+        Caption = 'BSS type'
+        Width = 100
+      end    
+      item
+        Caption = 'Number of BSS IDs'
+        Width = 120
+      end    
+      item
+        Caption = 'Connectable'
+        Width = 80
+      end    
+      item
+        Caption = 'Not connectable reason'
+        Width = 150
+      end    
+      item
+        Caption = 'PHY types'
+        Width = 150
+      end    
+      item
+        Caption = 'More PHY types'
+        Width = 100
+      end    
+      item
+        Caption = 'Signal quality'
+        Width = 100
+      end    
+      item
+        Caption = 'Security enabled'
+        Width = 100
+      end    
+      item
+        Caption = 'Def. auth. algorithm'
+        Width = 120
+      end    
+      item
+        Caption = 'Def. cypher algorithm'
+        Width = 120
+      end    
+      item
+        Caption = 'Flags'
+        Width = 150
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 5
+    ViewStyle = vsReport
+  end
+  object cbClientAdHocProfiles: TCheckBox
+    Left = 128
+    Height = 19
+    Top = 152
+    Width = 130
+    Caption = 'Include Ad Hoc profiles'
+    TabOrder = 6
+  end
+  object cbClientHiddenProfiles: TCheckBox
+    Left = 280
+    Height = 19
+    Top = 152
+    Width = 126
+    Caption = 'Include hidden profiles'
+    TabOrder = 7
+  end
+  object lvClientBss: TListView
+    Left = 8
+    Height = 81
+    Top = 288
+    Width = 849
+    Columns = <    
+      item
+        Caption = 'SSID'
+        Width = 150
+      end    
+      item
+        Caption = 'PHY ID'
+        Width = 100
+      end    
+      item
+        Caption = 'MAC'
+        Width = 120
+      end    
+      item
+        Caption = 'BSS type'
+        Width = 80
+      end    
+      item
+        Caption = 'PHY type'
+        Width = 150
+      end    
+      item
+        Caption = 'RSSI'
+        Width = 120
+      end    
+      item
+        Caption = 'Link quality'
+        Width = 150
+      end    
+      item
+        Caption = 'In reg domain'
+        Width = 100
+      end    
+      item
+        Caption = 'Beacon period'
+        Width = 100
+      end    
+      item
+        Caption = 'Timestamp'
+        Width = 100
+      end    
+      item
+        Caption = 'Host timestamp'
+        Width = 120
+      end    
+      item
+        Caption = 'Capability'
+        Width = 120
+      end    
+      item
+        Caption = 'Center frequency'
+        Width = 150
+      end    
+      item
+        Caption = 'IEs'
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 8
+    ViewStyle = vsReport
+  end
+  object btClientScan: TButton
+    Left = 432
+    Height = 25
+    Top = 144
+    Width = 75
+    Caption = 'Scan'
+    OnClick = btClientScanClick
+    TabOrder = 9
+  end
+  object edClientScanSSID: TEdit
+    Left = 552
+    Height = 21
+    Top = 144
+    Width = 193
+    TabOrder = 10
+  end
+  object btClientEnumBSS: TButton
+    Left = 8
+    Height = 25
+    Top = 256
+    Width = 75
+    Caption = 'Enum BSS'
+    OnClick = btClientEnumBSSClick
+    TabOrder = 11
+  end
+  object cbClientUseSSID: TCheckBox
+    Left = 88
+    Height = 19
+    Top = 264
+    Width = 67
+    Caption = 'Use SSID'
+    TabOrder = 12
+  end
+  object cbClientBssType: TComboBox
+    Left = 216
+    Height = 22
+    Top = 256
+    Width = 145
+    ItemHeight = 16
+    ItemIndex = 2
+    Items.Strings = (
+      'bssInfrastructure'
+      'bssIndependent'
+      'bssAny'
+    )
+    Style = csOwnerDrawFixed
+    TabOrder = 13
+    Text = 'bssAny'
+  end
+  object cbClientSecurityEnabled: TCheckBox
+    Left = 368
+    Height = 19
+    Top = 264
+    Width = 99
+    Caption = 'Security enabled'
+    Checked = True
+    State = cbChecked
+    TabOrder = 14
+  end
+  object btclientDisconnect: TButton
+    Left = 296
+    Height = 25
+    Top = 8
+    Width = 249
+    Caption = 'Disconnect select interface from WLAN network'
+    OnClick = btclientDisconnectClick
+    TabOrder = 15
+  end
+  object btClientGetShowDeniedNetworks: TButton
+    Left = 8
+    Height = 25
+    Top = 552
+    Width = 161
+    Caption = 'Get "Show denied networks"'
+    OnClick = btClientGetShowDeniedNetworksClick
+    TabOrder = 16
+  end
+  object btClientSetShowDeniedNetworks: TButton
+    Left = 8
+    Height = 25
+    Top = 584
+    Width = 161
+    Caption = 'Set "Show denied networks"'
+    OnClick = btClientSetShowDeniedNetworksClick
+    TabOrder = 17
+  end
+  object btClientGetPowerSettings: TButton
+    Left = 176
+    Height = 25
+    Top = 552
+    Width = 153
+    Caption = 'Get power settings'
+    OnClick = btClientGetPowerSettingsClick
+    TabOrder = 18
+  end
+  object btClientGetOnlyUseGpProfiles: TButton
+    Left = 176
+    Height = 25
+    Top = 584
+    Width = 153
+    Caption = 'Get "Only use GP profiles"'
+    OnClick = btClientGetOnlyUseGpProfilesClick
+    TabOrder = 19
+  end
+  object btClientGetAllowExplicitCreds: TButton
+    Left = 336
+    Height = 25
+    Top = 552
+    Width = 145
+    Caption = 'Get "Allow explicit creds"'
+    OnClick = btClientGetAllowExplicitCredsClick
+    TabOrder = 20
+  end
+  object btClientSetAllowExplicitCreds: TButton
+    Left = 336
+    Height = 25
+    Top = 584
+    Width = 145
+    Caption = 'Set "Allow explicit creds"'
+    OnClick = btClientSetAllowExplicitCredsClick
+    TabOrder = 21
+  end
+  object btClientGetBlockPeriod: TButton
+    Left = 488
+    Height = 25
+    Top = 552
+    Width = 97
+    Caption = 'Get block period'
+    OnClick = btClientGetBlockPeriodClick
+    TabOrder = 22
+  end
+  object btClientSetBlockPeriod: TButton
+    Left = 488
+    Height = 25
+    Top = 584
+    Width = 97
+    Caption = 'Set block period'
+    OnClick = btClientSetBlockPeriodClick
+    TabOrder = 23
+  end
+  object btClientGetVirtualStationExtensibility: TButton
+    Left = 592
+    Height = 25
+    Top = 552
+    Width = 161
+    Caption = 'Get "Virtual station extensibility"'
+    OnClick = btClientGetVirtualStationExtensibilityClick
+    TabOrder = 24
+  end
+  object btClientSetVirtualStationExtensibility: TButton
+    Left = 592
+    Height = 25
+    Top = 584
+    Width = 161
+    Caption = 'Set "Virtual station extensibility"'
+    OnClick = btClientSetVirtualStationExtensibilityClick
+    TabOrder = 25
+  end
+  object btClientGetInterfaceState: TButton
+    Left = 560
+    Height = 25
+    Top = 8
+    Width = 129
+    Caption = 'Get interface state'
+    OnClick = btClientGetInterfaceStateClick
+    TabOrder = 26
+  end
+  object btClientEnumProfiles: TButton
+    Left = 8
+    Height = 25
+    Top = 376
+    Width = 75
+    Caption = 'Enum profiles'
+    OnClick = btClientEnumProfilesClick
+    TabOrder = 27
+  end
+  object lvClientProfiles: TListView
+    Left = 8
+    Height = 73
+    Top = 408
+    Width = 849
+    Columns = <    
+      item
+        Caption = 'Name'
+        Width = 200
+      end    
+      item
+        Caption = 'Flags'
+        Width = 200
+      end>
+    ColumnClick = False
+    GridLines = True
+    HideSelection = False
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 28
+    ViewStyle = vsReport
+  end
+  object btClientDeleteProfile: TButton
+    Left = 96
+    Height = 25
+    Top = 376
+    Width = 75
+    Caption = 'Delete profile'
+    OnClick = btClientDeleteProfileClick
+    TabOrder = 29
+  end
+  object btClientRenameProfile: TButton
+    Left = 176
+    Height = 25
+    Top = 376
+    Width = 81
+    Caption = 'Rename profile'
+    OnClick = btClientRenameProfileClick
+    TabOrder = 30
+  end
+  object btClientGetProfileXml: TButton
+    Left = 272
+    Height = 25
+    Top = 376
+    Width = 89
+    Caption = 'Get profile XML'
+    OnClick = btClientGetProfileXmlClick
+    TabOrder = 31
+  end
+  object btClientSetProfileXml: TButton
+    Left = 544
+    Height = 25
+    Top = 376
+    Width = 81
+    Caption = 'Set profile XML'
+    OnClick = btClientSetProfileXmlClick
+    TabOrder = 32
+  end
+  object btClientConnect: TButton
+    Left = 8
+    Height = 25
+    Top = 488
+    Width = 75
+    Caption = 'Connect'
+    OnClick = btClientConnectClick
+    TabOrder = 33
+  end
+  object cbClientConnect: TComboBox
+    Left = 88
+    Height = 21
+    Top = 488
+    Width = 217
+    ItemHeight = 13
+    ItemIndex = 0
+    Items.Strings = (
+      'using network profile'
+      'using selected profile'
+      'using selected network'
+      'using temporary profile'
+    )
+    Style = csDropDownList
+    TabOrder = 34
+    Text = 'using network profile'
+  end
+  object edClientPasskey: TEdit
+    Left = 464
+    Height = 21
+    Top = 488
+    Width = 121
+    TabOrder = 35
+    Text = '12345678910'
+  end
+  object cbClientDiscoverSecure: TCheckBox
+    Left = 608
+    Height = 19
+    Top = 496
+    Width = 97
+    Caption = 'Discover secure'
+    Checked = True
+    State = cbChecked
+    TabOrder = 36
+  end
+  object btTunrOn: TButton
+    Left = 704
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Turn ON'
+    OnClick = btTunrOnClick
+    TabOrder = 37
+  end
+  object btTurnOff: TButton
+    Left = 784
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Turn OFF'
+    OnClick = btTurnOffClick
+    TabOrder = 38
+  end
+  object cbUseBssMac: TCheckBox
+    Left = 720
+    Height = 19
+    Top = 496
+    Width = 89
+    Caption = 'Use BSS MAC'
+    TabOrder = 39
+  end
+  object cbPlainText: TCheckBox
+    Left = 368
+    Height = 19
+    Top = 384
+    Width = 153
+    Caption = 'Get passphrase as plain text'
+    Checked = True
+    State = cbChecked
+    TabOrder = 40
+  end
+  object btCurrentIp: TButton
+    Left = 8
+    Height = 25
+    Top = 40
+    Width = 75
+    Caption = 'Current IP'
+    OnClick = btCurrentIpClick
+    TabOrder = 41
+  end
+  object btGetIpSettings: TButton
+    Left = 96
+    Height = 25
+    Top = 40
+    Width = 97
+    Caption = 'Get IP settings'
+    OnClick = btGetIpSettingsClick
+    TabOrder = 42
+  end
+  object btEnableDhcp: TButton
+    Left = 208
+    Height = 25
+    Top = 40
+    Width = 89
+    Caption = 'Enable DHCP'
+    OnClick = btEnableDhcpClick
+    TabOrder = 43
+  end
+  object btEnableStaticIp: TButton
+    Left = 304
+    Height = 25
+    Top = 40
+    Width = 97
+    Caption = 'Enabpe Static IP'
+    OnClick = btEnableStaticIpClick
+    TabOrder = 44
+  end
+  object btEditUi: TButton
+    Left = 776
+    Height = 25
+    Top = 376
+    Width = 75
+    Caption = 'Show Edit UI'
+    OnClick = btEditUiClick
+    TabOrder = 45
+  end
+  object btSetProfileXmlUserData: TButton
+    Left = 632
+    Height = 25
+    Top = 376
+    Width = 137
+    Caption = 'Set profile XML user data'
+    OnClick = btSetProfileXmlUserDataClick
+    TabOrder = 46
+  end
+  object SaveDialog: TSaveDialog
+    DefaultExt = '.xml'
+    Filter = 'Profile XML files (*.xml)|*.xml'
+    Left = 472
+    Top = 320
+  end
+  object OpenDialog: TOpenDialog
+    DefaultExt = '.xml'
+    Filter = 'Profile XML files (*.xml)|*.xml'
+    Left = 536
+    Top = 328
+  end
+end
