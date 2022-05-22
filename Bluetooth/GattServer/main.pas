@@ -9,6 +9,9 @@ uses
   Dialogs, StdCtrls, wclBluetooth, wclErrors;
 
 type
+
+  { TfmMain }
+
   TfmMain = class(TForm)
     btStart: TButton;
     btStop: TButton;
@@ -145,6 +148,7 @@ var
   Res: Integer;
 begin
   lbLog.Items.Add('Client subscribed :' + IntToHex(Address, 12));
+
   Res := Characteristic.Notify(Address, @FCounter, 4);
   Inc(FCounter);
   if Res <> WCL_E_SUCCESS then
