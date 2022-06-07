@@ -505,4 +505,13 @@ object fmMain: TfmMain
     TabOrder = 32
     Text = 'Balanced'
   end
+  object btGetMaxPduSize: TButton
+    Left = 16
+    Height = 25
+    Top = 663
+    Width = 89
+    Caption = 'Max PDU size'
+    OnClick = btGetMaxPduSizeClick
+    TabOrder = 33
+  end
 end

@@ -34,17 +34,25 @@ type
     procedure wclGattServerStarted(Sender: TObject);
     procedure wclGattServerStopped(Sender: TObject);
     procedure wclGattServerRead(Sender: TObject;
+      const Client: TwclGattServerClient;
       const Characteristic: TwclGattLocalCharacteristic;
-      const Address: Int64; const Value: TwclGattLocalCharacteristicValue);
+      const Value: TwclGattLocalCharacteristicValue);
     procedure wclGattServerWrite(Sender: TObject;
+      const Client: TwclGattServerClient;
       const Characteristic: TwclGattLocalCharacteristic;
-      const Address: Int64; const Data: Pointer; const Size: Cardinal);
+      const Data: Pointer; const Size: Cardinal);
     procedure wclGattServerUnsubscribed(Sender: TObject;
-      const Characteristic: TwclGattLocalCharacteristic;
-      const Address: Int64);
+      const Client: TwclGattServerClient;
+      const Characteristic: TwclGattLocalCharacteristic);
     procedure wclGattServerSubscribed(Sender: TObject;
-      const Characteristic: TwclGattLocalCharacteristic;
-      const Address: Int64);
+      const Client: TwclGattServerClient;
+      const Characteristic: TwclGattLocalCharacteristic);
+    procedure wclGattServerClientConnected(Sender: TObject;
+      const Client: TwclGattServerClient);
+    procedure wclGattServerClientDisconnected(Sender: TObject;
+      const Client: TwclGattServerClient);
+    procedure wclGattServerNotificationSizeChanged(Sender: TObject;
+      const Client: TwclGattServerClient);
 
     function InitBluetooth(out Radio: TwclBluetoothRadio): Boolean;
     procedure UninitBluetooth;
@@ -76,6 +84,9 @@ begin
   wclGattServer.OnSubscribed := wclGattServerSubscribed;
   wclGattServer.OnUnsubscribed := wclGattServerUnsubscribed;
   wclGattServer.OnWrite := wclGattServerWrite;
+  wclGattServer.OnClientConnected := wclGattServerClientConnected;
+  wclGattServer.OnClientDisconnected := wclGattServerClientDisconnected;
+  wclGattServer.OnNotificationSizeChanged := wclGattServerNotificationSizeChanged;
 
   FStarted := False;
 end;
@@ -104,13 +115,14 @@ begin
 end;
 
 procedure TfmMain.wclGattServerRead(Sender: TObject;
-  const Characteristic: TwclGattLocalCharacteristic; const Address: Int64;
+  const Client: TwclGattServerClient;
+  const Characteristic: TwclGattLocalCharacteristic;
   const Value: TwclGattLocalCharacteristicValue);
 var
   b: array [0..4] of Byte;
   Res: Integer;
 begin
-  lbLog.Items.Add('Read request from ' + IntToHex(Address, 12));
+  lbLog.Items.Add('Read request from ' + IntToHex(Client.Address, 12));
   b[0] := 1;
   b[1] := 2;
   b[2] := 3;
@@ -122,13 +134,14 @@ begin
 end;
 
 procedure TfmMain.wclGattServerWrite(Sender: TObject;
-  const Characteristic: TwclGattLocalCharacteristic; const Address: Int64;
+  const Client: TwclGattServerClient;
+  const Characteristic: TwclGattLocalCharacteristic;
   const Data: Pointer; const Size: Cardinal);
 var
   s: String;
   i: Cardinal;
 begin
-  lbLog.Items.Add('Data received from ' + IntToHex(Address, 12) + ' (' +
+  lbLog.Items.Add('Data received from ' + IntToHex(Client.Address, 12) + ' (' +
     IntToStr(Size) + ' bytes): ');
   s := '';
   for i := 0 to Size - 1 do
@@ -137,19 +150,42 @@ begin
 end;
 
 procedure TfmMain.wclGattServerUnsubscribed(Sender: TObject;
-  const Characteristic: TwclGattLocalCharacteristic; const Address: Int64);
+  const Client: TwclGattServerClient;
+  const Characteristic: TwclGattLocalCharacteristic);
 begin
-  lbLog.Items.Add('Client unsubscribed :' + IntToHex(Address, 12));
+  lbLog.Items.Add('Client unsubscribed :' + IntToHex(Client.Address, 12));
+end;
+
+procedure TfmMain.wclGattServerClientConnected(Sender: TObject;
+  const Client: TwclGattServerClient);
+begin
+  lbLog.Items.Add('Client connected :' + IntToHex(Client.Address, 12));
+end;
+
+procedure TfmMain.wclGattServerClientDisconnected(Sender: TObject;
+  const Client: TwclGattServerClient);
+begin
+  lbLog.Items.Add('Client disconnected :' + IntToHex(Client.Address, 12));
 end;
 
 procedure TfmMain.wclGattServerSubscribed(Sender: TObject;
-  const Characteristic: TwclGattLocalCharacteristic; const Address: Int64);
+  const Client: TwclGattServerClient;
+  const Characteristic: TwclGattLocalCharacteristic);
 var
+  Str: string;
   Res: Integer;
+  Size: Word;
 begin
-  lbLog.Items.Add('Client subscribed :' + IntToHex(Address, 12));
+  Str := 'Client subscribed: ' + IntToHex(Client.Address, 12);
 
-  Res := Characteristic.Notify(Address, @FCounter, 4);
+  Res := Client.GetMaxNotificationSize(Size);
+  if Res <> WCL_E_SUCCESS then
+    Str := Str + ' Get max notification size failed: 0x' + IntToHex(Res, 8)
+  else
+    Str := Str + ' Max notification size: ' + IntToStr(Size);
+  lbLog.Items.Add(Str);
+
+  Res := Characteristic.Notify(Client.Address, @FCounter, 4);
   Inc(FCounter);
   if Res <> WCL_E_SUCCESS then
     lbLog.Items.Add('Notification failed: ' + IntToHex(Res, 8));
@@ -363,6 +399,22 @@ begin
 
   wclGattServer.Free;
   wclBluetoothManager.Free;
+end;
+
+procedure TfmMain.wclGattServerNotificationSizeChanged(Sender: TObject;
+  const Client: TwclGattServerClient);
+var
+  Res: Integer;
+  Size: Word;
+begin
+  Res := Client.GetMaxNotificationSize(Size);
+  if Res = WCL_E_SUCCESS then begin
+    lbLog.Items.Add(IntToHex(Client.Address, 12) +
+      ' notification size changed: ' + IntToStr(Size));
+  end else begin
+    lbLog.Items.Add(IntToHex(Client.Address, 12) +
+      ' get max notification size failed: 0x' + IntToHex(Res, 8));
+  end;
 end;
 
 end.

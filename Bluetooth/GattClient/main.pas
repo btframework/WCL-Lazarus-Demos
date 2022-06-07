@@ -8,8 +8,12 @@ uses
   Forms, wclBluetooth, Classes, StdCtrls, Controls, ComCtrls;
 
 type
+
+  { TfmMain }
+
   TfmMain = class(TForm)
     btDiscover: TButton;
+    btGetMaxPduSize: TButton;
     lvDevices: TListView;
     lvEvents: TListView;
     btClearEvents: TButton;
@@ -45,6 +49,7 @@ type
     btGetParams: TButton;
     btSetParams: TButton;
     cbParams: TComboBox;
+    procedure btGetMaxPduSizeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btDiscoverClick(Sender: TObject);
@@ -108,6 +113,7 @@ type
     procedure wclGattClientDisconnect(Sender: TObject;
       const Reason: Integer);
     procedure wclGattClientConnectionParamsChanged(Sender: TObject);
+    procedure wclGattClientMaxPduSizeChanged(Sender: TObject);
 
     function GetRadio: TwclBluetoothRadio;
     function OpFlag: TwclGattOperationFlag;
@@ -120,6 +126,8 @@ type
     procedure ListProp(const Name: string; const Value: string);
 
     function Protection: TwclGattProtectionLevel;
+
+    procedure GetMaxPduSize;
   end;
 
 var
@@ -151,6 +159,7 @@ begin
   wclGattClient.OnConnect := wclGattClientConnect;
   wclGattClient.OnConnectionParamsChanged := wclGattClientConnectionParamsChanged;
   wclGattClient.OnDisconnect := wclGattClientDisconnect;
+  wclGattClient.OnMaxPduSizeChanged := wclGattClientMaxPduSizeChanged;
 
   // In real application you should always analize the result code.
   // In this demo we assume that all is always OK.
@@ -159,6 +168,11 @@ begin
   cbOperationFlag.ItemIndex := 0;
 
   Cleanup;
+end;
+
+procedure TfmMain.btGetMaxPduSizeClick(Sender: TObject);
+begin
+  GetMaxPduSize;
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
@@ -877,6 +891,9 @@ begin
   // Connection property is valid here.
   TraceEvent(TwclGattClient(Sender).Address, 'Connected', 'Error',
     '0x' + IntToHex(Error, 8));
+
+  if Error = WCL_E_SUCCESS then
+    GetMaxPduSize;
 end;
 
 procedure TfmMain.wclGattClientDisconnect(Sender: TObject;
@@ -1039,6 +1056,24 @@ begin
   
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
+end;
+
+procedure TfmMain.wclGattClientMaxPduSizeChanged(Sender: TObject);
+begin
+  GetMaxPduSize;
+end;
+
+procedure TfmMain.GetMaxPduSize;
+var
+  Res: Integer;
+  Size: Word;
+begin
+  Res := wclGattClient.GetMaxPduSize(Size);
+  if Res <> WCL_E_SUCCESS then begin
+    TraceEvent(wclGattClient.Address, 'Max PDU size', 'Error',
+      IntToHex(Res, 8));
+  end else
+    TraceEvent(wclGattClient.Address, 'Max PDU size', 'Size', IntToStr(Size));
 end;
 
 end.
