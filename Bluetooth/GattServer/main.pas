@@ -53,6 +53,8 @@ type
       const Client: TwclGattServerClient);
     procedure wclGattServerNotificationSizeChanged(Sender: TObject;
       const Client: TwclGattServerClient);
+    procedure wclGattServerMaxPduSizeChanged(Sender: TObject;
+      const Client: TwclGattServerClient);
 
     function InitBluetooth(out Radio: TwclBluetoothRadio): Boolean;
     procedure UninitBluetooth;
@@ -87,6 +89,7 @@ begin
   wclGattServer.OnClientConnected := wclGattServerClientConnected;
   wclGattServer.OnClientDisconnected := wclGattServerClientDisconnected;
   wclGattServer.OnNotificationSizeChanged := wclGattServerNotificationSizeChanged;
+  wclGattServer.OnMaxPduSizeChanged := wclGattServerMaxPduSizeChanged;
 
   FStarted := False;
 end;
@@ -158,8 +161,17 @@ end;
 
 procedure TfmMain.wclGattServerClientConnected(Sender: TObject;
   const Client: TwclGattServerClient);
+var
+  Res: Integer;
+  Size: Word;
 begin
   lbLog.Items.Add('Client connected :' + IntToHex(Client.Address, 12));
+
+  Res := Client.GetMaxPduSize(Size);
+  if Res <> WCL_E_SUCCESS then
+    lbLog.Items.Add('Get max PDU size failed: 0x' + IntToHex(Res, 8))
+  else
+    lbLog.Items.Add('Max PDU size: ' + IntToStr(Size));
 end;
 
 procedure TfmMain.wclGattServerClientDisconnected(Sender: TObject;
@@ -414,6 +426,22 @@ begin
   end else begin
     lbLog.Items.Add(IntToHex(Client.Address, 12) +
       ' get max notification size failed: 0x' + IntToHex(Res, 8));
+  end;
+end;
+
+procedure TfmMain.wclGattServerMaxPduSizeChanged(Sender: TObject;
+  const Client: TwclGattServerClient);
+var
+  Res: Integer;
+  Size: Word;
+begin
+  Res := Client.GetMaxPduSize(Size);
+  if Res = WCL_E_SUCCESS then begin
+    lbLog.Items.Add(IntToHex(Client.Address, 12) +
+      ' PDU size changed: ' + IntToStr(Size));
+  end else begin
+    lbLog.Items.Add(IntToHex(Client.Address, 12) +
+      ' get max PDU size failed: 0x' + IntToHex(Res, 8));
   end;
 end;
 

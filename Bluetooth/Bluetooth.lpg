@@ -57,6 +57,11 @@
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
+      <Target FileName="BleSniffer\BleSniffer_D7.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
     </Targets>
   </ProjectGroup>
 </CONFIG>
