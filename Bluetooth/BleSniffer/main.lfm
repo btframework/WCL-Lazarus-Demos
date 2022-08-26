@@ -45,7 +45,11 @@ object fmMain: TfmMain
     Height = 329
     Top = 48
     Width = 577
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Courier New'
     ItemHeight = 0
+    ParentFont = False
     TabOrder = 2
   end
   object btClear: TButton

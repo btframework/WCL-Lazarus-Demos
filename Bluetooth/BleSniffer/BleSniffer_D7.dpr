@@ -5,10 +5,7 @@ program BleSniffer_D7;
 {$ENDIF}
 
 uses
-{$IFnDEF FPC}
-{$ELSE}
   Interfaces,
-{$ENDIF}
   Forms,
   main in 'main.pas' {fmMain};
 
