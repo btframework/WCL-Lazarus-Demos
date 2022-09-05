@@ -123,7 +123,7 @@ type
       out OobData: TwclBluetoothOobData);
     procedure wclBluetoothManagerProtectionLevelRequest(Sender: TObject;
       const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Protection: TwclBluetoothleProtectionLevel);
+      out Protection: TwclBluetoothLeProtectionLevel);
     procedure wclBluetoothManagerClosed(Sender: TObject);
 
     procedure TraceEvent(const Radio: TwclBluetoothRadio; const Event: string;
@@ -1102,7 +1102,7 @@ end;
 
 procedure TfmMain.wclBluetoothManagerProtectionLevelRequest(
   Sender: TObject; const Radio: TwclBluetoothRadio; const Address: Int64;
-  out Protection: TwclBluetoothleProtectionLevel);
+  out Protection: TwclBluetoothLeProtectionLevel);
 begin
   case cbBleProtection.ItemIndex of
     0: Protection := pplDefault;
