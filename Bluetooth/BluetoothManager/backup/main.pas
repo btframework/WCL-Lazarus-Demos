@@ -8,11 +8,7 @@ uses
   Forms, wclBluetooth, StdCtrls, Classes, Controls, ComCtrls, wclPowerEvents;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
-    btEnumConnected: TButton;
     lvEvents: TListView;
     btClearEvents: TButton;
     btOpen: TButton;
@@ -59,7 +55,6 @@ type
     cbPairingMethod: TComboBox;
     btDisconnect: TButton;
     procedure btClearEventsClick(Sender: TObject);
-    procedure btEnumConnectedClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btRefreshRadioClick(Sender: TObject);
     procedure btOpenClick(Sender: TObject);
@@ -163,43 +158,6 @@ uses
 procedure TfmMain.btClearEventsClick(Sender: TObject);
 begin
   lvEvents.Items.Clear;
-end;
-
-procedure TfmMain.btEnumConnectedClick(Sender: TObject);
-var
-  Item: TListItem;
-  Radio: TwclBluetoothRadio;
-  Devices: TwclBluetoothAddresses;
-  Res: Integer;
-  i: Integer;
-begin
-  if lvRadios.Selected = nil then
-    MessageDlg('Select radio', mtWarning, [mbOK], 0)
-
-  else begin
-    ClearDevices;
-
-    Item := lvRadios.Selected;
-    Radio := TwclBluetoothRadio(Item.Data);
-
-    Res := Radio.EnumConnectedDevices(Devices);
-    if Res <> WCL_E_SUCCESS then
-      ShowError(Res)
-
-    else begin
-      if Devices <> nil then begin
-        try
-          for i := 0 to Length(Devices) - 1 do
-            AddDevice(Radio, Devices[i]);
-
-          RefreshDevices;
-
-        finally
-          Devices := nil;
-        end;
-      end;
-    end;
-  end;
 end;
 
 procedure TfmMain.TraceEvent(const Radio: TwclBluetoothRadio;

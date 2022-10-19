@@ -15,14 +15,13 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.2.0'
+  LCLVersion = '2.2.0.4'
   object laTimeout: TLabel
     Left = 88
     Height = 13
     Top = 120
     Width = 38
     Caption = 'Timeout'
-    ParentColor = False
   end
   object laPin: TLabel
     Left = 176
@@ -30,15 +29,13 @@ object fmMain: TfmMain
     Top = 280
     Width = 18
     Caption = 'PIN'
-    ParentColor = False
   end
   object laDiscoveringMode: TLabel
-    Left = 184
+    Left = 192
     Height = 13
     Top = 120
-    Width = 27
-    Caption = 'Mode'
-    ParentColor = False
+    Width = 85
+    Caption = 'Discovering mode'
   end
   object laMitmProtection: TLabel
     Left = 232
@@ -46,7 +43,6 @@ object fmMain: TfmMain
     Top = 280
     Width = 28
     Caption = 'MITM'
-    ParentColor = False
   end
   object laIoCap: TLabel
     Left = 440
@@ -54,7 +50,6 @@ object fmMain: TfmMain
     Top = 280
     Width = 33
     Caption = 'IO Cap'
-    ParentColor = False
   end
   object laBleProtection: TLabel
     Left = 592
@@ -62,7 +57,6 @@ object fmMain: TfmMain
     Top = 280
     Width = 71
     Caption = 'BLE Protection'
-    ParentColor = False
   end
   object laPairingMethod: TLabel
     Left = 720
@@ -70,7 +64,6 @@ object fmMain: TfmMain
     Top = 280
     Width = 70
     Caption = 'Pairing method'
-    ParentColor = False
   end
   object lvEvents: TListView
     Left = 8
@@ -229,7 +222,7 @@ object fmMain: TfmMain
     Text = 'NewRadioName'
   end
   object btEnumPaired: TButton
-    Left = 384
+    Left = 456
     Height = 25
     Top = 112
     Width = 75
@@ -361,7 +354,7 @@ object fmMain: TfmMain
     Text = '10'
   end
   object btTerminate: TButton
-    Left = 304
+    Left = 376
     Height = 25
     Top = 112
     Width = 75
@@ -515,7 +508,7 @@ object fmMain: TfmMain
     TabOrder = 31
   end
   object cbDiscoveringMode: TComboBox
-    Left = 216
+    Left = 288
     Height = 21
     Top = 112
     Width = 81
@@ -609,14 +602,5 @@ object fmMain: TfmMain
     Caption = 'Disconnect'
     OnClick = btDisconnectClick
     TabOrder = 37
-  end
-  object btEnumConnected: TButton
-    Left = 464
-    Height = 25
-    Top = 112
-    Width = 96
-    Caption = 'Enum connected'
-    OnClick = btEnumConnectedClick
-    TabOrder = 38
   end
 end
