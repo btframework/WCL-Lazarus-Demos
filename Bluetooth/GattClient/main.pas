@@ -533,7 +533,10 @@ begin
           end;
 
         dtCharacteristicUserDescription:
-          ListProp('Type', 'dtCharacteristicUserDescription');
+          begin
+            ListProp('Type', 'dtCharacteristicUserDescription');
+            ListProp('Descriptipon', Value.UserDescription.Description);
+          end;
 
         dtClientCharacteristicConfiguration:
           begin
@@ -561,23 +564,15 @@ begin
               ListProp('Type', 'dtCharacteristicFormat')
             else
               ListProp('Type', 'dtCharacteristicAggregateFormat');
-            ListProp('Format', IntToHex(Value.CharacteristicFormat.Format, 2));
+            ListProp('Format', IntToHex(Byte(Value.CharacteristicFormat.Format), 2));
             ListProp('Exponent', IntToHex(
               Value.CharacteristicFormat.Exponent, 2));
-            if Value.CharacteristicFormat.AUnit.IsShortUuid then
-              ListProp('Unit', IntToHex(
-                Value.CharacteristicFormat.AUnit.ShortUuid, 4))
-            else
-              ListProp('Unit', GUIDToString(
-                Value.CharacteristicFormat.AUnit.LongUuid));
+            ListProp('Unit', IntToHex(
+              Value.CharacteristicFormat.AUnit, 4));
             ListProp('NameSpace', IntToHex(
               Value.CharacteristicFormat.NameSpace, 2));
-            if Value.CharacteristicFormat.Description.IsShortUuid then
-              ListProp('Description', IntToHex(
-                Value.CharacteristicFormat.Description.ShortUuid, 4))
-            else
-              ListProp('Description', GUIDToString(
-                Value.CharacteristicFormat.Description.LongUuid));
+            ListProp('Description', IntToHex(
+              Value.CharacteristicFormat.Description, 4));
           end;
 
         else

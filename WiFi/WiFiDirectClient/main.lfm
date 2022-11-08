@@ -14,13 +14,14 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  LCLVersion = '2.2.4.0'
   object laGroupOwnerIntent: TLabel
     Left = 8
     Height = 13
     Top = 200
     Width = 90
     Caption = 'Group owner intent'
+    ParentColor = False
   end
   object laPairingProcedure: TLabel
     Left = 8
@@ -28,6 +29,7 @@ object fmMain: TfmMain
     Top = 176
     Width = 83
     Caption = 'Pairing procedure'
+    ParentColor = False
   end
   object lvDevices: TListView
     Left = 8

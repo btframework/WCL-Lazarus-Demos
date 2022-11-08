@@ -43,7 +43,7 @@ type
     procedure wclWiFiDirectDeviceWatcherDiscoveringStarted(
       Sender: TObject);
     procedure wclWiFiDirectDeviceWatcherDeviceFound(Sender: TObject;
-      const Id, Name: String);
+      const Id: string; const Name: string);
 
     procedure wclWiFiDirectClientPairCompleted(Sender: TObject;
       const Device: TwclWiFiDirectDevice; const Result: Integer);
@@ -74,7 +74,7 @@ uses
 {$R *.lfm}
 
 procedure TfmMain.wclWiFiDirectDeviceWatcherDeviceFound(Sender: TObject;
-  const Id, Name: String);
+  const Id: string; const Name: string);
 var
   Item: TListItem;
 begin
