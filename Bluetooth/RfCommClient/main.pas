@@ -150,9 +150,10 @@ begin
   Radio := GetRadio;
   if Radio <> nil then begin
     Res := Radio.Discover(10, dkClassic);
-    if Res <> WCL_E_SUCCESS then
+    if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Error starting discovering: 0x' + IntToHex(Res, 8),
         mtError, [mbOK], 0);
+    end;
   end;
 end;
 
@@ -241,9 +242,10 @@ begin
   Res := wclRfCommClient.Write(PByte(Ansi), Length(Ansi), Sent);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
-  else
+  else begin
     MessageDlg('Sent: ' + IntToStr(Sent) + ' from ' + IntToStr(Length(Ansi)),
       mtInformation, [mbOK], 0);
+  end;
 end;
 
 procedure TfmMain.btSetBuffersClick(Sender: TObject);
@@ -344,7 +346,8 @@ begin
   Item.Data := Radio; // To use it later.
   if Res <> WCL_E_SUCCESS then
     Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8))
-  else
+
+  else begin
     case DevType of
       dtClassic:
         Item.SubItems.Add('Classic');
@@ -355,6 +358,7 @@ begin
     else
       Item.SubItems.Add('Unknown');
     end;
+  end;
 
   lbEvents.Items.Add('Device found: ' + IntToHex(Address, 12));
 end;
@@ -371,7 +375,7 @@ begin
   if lvDevices.Items.Count = 0 then
     MessageDlg('No devices were found.', mtInformation, [mbOK], 0)
 
-  else
+  else begin
     // Here we can update found devices names.
     for i := 0 to lvDevices.Items.Count - 1 do begin
       Item := lvDevices.Items[i];
@@ -383,6 +387,7 @@ begin
       else
         Item.SubItems[0] := DevName;
     end;
+  end;
 
   lbEvents.Items.Add('Discovering completed');
 end;

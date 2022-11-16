@@ -214,6 +214,7 @@ begin
   Res := wclBluetoothManager.Open();
   if Res <> WCL_E_SUCCESS then
     lbLog.Items.Add('Bluetooth Manager open failed: 0x' + IntToHex(Res, 8))
+
   else begin
     lbLog.Items.Add('Checking for working Radio');
     Res := wclBluetoothManager.GetLeRadio(Radio);
@@ -273,51 +274,61 @@ begin
   lbLog.Items.Add('Adding characteristics services');
 
   Uuid.IsShortUuid := True;
-  Result := False;
+  Params.Descriptors := nil;
+  Params.PresentationFormats := nil;
 
   lbLog.Items.Add('Add empty characteristic');
   Uuid.ShortUuid := $FFF1;
   Params.Props := [];
+  Params.UserDescription := 'Empty characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);
   if Res <> WCL_E_SUCCESS then begin
     lbLog.Items.Add('Failed to add empty characteristic: 0x' + IntToHex(Res, 8));
     Result := False;
-   Exit;
+    Exit;
   end;
 
   lbLog.Items.Add('Add readable characteristic');
   Uuid.ShortUuid := $FFF2;
   Params.Props := [cpReadable];
+  Params.UserDescription := 'Readable characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);
   if Res <> WCL_E_SUCCESS then begin
     lbLog.Items.Add('Failed to add readable characteristic: 0x' + IntToHex(Res, 8));
+    Result := False;
     Exit;
   end;
 
   lbLog.Items.Add('Add writable characteristic');
   Uuid.ShortUuid := $FFF3;
   Params.Props := [cpWritable];
+  Params.UserDescription := 'Writable characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);
   if Res <> WCL_E_SUCCESS then begin
     lbLog.Items.Add('Failed to add writable characteristic: 0x' + IntToHex(Res, 8));
+    Result := False;
     Exit;
   end;
 
   lbLog.Items.Add('Add notifiable characteristic');
   Uuid.ShortUuid := $FFF4;
   Params.Props := [cpNotifiable];
+  Params.UserDescription := 'Notifiable characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);
   if Res <> WCL_E_SUCCESS then begin
     lbLog.Items.Add('Failed to add notifiable characteristic: 0x' + IntToHex(Res, 8));
+    Result := False;
     Exit;
   end;
 
   lbLog.Items.Add('Add indicatable characteristic');
   Uuid.ShortUuid := $FFF5;
   Params.Props := [cpIndicatable];
+  Params.UserDescription := 'Indicatable characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);
   if Res <> WCL_E_SUCCESS then begin
     lbLog.Items.Add('Failed to add indicatable characteristic: 0x' + IntToHex(Res, 8));
+    Result := False;
     Exit;
   end;
 

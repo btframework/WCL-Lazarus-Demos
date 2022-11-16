@@ -188,15 +188,10 @@ begin
 
     else begin
       if Devices <> nil then begin
-        try
-          for i := 0 to Length(Devices) - 1 do
-            AddDevice(Radio, Devices[i]);
+        for i := 0 to Length(Devices) - 1 do
+          AddDevice(Radio, Devices[i]);
 
-          RefreshDevices;
-
-        finally
-          Devices := nil;
-        end;
+        RefreshDevices;
       end;
     end;
   end;
@@ -427,17 +422,14 @@ begin
     if Res <> WCL_E_SUCCESS then
       ShowError(Res)
 
-    else
-      if Devices <> nil then
-        try
-          for i := 0 to Length(Devices) - 1 do
-            AddDevice(Radio, Devices[i]);
+    else begin
+      if Devices <> nil then begin
+        for i := 0 to Length(Devices) - 1 do
+          AddDevice(Radio, Devices[i]);
 
-          RefreshDevices;
-
-        finally
-          Devices := nil;
-        end;
+        RefreshDevices;
+      end;
+    end;
   end;
 end;
 
@@ -471,17 +463,14 @@ begin
   Res := Radio.GetRemoteDeviceType(Address, DevType);
   if Res <> WCL_E_SUCCESS then
     Item.SubItems[2] := 'Error: 0x' + IntToHex(Res, 8)
-  else
+  else begin
     case DevType of
-      dtClassic:
-        Item.SubItems[2] := 'Classic';
-      dtBle:
-        Item.SubItems[2] := 'BLE';
-      dtMixed:
-        Item.SubItems[2] := 'Mixed';
-      else
-        Item.SubItems[2] := 'Unknown';
+      dtClassic: Item.SubItems[2] := 'Classic';
+      dtBle: Item.SubItems[2] := 'BLE';
+      dtMixed: Item.SubItems[2] := 'Mixed';
+      else Item.SubItems[2] := 'Unknown';
     end;
+  end;
 
   Res := Radio.GetRemoteName(Address, DevName);
   if Res <> WCL_E_SUCCESS then
@@ -557,24 +546,21 @@ begin
     if Res <> WCL_E_SUCCESS then
       ShowError(Res)
 
-    else
-      if Services <> nil then
-        try
-          for i := 0 to Length(Services) - 1 do begin
-            Item := lvServices.Items.Add;
+    else begin
+      if Services <> nil then begin
+        for i := 0 to Length(Services) - 1 do begin
+          Item := lvServices.Items.Add;
 
-            Item.Caption := Radio.ApiName;
-            Item.SubItems.Add(IntToHex(Address, 12));
-            Item.SubItems.Add(IntToHex(Services[i].Handle, 8));
-            Item.SubItems.Add(GUIDToString(Services[i].Uuid));
-            Item.SubItems.Add(IntToStr(Services[i].Channel));
-            Item.SubItems.Add(Services[i].Name);
-            Item.SubItems.Add(Services[i].Comment);
-          end;
-
-        finally
-          Services := nil;
+          Item.Caption := Radio.ApiName;
+          Item.SubItems.Add(IntToHex(Address, 12));
+          Item.SubItems.Add(IntToHex(Services[i].Handle, 8));
+          Item.SubItems.Add(GUIDToString(Services[i].Uuid));
+          Item.SubItems.Add(IntToStr(Services[i].Channel));
+          Item.SubItems.Add(Services[i].Name);
+          Item.SubItems.Add(Services[i].Comment);
         end;
+      end;
+    end;
   end;
 end;
 
@@ -929,7 +915,7 @@ begin
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Error enumerating vCOMs: 0x' + IntToHex(Res, 8))
 
-  else
+  else begin
     for i := 0 to Length(Ports) - 1 do begin
       Port := Ports[i];
 
@@ -941,6 +927,7 @@ begin
 
       Item.Data := Radio;
     end;
+  end;
 end;
 
 procedure TfmMain.btCreateVCOMClick(Sender: TObject);
@@ -955,7 +942,7 @@ begin
   if lvDevices.Selected = nil then
     MessageDlg('Select device', mtWarning, [mbOK], 0)
 
-  else
+  else begin
     if lvServices.Selected = nil then
       MessageDlg('Select service', mtWarning, [mbOK], 0)
 
@@ -975,6 +962,7 @@ begin
         RefreshVComs;
       end;
     end;
+  end;
 end;
 
 procedure TfmMain.btDestroyVCOMClick(Sender: TObject);
@@ -1051,7 +1039,7 @@ begin
   if lvDevices.Selected = nil then
     MessageDlg('Select device', mtWarning, [mbOK], 0)
 
-  else
+  else begin
     if lvServices.Selected = nil then
       MessageDlg('Select service', mtWarning, [mbOK], 0)
 
@@ -1067,6 +1055,7 @@ begin
       else
         MessageDlg('Device uninstalled', mtInformation, [mbOK], 0);
     end;
+  end;
 end;
 
 procedure TfmMain.btIsInRangeClick(Sender: TObject);

@@ -122,11 +122,11 @@ begin
 
   else begin
     Res := wclBluetoothManager.GetClassicRadio(Radio);
-    if Res <> WCL_E_SUCCESS then
+    if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
-        [mbOK], 0)
+        [mbOK], 0);
 
-    else begin
+    end else begin
       // As wrote above it is better to start listening in AfterOpen event
       // handler. But again, for demo app its OK to do it here.
       Res := wclRfCommServer.Listen(Radio);

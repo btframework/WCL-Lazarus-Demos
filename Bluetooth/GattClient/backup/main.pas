@@ -213,10 +213,9 @@ begin
   Radio := GetRadio;
   if Radio <> nil then begin
     Res := Radio.Discover(10, dkBle);
-    if Res <> WCL_E_SUCCESS then begin
+    if Res <> WCL_E_SUCCESS then
       MessageDlg('Error starting discovering: 0x' + IntToHex(Res, 8),
         mtError, [mbOK], 0);
-    end;
   end;
 end;
 
@@ -417,14 +416,21 @@ begin
   if Value = nil then
     Exit;
 
-  if Length(Value) = 0 then
-    MessageDlg('Value is empty', mtInformation, [mbOK], 0)
+  try
+    if Length(Value) = 0 then
+      MessageDlg('Value is empty', mtInformation, [mbOK], 0)
 
-  else begin
-    Str := '';
-    for i := Low(Value) to High(Value) do
-      Str := Str + IntToHex(Value[i], 2);
-    MessageDlg('Value: ' + Str, mtInformation, [mbOK], 0);
+    else begin
+      Str := '';
+
+      for i := Low(Value) to High(Value) do
+        Str := Str + IntToHex(Value[i], 2);
+
+      MessageDlg('Value: ' + Str, mtInformation, [mbOK], 0);
+    end;
+
+  finally
+    Value := nil;
   end;
 end;
 
@@ -651,12 +657,11 @@ begin
   // In case if characteristic has both Indication and Notification properties
   // set to True we have to select one of them. Here we use Notifications but
   // you can use other one.
-  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
+  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then
     // Change the code line below to
     // Characteristic.IsNotifiable = false;
     // if you want to receive Indications instead of notifications.
     Characteristic.IsIndicatable := False;
-  end;
   if cbFastSubscribe.Checked then
     Res := wclGattClient.SubscribeForNotifications(Characteristic)
   else
@@ -681,12 +686,11 @@ begin
   // set to True we have to select one of them. Here we use Notifications but
   // you can use other one.
   // YOU MUST USE THE SAME PROPERTY THAT IS USED IN SUBSCRIBE
-  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
+  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then
     // Change the code line below to
     // Characteristic.IsNotifiable = false;
     // if you want to receive Indications instead of notifications.
     Characteristic.IsIndicatable := False;
-  end;
   if cbFastSubscribe.Checked then
     Res := wclGattClient.UnsubscribeFromNotifications(Characteristic)
   else
@@ -722,12 +726,11 @@ begin
   // In case if characteristic has both Indication and Notification properties
   // set to True we have to select one of them. Here we use Notifications but
   // you can use other one.
-  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
+  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then
     // Change the code line below to
     // Characteristic.IsNotifiable = false;
     // if you want to receive Indications instead of notifications.
     Characteristic.IsIndicatable := False;
-  end;
   Res := wclGattClient.WriteClientConfiguration(Characteristic, True, OpFlag,
     Protection);
   if Res <> WCL_E_SUCCESS then
@@ -750,12 +753,11 @@ begin
   // set to True we have to select one of them. Here we use Notifications but
   // you can use other one.
   // YOU MUST USE THE SAME PROPERTY THAT IS USED IN SUBSCRIBE
-  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
+  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then
     // Change the code line below to
     // Characteristic.IsNotifiable = false;
     // if you want to receive Indications instead of notifications.
     Characteristic.IsIndicatable := False;
-  end;
   Res := wclGattClient.WriteClientConfiguration(Characteristic, False, OpFlag,
     Protection);
   if Res <> WCL_E_SUCCESS then
@@ -811,7 +813,7 @@ begin
   Item.Data := Radio; // To use it later.
   if Res <> WCL_E_SUCCESS then
     Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8))
-  else begin
+  else
     case DevType of
       dtClassic:
         Item.SubItems.Add('Classic');
@@ -822,7 +824,6 @@ begin
     else
       Item.SubItems.Add('Unknown');
     end;
-  end;
 
   TraceEvent(Address, 'Device found', '', '');
 end;
@@ -839,7 +840,7 @@ begin
   if lvDevices.Items.Count = 0 then
     MessageDlg('No BLE devices were found.', mtInformation, [mbOK], 0)
 
-  else begin
+  else
     // Here we can update found devices names.
     for i := 0 to lvDevices.Items.Count - 1 do begin
       Item := lvDevices.Items[i];
@@ -851,7 +852,6 @@ begin
       else
         Item.SubItems[0] := DevName;
     end;
-  end;
 
   TraceEvent(0, 'Discovering completed', '', '');
 end;
@@ -874,17 +874,18 @@ begin
   if Value = nil then
     TraceEvent(0, '', 'Value', '')
 
-  else begin
+  else
     if Length(Value) = 0 then
       TraceEvent(0, '', 'Value', '')
 
     else begin
       Str := '';
+
       for i := Low(Value) to High(Value) do
         Str := Str + IntToHex(Value[i], 2);
+
       TraceEvent(0, '', 'Value', Str);
     end;
-  end;
 end;
 
 procedure TfmMain.wclGattClientConnect(Sender: TObject;
@@ -1025,7 +1026,6 @@ begin
   Res := wclGattClient.GetConnectionParams(Params);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
-
   else begin
     Str := 'Connection params' + #13#10 +
       '  Connection interval: ' + IntToStr(Params.Interval) + #13#10 +

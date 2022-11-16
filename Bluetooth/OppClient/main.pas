@@ -252,9 +252,10 @@ begin
   if Radio <> nil then begin
     // Discover classic devices only.
     Res := Radio.Discover(10, dkClassic);
-    if Res <> WCL_E_SUCCESS then
+    if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Failed to start discovering: 0x' + IntToHex(Res, 8),
         mtError, [mbOK], 0);
+    end;
   end;
 end;
 
@@ -312,11 +313,13 @@ var
 begin
   if FOpp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
+
   else begin
     Res := FOpp.Disconnect('');
-    if Res <> WCL_E_SUCCESS then
+    if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Close session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
+    end;
   end;
 end;
 
@@ -326,11 +329,13 @@ var
 begin
   if FOpp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
+
   else begin
     Res := FOpp.Connect;
-    if Res <> WCL_E_SUCCESS then
+    if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Open session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
+    end;
   end;
 end;
 
@@ -356,6 +361,7 @@ var
 begin
   if wclRfCommClient.State <> csDisconnected then
     MessageDlg('Client is connected', mtWarning, [mbOK], 0)
+
   else begin
     if lvDevices.Selected = nil then
       MessageDlg('Select device', mtWarning, [mbOK], 0)
@@ -407,6 +413,7 @@ var
 begin
   if FOpp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
+
   else begin
     Res := FOpp.Abort('');
     if Res <> WCL_E_SUCCESS then begin
@@ -423,9 +430,11 @@ var
 begin
   if FOpp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
+
   else begin
     if edFileName.Text = '' then
       MessageDlg('Select file', mtWarning, [mbOK], 0)
+
     else begin
       Stream := TFileStream.Create(edFileName.Text, fmOpenRead);
       Res := FOpp.Put(ExtractFileName(edFileName.Text), '', Stream);
@@ -445,6 +454,7 @@ var
 begin
   if FOpp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
+
   else begin
     Stream := TFileStream.Create('vcard.vcf', fmCreate);
     // Request default vCard object.
@@ -463,6 +473,7 @@ var
 begin
   if FOpp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
+
   else begin
     Stream := TFileStream.Create('caps.xml', fmCreate);
     // Request Device Capability object.

@@ -363,11 +363,12 @@ begin
   lbEvents.Items.Add('Client disconnected: ' + IntToHex(Client.Address, 12) +
     ' on radio ' + Server.Radio.ApiName + ' reason: 0x' + IntToHex(Reason, 8));
 
-  for i := 0 to lvClients.Items.Count - 1 do
+  for i := 0 to lvClients.Items.Count - 1 do begin
     if lvClients.Items[i].Data = Client then begin
       lvClients.Items.Delete(i);
       Break;
     end;
+  end;
 end;
 
 procedure TfmMain.wclRfCommServerListen(Sender: TObject);

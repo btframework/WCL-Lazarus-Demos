@@ -1,7 +1,7 @@
 object fmMain: TfmMain
-  Left = 682
+  Left = 508
   Height = 694
-  Top = 170
+  Top = 161
   Width = 781
   BorderStyle = bsSingle
   Caption = 'Bluetooth GATT Client Demo'

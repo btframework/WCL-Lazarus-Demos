@@ -576,6 +576,7 @@ begin
 
     if wclBluetoothLeAdvertiser.Count = 0 then
       ShowMessage('Select at least one advertisement type.')
+
     else begin
       wclBluetoothLeAdvertiser.UseExtendedAdvertisement := cbUseExtended.Checked;
       wclBluetoothLeAdvertiser.Anonymous := cbAnonymous.Checked;
