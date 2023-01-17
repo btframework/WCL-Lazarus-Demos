@@ -14,6 +14,11 @@ type
   TfmMain = class(TForm)
     btDiscover: TButton;
     btGetMaxPduSize: TButton;
+    btGetPhy: TButton;
+    cbWriteKind: TComboBox;
+    cbSubscribeKind: TComboBox;
+    laSubscribeKind: TLabel;
+    laWriteKind: TLabel;
     lvDevices: TListView;
     lvEvents: TListView;
     btClearEvents: TButton;
@@ -50,6 +55,7 @@ type
     btSetParams: TButton;
     cbParams: TComboBox;
     procedure btGetMaxPduSizeClick(Sender: TObject);
+    procedure btGetPhyClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btDiscoverClick(Sender: TObject);
@@ -178,6 +184,28 @@ procedure TfmMain.btGetMaxPduSizeClick(Sender: TObject);
 begin
   TraceEvent(wclGattClient.Address, 'Max PDU', '', '');
   GetMaxPduSize;
+end;
+
+procedure TfmMain.btGetPhyClick(Sender: TObject);
+var
+  Res: Integer;
+  Phy: TwclBluetoothLeConnectionPhy;
+begin
+  Res := wclGattClient.GetConnectionPhyInfo(Phy);
+  if Res <> WCL_E_SUCCESS then begin
+    TraceEvent(wclGattClient.Address, 'Connection PHY', 'Error',
+      IntToHex(Res, 8));
+  end else begin
+    TraceEvent(wclGattClient.Address, 'Transmit PHY', '', '');
+    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Transmit.IsCoded, True));
+    TraceEvent(0, '', '1M', BoolToStr(Phy.Transmit.IsUncoded1MPhy, True));
+    TraceEvent(0, '', '2M', BoolToStr(Phy.Transmit.IsUncoded2MPhy, True));
+
+    TraceEvent(0, 'Receive PHY', '', '');
+    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Receive.IsCoded, True));
+    TraceEvent(0, '', '1M', BoolToStr(Phy.Receive.IsUncoded1MPhy, True));
+    TraceEvent(0, '', '2M', BoolToStr(Phy.Receive.IsUncoded2MPhy, True));
+  end;
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
@@ -610,6 +638,7 @@ var
   i: Integer;
   j: Integer;
   Res: Integer;
+  WriteKind: TwclGattWriteKind;
 begin
   if lvCharacteristics.Selected = nil then begin
     MessageDlg('Select characteristic', mtWarning, [mbOK], 0);
@@ -630,8 +659,20 @@ begin
     Inc(i, 2);
   end;
 
-  Res := wclGattClient.WriteCharacteristicValue(Characteristic, Val,
-    Protection);
+  case cbWriteKind.ItemIndex of
+    0: WriteKind := wkWithResponse;
+    1: WriteKind := wkWithoutResponse;
+    else WriteKind := wkAuto;
+  end;
+
+  if WriteKind = wkAuto then begin
+    Res := wclGattClient.WriteCharacteristicValue(Characteristic, Val,
+      Protection);
+  end else begin
+    Res := wclGattClient.WriteCharacteristicValue(Characteristic, Val,
+      Protection, WriteKind);
+  end;
+
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -640,6 +681,7 @@ procedure TfmMain.btSubscribeClick(Sender: TObject);
 var
   Characteristic: TwclGattCharacteristic;
   Res: Integer;
+  SubscribeKind: TwclGattSubscribeKind;
 begin
   if lvCharacteristics.Selected = nil then begin
     MessageDlg('Select characteristic', mtWarning, [mbOK], 0);
@@ -648,19 +690,38 @@ begin
 
   Characteristic := FCharacteristics[lvCharacteristics.Selected.Index];
 
-  // In case if characteristic has both Indication and Notification properties
-  // set to True we have to select one of them. Here we use Notifications but
-  // you can use other one.
-  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
-    // Change the code line below to
-    // Characteristic.IsNotifiable = false;
-    // if you want to receive Indications instead of notifications.
-    Characteristic.IsIndicatable := False;
+  case cbSubscribeKind.ItemIndex of
+    0: SubscribeKind := skNotification;
+    1: SubscribeKind := skIndication;
+    else SubscribeKind := skManual;
   end;
-  if cbFastSubscribe.Checked then
-    Res := wclGattClient.SubscribeForNotifications(Characteristic)
-  else
-    Res := wclGattClient.Subscribe(Characteristic);
+
+  if SubscribeKind = skManual then begin
+    // In case if characteristic has both Indication and Notification properties
+    // set to True we have to select one of them. Here we use Notifications but
+    // you can use other one.
+    if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
+      // Change the code line below to
+      // Characteristic.IsNotifiable = false;
+      // if you want to receive Indications instead of notifications.
+      Characteristic.IsIndicatable := False;
+    end;
+  end;
+
+  if cbFastSubscribe.Checked then begin
+    if SubscribeKind = skManual then
+      Res := wclGattClient.SubscribeForNotifications(Characteristic)
+    else begin
+      Res := wclGattClient.SubscribeForNotifications(Characteristic, OpFlag,
+        Protection, SubscribeKind);
+    end;
+  end else begin
+    if SubscribeKind = skManual then
+      Res := wclGattClient.Subscribe(Characteristic)
+    else
+      Res := wclGattClient.Subscribe(Characteristic, SubscribeKind);
+  end;
+
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -669,6 +730,7 @@ procedure TfmMain.btUnsubscribeClick(Sender: TObject);
 var
   Characteristic: TwclGattCharacteristic;
   Res: Integer;
+  SubscribeKind: TwclGattSubscribeKind;
 begin
   if lvCharacteristics.Selected = nil then begin
     MessageDlg('Select characteristic', mtWarning, [mbOK], 0);
@@ -677,20 +739,39 @@ begin
 
   Characteristic := FCharacteristics[lvCharacteristics.Selected.Index];
 
-  // In case if characteristic has both Indication and Notification properties
-  // set to True we have to select one of them. Here we use Notifications but
-  // you can use other one.
-  // YOU MUST USE THE SAME PROPERTY THAT IS USED IN SUBSCRIBE
-  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
-    // Change the code line below to
-    // Characteristic.IsNotifiable = false;
-    // if you want to receive Indications instead of notifications.
-    Characteristic.IsIndicatable := False;
+  case cbSubscribeKind.ItemIndex of
+    0: SubscribeKind := skNotification;
+    1: SubscribeKind := skIndication;
+    else SubscribeKind := skManual;
   end;
-  if cbFastSubscribe.Checked then
-    Res := wclGattClient.UnsubscribeFromNotifications(Characteristic)
-  else
-    Res := wclGattClient.Unsubscribe(Characteristic);
+
+  if SubscribeKind = skManual then begin
+    // In case if characteristic has both Indication and Notification properties
+    // set to True we have to select one of them. Here we use Notifications but
+    // you can use other one.
+    // YOU MUST USE THE SAME PROPERTY THAT IS USED IN SUBSCRIBE
+    if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
+      // Change the code line below to
+      // Characteristic.IsNotifiable = false;
+      // if you want to receive Indications instead of notifications.
+      Characteristic.IsIndicatable := False;
+    end;
+  end;
+
+  if cbFastSubscribe.Checked then begin
+    if SubscribeKind = skManual then
+      Res := wclGattClient.UnsubscribeFromNotifications(Characteristic)
+    else begin
+      Res := wclGattClient.UnsubscribeFromNotifications(Characteristic, OpFlag,
+        Protection, SubscribeKind);
+    end;
+  end else begin
+    if SubscribeKind = skManual then
+      Res := wclGattClient.Unsubscribe(Characteristic)
+    else
+      Res := wclGattClient.Unsubscribe(Characteristic, SubscribeKind);
+  end;
+
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -711,6 +792,7 @@ procedure TfmMain.btCCCDSubscribeClick(Sender: TObject);
 var
   Characteristic: TwclGattCharacteristic;
   Res: Integer;
+  SubscribeKind: TwclGattSubscribeKind;
 begin
   if lvCharacteristics.Selected = nil then begin
     MessageDlg('Select characteristic', mtWarning, [mbOK], 0);
@@ -719,17 +801,30 @@ begin
 
   Characteristic := FCharacteristics[lvCharacteristics.Selected.Index];
 
-  // In case if characteristic has both Indication and Notification properties
-  // set to True we have to select one of them. Here we use Notifications but
-  // you can use other one.
-  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
-    // Change the code line below to
-    // Characteristic.IsNotifiable = false;
-    // if you want to receive Indications instead of notifications.
-    Characteristic.IsIndicatable := False;
+  case cbSubscribeKind.ItemIndex of
+    0: SubscribeKind := skNotification;
+    1: SubscribeKind := skIndication;
+    else SubscribeKind := skManual;
   end;
-  Res := wclGattClient.WriteClientConfiguration(Characteristic, True, OpFlag,
-    Protection);
+
+  if SubscribeKind = skManual then begin
+    // In case if characteristic has both Indication and Notification properties
+    // set to True we have to select one of them. Here we use Notifications but
+    // you can use other one.
+    if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
+      // Change the code line below to
+      // Characteristic.IsNotifiable = false;
+      // if you want to receive Indications instead of notifications.
+      Characteristic.IsIndicatable := False;
+    end;
+    Res := wclGattClient.WriteClientConfiguration(Characteristic, True, OpFlag,
+      Protection);
+
+  end else begin
+    Res := wclGattClient.WriteClientConfiguration(Characteristic, True, OpFlag,
+      Protection, SubscribeKind);
+  end;
+
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -738,6 +833,7 @@ procedure TfmMain.btCCCDUnsubscribeClick(Sender: TObject);
 var
   Characteristic: TwclGattCharacteristic;
   Res: Integer;
+  SubscribeKind: TwclGattSubscribeKind;
 begin
   if lvCharacteristics.Selected = nil then begin
     MessageDlg('Select characteristic', mtWarning, [mbOK], 0);
@@ -746,18 +842,30 @@ begin
 
   Characteristic := FCharacteristics[lvCharacteristics.Selected.Index];
 
-  // In case if characteristic has both Indication and Notification properties
-  // set to True we have to select one of them. Here we use Notifications but
-  // you can use other one.
-  // YOU MUST USE THE SAME PROPERTY THAT IS USED IN SUBSCRIBE
-  if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
-    // Change the code line below to
-    // Characteristic.IsNotifiable = false;
-    // if you want to receive Indications instead of notifications.
-    Characteristic.IsIndicatable := False;
+  case cbSubscribeKind.ItemIndex of
+    0: SubscribeKind := skNotification;
+    1: SubscribeKind := skIndication;
+    else SubscribeKind := skManual;
   end;
-  Res := wclGattClient.WriteClientConfiguration(Characteristic, False, OpFlag,
-    Protection);
+
+  if SubscribeKind = skManual then begin
+    // In case if characteristic has both Indication and Notification properties
+    // set to True we have to select one of them. Here we use Notifications but
+    // you can use other one.
+    // YOU MUST USE THE SAME PROPERTY THAT IS USED IN SUBSCRIBE
+    if Characteristic.IsNotifiable and Characteristic.IsIndicatable then begin
+      // Change the code line below to
+      // Characteristic.IsNotifiable = false;
+      // if you want to receive Indications instead of notifications.
+      Characteristic.IsIndicatable := False;
+    end;
+    Res := wclGattClient.WriteClientConfiguration(Characteristic, False, OpFlag,
+      Protection);
+  end else begin
+    Res := wclGattClient.WriteClientConfiguration(Characteristic, False, OpFlag,
+      Protection, SubscribeKind);
+  end;
+
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;

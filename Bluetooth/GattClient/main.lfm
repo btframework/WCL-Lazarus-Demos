@@ -1,7 +1,7 @@
 object fmMain: TfmMain
-  Left = 682
+  Left = 318
   Height = 694
-  Top = 170
+  Top = 150
   Width = 781
   BorderStyle = bsSingle
   Caption = 'Bluetooth GATT Client Demo'
@@ -16,7 +16,7 @@ object fmMain: TfmMain
   Position = poScreenCenter
   LCLVersion = '2.2.4.0'
   object laCharVal: TLabel
-    Left = 264
+    Left = 184
     Height = 13
     Top = 240
     Width = 119
@@ -76,8 +76,8 @@ object fmMain: TfmMain
   end
   object lvEvents: TListView
     Left = 8
-    Height = 97
-    Top = 560
+    Height = 81
+    Top = 576
     Width = 762
     Columns = <    
       item
@@ -179,7 +179,7 @@ object fmMain: TfmMain
     Left = 8
     Height = 25
     Top = 232
-    Width = 121
+    Width = 105
     Caption = 'Get characteristics'
     OnClick = btGetCharacteristicsClick
     TabOrder = 9
@@ -251,10 +251,10 @@ object fmMain: TfmMain
     ViewStyle = vsReport
   end
   object btGetCharValue: TButton
-    Left = 184
+    Left = 120
     Height = 25
     Top = 232
-    Width = 75
+    Width = 56
     Caption = 'Get value'
     OnClick = btGetCharValueClick
     TabOrder = 11
@@ -263,7 +263,7 @@ object fmMain: TfmMain
     Left = 8
     Height = 25
     Top = 352
-    Width = 97
+    Width = 98
     Caption = 'Get descriptors'
     OnClick = btGetDescriptorsClick
     TabOrder = 12
@@ -271,7 +271,7 @@ object fmMain: TfmMain
   object lvDescriptors: TListView
     Left = 8
     Height = 81
-    Top = 384
+    Top = 408
     Width = 762
     Columns = <    
       item
@@ -307,18 +307,18 @@ object fmMain: TfmMain
     ViewStyle = vsReport
   end
   object btGetDescValue: TButton
-    Left = 112
+    Left = 8
     Height = 25
-    Top = 352
-    Width = 75
+    Top = 376
+    Width = 98
     Caption = 'Get value'
     OnClick = btGetDescValueClick
     TabOrder = 14
   end
   object lvDescriptorValue: TListView
-    Left = 8
-    Height = 81
-    Top = 472
+    Left = 7
+    Height = 73
+    Top = 496
     Width = 762
     Columns = <    
       item
@@ -338,24 +338,24 @@ object fmMain: TfmMain
     ViewStyle = vsReport
   end
   object btSetValue: TButton
-    Left = 696
+    Left = 520
     Height = 25
-    Top = 232
-    Width = 75
+    Top = 228
+    Width = 64
     Caption = 'Set value'
     OnClick = btSetValueClick
     TabOrder = 16
   end
   object edCharVal: TEdit
-    Left = 392
+    Left = 312
     Height = 21
     Top = 232
-    Width = 297
+    Width = 201
     TabOrder = 17
     Text = '00FFAA00'
   end
   object btSubscribe: TButton
-    Left = 200
+    Left = 344
     Height = 25
     Top = 352
     Width = 75
@@ -364,9 +364,9 @@ object fmMain: TfmMain
     TabOrder = 18
   end
   object btUnsubscribe: TButton
-    Left = 560
+    Left = 344
     Height = 25
-    Top = 352
+    Top = 376
     Width = 75
     Caption = 'Unsubscribe'
     OnClick = btUnsubscribeClick
@@ -387,18 +387,18 @@ object fmMain: TfmMain
     TabOrder = 20
   end
   object btCCCDSubscribe: TButton
-    Left = 280
+    Left = 424
     Height = 25
     Top = 352
-    Width = 129
+    Width = 137
     Caption = 'Write CCCD subscribe'
     OnClick = btCCCDSubscribeClick
     TabOrder = 21
   end
   object btCCCDUnsubscribe: TButton
-    Left = 416
+    Left = 424
     Height = 25
-    Top = 352
+    Top = 376
     Width = 137
     Caption = 'Write CCCD unsubscribe'
     OnClick = btCCCDUnsubscribeClick
@@ -457,9 +457,9 @@ object fmMain: TfmMain
     TabOrder = 27
   end
   object cbFastSubscribe: TCheckBox
-    Left = 648
+    Left = 112
     Height = 19
-    Top = 360
+    Top = 358
     Width = 88
     Caption = 'Fast subscribe'
     OnClick = cbFastSubscribeClick
@@ -509,12 +509,69 @@ object fmMain: TfmMain
     Text = 'Balanced'
   end
   object btGetMaxPduSize: TButton
-    Left = 16
+    Left = 640
     Height = 25
-    Top = 663
+    Top = 352
     Width = 89
     Caption = 'Max PDU size'
     OnClick = btGetMaxPduSizeClick
     TabOrder = 33
+  end
+  object laWriteKind: TLabel
+    Left = 600
+    Height = 13
+    Top = 236
+    Width = 51
+    Caption = 'Write kind:'
+    ParentColor = False
+  end
+  object cbWriteKind: TComboBox
+    Left = 656
+    Height = 21
+    Top = 232
+    Width = 109
+    ItemHeight = 13
+    ItemIndex = 2
+    Items.Strings = (
+      'With Response'
+      'Without Response'
+      'Auto'
+    )
+    Style = csDropDownList
+    TabOrder = 34
+    Text = 'Auto'
+  end
+  object btGetPhy: TButton
+    Left = 640
+    Height = 25
+    Top = 376
+    Width = 88
+    Caption = 'Get PHY'
+    OnClick = btGetPhyClick
+    TabOrder = 35
+  end
+  object laSubscribeKind: TLabel
+    Left = 112
+    Height = 13
+    Top = 386
+    Width = 73
+    Caption = 'Subscribe kind:'
+    ParentColor = False
+  end
+  object cbSubscribeKind: TComboBox
+    Left = 192
+    Height = 21
+    Top = 380
+    Width = 125
+    ItemHeight = 13
+    ItemIndex = 2
+    Items.Strings = (
+      'Notification'
+      'Indication'
+      'Manual'
+    )
+    Style = csDropDownList
+    TabOrder = 36
+    Text = 'Manual'
   end
 end
