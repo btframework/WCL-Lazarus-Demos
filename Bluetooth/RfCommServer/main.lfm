@@ -14,13 +14,14 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  LCLVersion = '2.2.4.0'
   object laReadBuffer: TLabel
     Left = 104
     Height = 13
     Top = 200
     Width = 56
     Caption = 'Read buffer'
+    ParentColor = False
   end
   object laWriteBuffer: TLabel
     Left = 280
@@ -28,6 +29,7 @@ object fmMain: TfmMain
     Top = 200
     Width = 55
     Caption = 'Write buffer'
+    ParentColor = False
   end
   object laServiceName: TLabel
     Left = 144
@@ -35,6 +37,7 @@ object fmMain: TfmMain
     Top = 32
     Width = 65
     Caption = 'Service name'
+    ParentColor = False
   end
   object btListen: TButton
     Left = 448

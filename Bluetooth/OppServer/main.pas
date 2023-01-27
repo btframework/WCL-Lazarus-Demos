@@ -127,6 +127,11 @@ begin
         [mbOK], 0);
 
     end else begin
+      // Switch radio in discoverable and connectable mode.
+      // Ignore any errors. In real application you need to check the result.
+      Radio.SetDiscoverable(True);
+      Radio.SetConnectable(True);
+
       // As wrote above it is better to start listening in AfterOpen event
       // handler. But again, for demo app its OK to do it here.
       Res := wclRfCommServer.Listen(Radio);

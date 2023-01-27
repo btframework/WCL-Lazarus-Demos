@@ -141,6 +141,11 @@ var
 begin
   Radio := GetRadio;
   if Radio <> nil then begin
+    // Switch radio in discoverable and connectable mode.
+    // Ignore any errors. In real application you need to check the result.
+    Radio.SetDiscoverable(True);
+    Radio.SetConnectable(True);
+
     wclRfCommServer.Authentication := cbAuthentication.Checked;
     wclRfCommServer.Encryption := cbEcnryption.Checked;
     
