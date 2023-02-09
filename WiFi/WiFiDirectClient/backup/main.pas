@@ -13,9 +13,6 @@ type
 
   TfmMain = class(TForm)
     btEnumPaired: TButton;
-    btIsPaired: TButton;
-    btUnpair: TButton;
-    btGetName: TButton;
     lvDevices: TListView;
     btDiscover: TButton;
     btTerminate: TButton;
@@ -32,10 +29,7 @@ type
     cbPairingProcedure: TComboBox;
     procedure btDiscoverClick(Sender: TObject);
     procedure btEnumPairedClick(Sender: TObject);
-    procedure btGetNameClick(Sender: TObject);
-    procedure btIsPairedClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
-    procedure btUnpairClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btClearClick(Sender: TObject);
@@ -135,44 +129,6 @@ begin
   Paired.Free;
 end;
 
-procedure TfmMain.btGetNameClick(Sender: TObject);
-var
-  Res: Integer;
-  Name: string;
-begin
-  if lvDevices.Selected = nil then
-    MessageDlg('Select device', mtWarning, [mbOK], 0)
-  else begin
-    Res := wclWiFiDirectDeviceWatcher.GetName(lvDevices.Selected.SubItems[0],
-      Name);
-    if Res <> WCL_E_SUCCESS then
-      ShowMessage('Get name error: 0x' + IntToHex(Res, 8))
-    else
-      ShowMessage('Device name: ' + Name);
-  end;
-end;
-
-procedure TfmMain.btIsPairedClick(Sender: TObject);
-var
-  Res: Integer;
-  IsPaired: Boolean;
-begin
-  if lvDevices.Selected = nil then
-    MessageDlg('Select device', mtWarning, [mbOK], 0)
-  else begin
-    Res := wclWiFiDirectDeviceWatcher.IsPaired(lvDevices.Selected.SubItems[0],
-      IsPaired);
-    if Res <> WCL_E_SUCCESS then
-      ShowMessage('Get paired error: 0x' + IntToHex(Res, 8))
-    else begin
-      if IsPaired then
-        ShowMessage('Device is paired')
-      else
-        ShowMessage('Device is NOT paired');
-    end;
-  end;
-end;
-
 procedure TfmMain.btTerminateClick(Sender: TObject);
 var
   Res: Integer;
@@ -180,21 +136,6 @@ begin
   Res := wclWiFiDirectDeviceWatcher.Terminate;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Terminate error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
-end;
-
-procedure TfmMain.btUnpairClick(Sender: TObject);
-var
-  Res: Integer;
-begin
-  if lvDevices.Selected = nil then
-    MessageDlg('Select device', mtWarning, [mbOK], 0)
-  else begin
-    Res := wclWiFiDirectDeviceWatcher.Unpair(lvDevices.Selected.SubItems[0]);
-    if Res <> WCL_E_SUCCESS then
-      ShowMessage('Unpair error: 0x' + IntToHex(Res, 8))
-    else
-      ShowMessage('Unpaired');
-  end;
 end;
 
 procedure TfmMain.FormCreate(Sender: TObject);

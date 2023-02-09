@@ -165,31 +165,4 @@ object fmMain: TfmMain
     OnClick = btEnumPairedClick
     TabOrder = 12
   end
-  object btIsPaired: TButton
-    Left = 248
-    Height = 25
-    Top = 8
-    Width = 48
-    Caption = 'Is paired'
-    OnClick = btIsPairedClick
-    TabOrder = 13
-  end
-  object btUnpair: TButton
-    Left = 296
-    Height = 25
-    Top = 8
-    Width = 40
-    Caption = 'Unpair'
-    OnClick = btUnpairClick
-    TabOrder = 14
-  end
-  object btGetName: TButton
-    Left = 336
-    Height = 25
-    Top = 8
-    Width = 62
-    Caption = 'Get name'
-    OnClick = btGetNameClick
-    TabOrder = 15
-  end
 end
