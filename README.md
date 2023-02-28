@@ -23,3 +23,5 @@ To be able to build this demos you should use Wireless Communication Library Fra
 ```
   
 Change path to the Framework's source code to the path that is correct on your machine. Now you can open the project in Lazarus IDE and build it.
+
+Should you have any questions please do not hesitate to contact us at support@btframework.com
