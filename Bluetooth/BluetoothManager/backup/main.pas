@@ -1206,8 +1206,6 @@ end;
 procedure TfmMain.wclBluetoothManagerClosed(Sender: TObject);
 begin
   ClearRadios;
-
-  TraceEvent(nil, 'Closed', '', '');
 end;
 
 procedure TfmMain.btDisconnectClick(Sender: TObject);
