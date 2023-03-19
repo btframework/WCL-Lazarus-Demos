@@ -61,6 +61,8 @@ type
     procedure btClearLogsClick(Sender: TObject);
     procedure btStartAdvertisingClick(Sender: TObject);
     procedure btStopAdvertisingClick(Sender: TObject);
+    procedure btGetAdvParamsClick(Sender: TObject);
+    procedure btSetAdvParamsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure tbMultiplierChange(Sender: TObject);
 
