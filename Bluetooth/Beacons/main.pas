@@ -38,9 +38,6 @@ type
     cbEddystoneUrl: TCheckBox;
     cb128SolUuid: TCheckBox;
     cbManufacturer: TCheckBox;
-    tbMultiplier: TTrackBar;
-    laMultiCaption: TLabel;
-    laMultiplier: TLabel;
     cb16UuidService: TCheckBox;
     cb32UuidService: TCheckBox;
     cb128UuidService: TCheckBox;
@@ -62,7 +59,6 @@ type
     procedure btStartAdvertisingClick(Sender: TObject);
     procedure btStopAdvertisingClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure tbMultiplierChange(Sender: TObject);
 
   private
     wclBluetoothManager: TwclBluetoothManager;
@@ -145,12 +141,6 @@ type
 
     procedure wclBluetoothLeAdvertiserStarted(Sender: TObject);
     procedure wclBluetoothLeAdvertiserStopped(Sender: TObject);
-    procedure wclBluetoothLeAdvertiserAdvertisingBegin(Sender: TObject;
-      const Index: Integer);
-    procedure wclBluetoothLeAdvertiserAdvertisingEnd(Sender: TObject;
-      const Index: Integer);
-    procedure wclBluetoothLeAdvertiserAdvertisingError(Sender: TObject;
-      const Index: Integer; const Error: Integer);
 
     function GetRadio: TwclBluetoothRadio;
 
@@ -936,42 +926,10 @@ begin
   wclBluetoothLeBeaconWatcher.OnStopped := wclBluetoothLeBeaconWatcherStopped;
 
   wclBluetoothLeAdvertiser := TwclBluetoothLeAdvertiser.Create(nil);
-  wclBluetoothLeAdvertiser.Multiplier := 5;
-  wclBluetoothLeAdvertiser.OnAdvertisingBegin := wclBluetoothLeAdvertiserAdvertisingBegin;
-  wclBluetoothLeAdvertiser.OnAdvertisingEnd := wclBluetoothLeAdvertiserAdvertisingEnd;
-  wclBluetoothLeAdvertiser.OnAdvertisingError := wclBluetoothLeAdvertiserAdvertisingError;
   wclBluetoothLeAdvertiser.OnStarted := wclBluetoothLeAdvertiserStarted;
   wclBluetoothLeAdvertiser.OnStopped := wclBluetoothLeAdvertiserStopped;
 
-  tbMultiplier.Position := wclBluetoothLeAdvertiser.Multiplier;
-  laMultiplier.Caption := IntToStr(wclBluetoothLeAdvertiser.Multiplier);
-
   DefaultScanParams;
-end;
-
-procedure TfmMain.tbMultiplierChange(Sender: TObject);
-begin
-  wclBluetoothLeAdvertiser.Multiplier := tbMultiplier.Position;
-  laMultiplier.Caption := IntToStr(wclBluetoothLeAdvertiser.Multiplier);
-end;
-
-procedure TfmMain.wclBluetoothLeAdvertiserAdvertisingBegin(Sender: TObject;
-  const Index: Integer);
-begin
-  ListBox.Items.Add('Advertising ' + IntToStr(Index) + ' begin.');
-end;
-
-procedure TfmMain.wclBluetoothLeAdvertiserAdvertisingEnd(Sender: TObject;
-  const Index: Integer);
-begin
-  ListBox.Items.Add('Advertising ' + IntToStr(Index) + ' end');
-end;
-
-procedure TfmMain.wclBluetoothLeAdvertiserAdvertisingError(Sender: TObject;
-  const Index: Integer; const Error: Integer);
-begin
-  ListBox.Items.Add('Advertising ' + IntToStr(Index) + ' error 0x' +
-    IntToHex(Error, 8));
 end;
 
 procedure TfmMain.DumpData(

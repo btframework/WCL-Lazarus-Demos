@@ -38,9 +38,6 @@ type
     cbEddystoneUrl: TCheckBox;
     cb128SolUuid: TCheckBox;
     cbManufacturer: TCheckBox;
-    tbMultiplier: TTrackBar;
-    laMultiCaption: TLabel;
-    laMultiplier: TLabel;
     cb16UuidService: TCheckBox;
     cb32UuidService: TCheckBox;
     cb128UuidService: TCheckBox;
@@ -61,10 +58,7 @@ type
     procedure btClearLogsClick(Sender: TObject);
     procedure btStartAdvertisingClick(Sender: TObject);
     procedure btStopAdvertisingClick(Sender: TObject);
-    procedure btGetAdvParamsClick(Sender: TObject);
-    procedure btSetAdvParamsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure tbMultiplierChange(Sender: TObject);
 
   private
     wclBluetoothManager: TwclBluetoothManager;
@@ -938,23 +932,13 @@ begin
   wclBluetoothLeBeaconWatcher.OnStopped := wclBluetoothLeBeaconWatcherStopped;
 
   wclBluetoothLeAdvertiser := TwclBluetoothLeAdvertiser.Create(nil);
-  wclBluetoothLeAdvertiser.Multiplier := 5;
   wclBluetoothLeAdvertiser.OnAdvertisingBegin := wclBluetoothLeAdvertiserAdvertisingBegin;
   wclBluetoothLeAdvertiser.OnAdvertisingEnd := wclBluetoothLeAdvertiserAdvertisingEnd;
   wclBluetoothLeAdvertiser.OnAdvertisingError := wclBluetoothLeAdvertiserAdvertisingError;
   wclBluetoothLeAdvertiser.OnStarted := wclBluetoothLeAdvertiserStarted;
   wclBluetoothLeAdvertiser.OnStopped := wclBluetoothLeAdvertiserStopped;
 
-  tbMultiplier.Position := wclBluetoothLeAdvertiser.Multiplier;
-  laMultiplier.Caption := IntToStr(wclBluetoothLeAdvertiser.Multiplier);
-
   DefaultScanParams;
-end;
-
-procedure TfmMain.tbMultiplierChange(Sender: TObject);
-begin
-  wclBluetoothLeAdvertiser.Multiplier := tbMultiplier.Position;
-  laMultiplier.Caption := IntToStr(wclBluetoothLeAdvertiser.Multiplier);
 end;
 
 procedure TfmMain.wclBluetoothLeAdvertiserAdvertisingBegin(Sender: TObject;
