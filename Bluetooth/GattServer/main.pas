@@ -6,7 +6,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, wclBluetooth, wclErrors;
+  Dialogs, StdCtrls, wclBluetooth;
+
+const
+  SHORT_DATA_LEN = 5;
+  LONG_DATA_LEN = 1024;
 
 type
 
@@ -28,6 +32,9 @@ type
     FCounter: Cardinal;
     FStarted: Boolean;
 
+    FLongData: array [0..LONG_DATA_LEN - 1] of Byte;
+    FShortData: array [0..SHORT_DATA_LEN - 1] of Byte;
+
     procedure wclBluetoothManagerAfterOpen(Sender: TObject);
     procedure wclBluetoothManagerBeforeClose(Sender: TObject);
 
@@ -36,11 +43,11 @@ type
     procedure wclGattServerRead(Sender: TObject;
       const Client: TwclGattServerClient;
       const Characteristic: TwclGattLocalCharacteristic;
-      const Value: TwclGattLocalCharacteristicValue);
+      const Request: TwclGattLocalCharacteristicReadRequest);
     procedure wclGattServerWrite(Sender: TObject;
       const Client: TwclGattServerClient;
       const Characteristic: TwclGattLocalCharacteristic;
-      const Data: Pointer; const Size: Cardinal);
+      const Request: TwclGattLocalCharacteristicWriteRequest);
     procedure wclGattServerUnsubscribed(Sender: TObject;
       const Client: TwclGattServerClient;
       const Characteristic: TwclGattLocalCharacteristic);
@@ -71,9 +78,14 @@ var
 
 implementation
 
+uses
+  wclErrors, wclBluetoothErrors;
+
 {$R *.lfm}
 
 procedure TfmMain.FormCreate(Sender: TObject);
+var
+  i: Word;
 begin
   wclBluetoothManager := TwclBluetoothManager.Create(nil);
   wclBluetoothManager.AfterOpen := wclBluetoothManagerAfterOpen;
@@ -92,6 +104,11 @@ begin
   wclGattServer.OnMaxPduSizeChanged := wclGattServerMaxPduSizeChanged;
 
   FStarted := False;
+
+  for i := 0 to SHORT_DATA_LEN - 1 do
+    FShortData[i] := i + 1;
+  for i := 0 to LONG_DATA_LEN - 1 do
+    FLongData[i] := LOBYTE(i);
 end;
 
 procedure TfmMain.wclBluetoothManagerAfterOpen(Sender: TObject);
@@ -120,36 +137,57 @@ end;
 procedure TfmMain.wclGattServerRead(Sender: TObject;
   const Client: TwclGattServerClient;
   const Characteristic: TwclGattLocalCharacteristic;
-  const Value: TwclGattLocalCharacteristicValue);
+  const Request: TwclGattLocalCharacteristicReadRequest);
 var
-  b: array [0..4] of Byte;
   Res: Integer;
+  IsShort: Boolean;
 begin
   lbLog.Items.Add('Read request from ' + IntToHex(Client.Address, 12));
-  b[0] := 1;
-  b[1] := 2;
-  b[2] := 3;
-  b[3] := 2;
-  b[4] := 1;
-  Res := Value.SetData(@b, 5);
-  if Res <> WCL_E_SUCCESS then
-    lbLog.Items.Add('Set data failed: 0x' + IntToHex(Res, 8));
+  lbLog.Items.Add('  Offset: ' + IntToStr(Request.Offset));
+  lbLog.Items.Add('  Read Buffer Size: ' + IntToStr(Request.Size));
+
+  IsShort := (Characteristic.Uuid.IsShortUuid and
+    (Characteristic.Uuid.ShortUuid = $FFF2));
+  if IsShort then
+    Res := Request.Respond(@FShortData, SHORT_DATA_LEN)
+
+  else begin
+    Res := Request.Respond(@FLongData[Request.Offset],
+      LONG_DATA_LEN - Request.Offset);
+  end;
+  if Res <> WCL_E_SUCCESS then begin
+    lbLog.Items.Add('  Set data failed: 0x' + IntToHex(Res, 8));
+    lbLog.Items.Add('  respond with error');
+    Res := Request.RespondWithError(WCL_E_BLUETOOTH_LE_UNLIKELY);
+    if Res <> WCL_E_SUCCESS then
+      lbLog.Items.Add('  Respond failed: 0x' + IntToHex(Res, 8));
+  end;
 end;
 
 procedure TfmMain.wclGattServerWrite(Sender: TObject;
   const Client: TwclGattServerClient;
   const Characteristic: TwclGattLocalCharacteristic;
-  const Data: Pointer; const Size: Cardinal);
+  const Request: TwclGattLocalCharacteristicWriteRequest);
 var
   s: String;
   i: Cardinal;
+  Res: Integer;
 begin
-  lbLog.Items.Add('Data received from ' + IntToHex(Client.Address, 12) + ' (' +
-    IntToStr(Size) + ' bytes): ');
+  lbLog.Items.Add('Data received from ' + IntToHex(Client.Address, 12));
+  lbLog.Items.Add('  Size: ' + IntToStr(Request.Size));
+  lbLog.Items.Add('  Offset: ' + IntToStr(Request.Offset));
+
   s := '';
-  for i := 0 to Size - 1 do
-    s := s + IntToHex(Byte(PAnsiChar(Data)[i]), 2);
+  for i := 0 to Request.Size - 1 do
+    s := s + IntToHex(Byte(PAnsiChar(Request.Data)[i]), 2);
   lbLog.Items.Add(s);
+
+  if Request.WithResponse then begin
+    lbLog.Items.Add('  Write With Response. Sending response');
+    Res := Request.Respond;
+    if Res <> WCL_E_SUCCESS then
+      lbLog.Items.Add('  Respond failed: 0x' + IntToHex(Res, 8));
+  end;
 end;
 
 procedure TfmMain.wclGattServerUnsubscribed(Sender: TObject;
@@ -288,20 +326,31 @@ begin
     Exit;
   end;
 
-  lbLog.Items.Add('Add readable characteristic');
+  lbLog.Items.Add('Add short readable characteristic');
   Uuid.ShortUuid := $FFF2;
   Params.Props := [cpReadable];
-  Params.UserDescription := 'Readable characteristic';
+  Params.UserDescription := 'Short readable characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);
   if Res <> WCL_E_SUCCESS then begin
-    lbLog.Items.Add('Failed to add readable characteristic: 0x' + IntToHex(Res, 8));
+    lbLog.Items.Add('Failed to add short readable characteristic: 0x' + IntToHex(Res, 8));
+    Result := False;
+    Exit;
+  end;
+
+  lbLog.Items.Add('Add long readable characteristic');
+  Uuid.ShortUuid := $FFF3;
+  Params.Props := [cpReadable];
+  Params.UserDescription := 'Long readable characteristic';
+  Res := Service.AddCharacteristic(Uuid, Params, Char);
+  if Res <> WCL_E_SUCCESS then begin
+    lbLog.Items.Add('Failed to add long readable characteristic: 0x' + IntToHex(Res, 8));
     Result := False;
     Exit;
   end;
 
   lbLog.Items.Add('Add writable characteristic');
-  Uuid.ShortUuid := $FFF3;
-  Params.Props := [cpWritable];
+  Uuid.ShortUuid := $FFF4;
+  Params.Props := [cpWritable, cpWritableWithoutResponse];
   Params.UserDescription := 'Writable characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);
   if Res <> WCL_E_SUCCESS then begin
@@ -311,7 +360,7 @@ begin
   end;
 
   lbLog.Items.Add('Add notifiable characteristic');
-  Uuid.ShortUuid := $FFF4;
+  Uuid.ShortUuid := $FFF5;
   Params.Props := [cpNotifiable];
   Params.UserDescription := 'Notifiable characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);
@@ -322,7 +371,7 @@ begin
   end;
 
   lbLog.Items.Add('Add indicatable characteristic');
-  Uuid.ShortUuid := $FFF5;
+  Uuid.ShortUuid := $FFF6;
   Params.Props := [cpIndicatable];
   Params.UserDescription := 'Indicatable characteristic';
   Res := Service.AddCharacteristic(Uuid, Params, Char);

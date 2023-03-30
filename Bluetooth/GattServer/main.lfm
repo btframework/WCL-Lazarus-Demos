@@ -14,7 +14,7 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  LCLVersion = '2.2.4.0'
   object btStart: TButton
     Left = 8
     Height = 25
