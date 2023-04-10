@@ -123,6 +123,7 @@ type
       const Reason: Integer);
     procedure wclGattClientConnectionParamsChanged(Sender: TObject);
     procedure wclGattClientMaxPduSizeChanged(Sender: TObject);
+    procedure wclGattClientConnectionPhyChanged(Sender: TObject);
 
     function GetRadio: TwclBluetoothRadio;
     function OpFlag: TwclGattOperationFlag;
@@ -137,6 +138,8 @@ type
     function Protection: TwclGattProtectionLevel;
 
     procedure GetMaxPduSize;
+    procedure GetConnectionParams;
+    procedure GetConnectionPhy;
   end;
 
 var
@@ -168,6 +171,7 @@ begin
   wclGattClient.OnCharacteristicChanged := wclGattClientCharacteristicChanged;
   wclGattClient.OnConnect := wclGattClientConnect;
   wclGattClient.OnConnectionParamsChanged := wclGattClientConnectionParamsChanged;
+  wclGattClient.OnConnectionPhyChanged := wclGattClientConnectionPhyChanged;
   wclGattClient.OnDisconnect := wclGattClientDisconnect;
   wclGattClient.OnMaxPduSizeChanged := wclGattClientMaxPduSizeChanged;
 
@@ -178,34 +182,6 @@ begin
   cbOperationFlag.ItemIndex := 0;
 
   Cleanup;
-end;
-
-procedure TfmMain.btGetMaxPduSizeClick(Sender: TObject);
-begin
-  TraceEvent(wclGattClient.Address, 'Max PDU', '', '');
-  GetMaxPduSize;
-end;
-
-procedure TfmMain.btGetPhyClick(Sender: TObject);
-var
-  Res: Integer;
-  Phy: TwclBluetoothLeConnectionPhy;
-begin
-  Res := wclGattClient.GetConnectionPhyInfo(Phy);
-  if Res <> WCL_E_SUCCESS then begin
-    TraceEvent(wclGattClient.Address, 'Connection PHY', 'Error',
-      IntToHex(Res, 8));
-  end else begin
-    TraceEvent(wclGattClient.Address, 'Transmit PHY', '', '');
-    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Transmit.IsCoded, True));
-    TraceEvent(0, '', '1M', BoolToStr(Phy.Transmit.IsUncoded1MPhy, True));
-    TraceEvent(0, '', '2M', BoolToStr(Phy.Transmit.IsUncoded2MPhy, True));
-
-    TraceEvent(0, 'Receive PHY', '', '');
-    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Receive.IsCoded, True));
-    TraceEvent(0, '', '1M', BoolToStr(Phy.Receive.IsUncoded1MPhy, True));
-    TraceEvent(0, '', '2M', BoolToStr(Phy.Receive.IsUncoded2MPhy, True));
-  end;
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
@@ -779,12 +755,9 @@ end;
 function TfmMain.OpFlag: TwclGattOperationFlag;
 begin
   case cbOperationFlag.ItemIndex of
-    1:
-      Result := goReadFromDevice;
-    2:
-      Result := goReadFromCache;
-    else
-      Result := goNone;
+    1: Result := goReadFromDevice;
+    2: Result := goReadFromCache;
+    else Result := goNone;
   end;
 end;
 
@@ -1002,8 +975,16 @@ begin
   TraceEvent(TwclGattClient(Sender).Address, 'Connected', 'Error',
     '0x' + IntToHex(Error, 8));
 
-  if Error = WCL_E_SUCCESS then
+  if Error = WCL_E_SUCCESS then begin
+    TraceEvent(wclGattClient.Address, 'Max PDU', '', '');
     GetMaxPduSize;
+
+    TraceEvent(wclGattClient.Address, 'Connection params', '', '');
+    GetConnectionParams;
+
+    TraceEvent(wclGattClient.Address, 'Connection PHY', '', '');
+    GetConnectionPhy;
+  end;
 end;
 
 procedure TfmMain.wclGattClientDisconnect(Sender: TObject;
@@ -1089,18 +1070,6 @@ begin
   TraceEvent(Address, 'Authentication completed', 'Error', IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclBluetoothManagerProtectionLevelRequest(Sender: TObject;
-  const Radio: TwclBluetoothRadio; const Address: Int64;
-  out Protection: TwclBluetoothLeProtectionLevel);
-begin
-  case cbProtection.ItemIndex of
-    0: Protection := pplNone;
-    1: Protection := pplDefault;
-    2: Protection := pplEncryption;
-    3: Protection := pplEncryptionAndAuthentication
-  end;
-end;
-
 procedure TfmMain.btPairClick(Sender: TObject);
 var
   Res: Integer;
@@ -1125,39 +1094,15 @@ begin
 end;
 
 procedure TfmMain.btGetParamsClick(Sender: TObject);
-var
-  Res: Integer;
-  Params: TwclBluetoothLeConnectionParameters;
-  Str: string;
 begin
-  Res := wclGattClient.GetConnectionParams(Params);
-  if Res <> WCL_E_SUCCESS then
-    MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
-
-  else begin
-    Str := 'Connection params' + #13#10 +
-      '  Connection interval: ' + IntToStr(Params.Interval) + #13#10 +
-      '  Connection latency: ' + IntToStr(Params.Latency) + #13#10 +
-      '  Link timeout: ' + IntToStr(Params.LinkTimeout);
-    MessageDlg(Str, mtInformation, [mbOK], 0);
-  end;
+  TraceEvent(wclGattClient.Address, 'Connection params', '', '');
+  GetConnectionParams;
 end;
 
 procedure TfmMain.wclGattClientConnectionParamsChanged(Sender: TObject);
-var
-  Res: Integer;
-  Params: TwclBluetoothLeConnectionParameters;
 begin
   TraceEvent(wclGattClient.Address, 'Connection params changed', '', '');
-  Res := wclGattClient.GetConnectionParams(Params);
-  if Res <> WCL_E_SUCCESS then
-    TraceEvent(0, '', 'Error', IntToHex(Res, 8))
-
-  else begin
-    TraceEvent(0, '', 'Connection interval', IntToStr(Params.Interval));
-    TraceEvent(0, '', 'Connection latency', IntToStr(Params.Latency));
-    TraceEvent(0, '', 'Link timeout', IntToStr(Params.LinkTimeout));
-  end;
+  GetConnectionParams;
 end;
 
 procedure TfmMain.btSetParamsClick(Sender: TObject);
@@ -1182,7 +1127,7 @@ begin
     end;
     Res := wclGattClient.SetConnectionParams(Params);
   end;
-  
+
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
 end;
@@ -1190,6 +1135,12 @@ end;
 procedure TfmMain.wclGattClientMaxPduSizeChanged(Sender: TObject);
 begin
   TraceEvent(wclGattClient.Address, 'Max PDU size changed', '', '');
+  GetMaxPduSize;
+end;
+
+procedure TfmMain.btGetMaxPduSizeClick(Sender: TObject);
+begin
+  TraceEvent(wclGattClient.Address, 'Max PDU', '', '');
   GetMaxPduSize;
 end;
 
@@ -1203,6 +1154,68 @@ begin
     TraceEvent(wclGattClient.Address, '', 'Error', IntToHex(Res, 8));
   end else
     TraceEvent(wclGattClient.Address, '', 'Size', IntToStr(Size));
+end;
+
+procedure TfmMain.GetConnectionParams;
+var
+  Params: TwclBluetoothLeConnectionParameters;
+  Res: Integer;
+begin
+  Res := wclGattClient.GetConnectionParams(Params);
+  if Res <> WCL_E_SUCCESS then
+    TraceEvent(0, '', 'Error', IntToHex(Res, 8))
+
+  else begin
+    TraceEvent(0, '', 'Connection interval', IntToStr(Params.Interval));
+    TraceEvent(0, '', 'Connection latency', IntToStr(Params.Latency));
+    TraceEvent(0, '', 'Link timeout', IntToStr(Params.LinkTimeout));
+  end;
+end;
+
+procedure TfmMain.wclBluetoothManagerProtectionLevelRequest(Sender: TObject;
+  const Radio: TwclBluetoothRadio; const Address: Int64;
+  out Protection: TwclBluetoothLeProtectionLevel);
+begin
+  case cbProtection.ItemIndex of
+    0: Protection := pplNone;
+    1: Protection := pplDefault;
+    2: Protection := pplEncryption;
+    3: Protection := pplEncryptionAndAuthentication
+  end;
+end;
+
+procedure TfmMain.btGetPhyClick(Sender: TObject);
+begin
+  TraceEvent(wclGattClient.Address, 'Connection PHY', '', '');
+  GetConnectionPhy;
+end;
+
+procedure TfmMain.wclGattClientConnectionPhyChanged(Sender: TObject);
+begin
+  TraceEvent(wclGattClient.Address, 'Connection PHY changed', '', '');
+  GetConnectionPhy;
+end;
+
+procedure TfmMain.GetConnectionPhy;
+var
+  Res: Integer;
+  Phy: TwclBluetoothLeConnectionPhy;
+begin
+  Res := wclGattClient.GetConnectionPhyInfo(Phy);
+  if Res <> WCL_E_SUCCESS then
+    TraceEvent(0, '', 'Error', IntToHex(Res, 8))
+
+  else begin
+    TraceEvent(0, 'Transmit PHY', '', '');
+    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Transmit.IsCoded, True));
+    TraceEvent(0, '', '1M', BoolToStr(Phy.Transmit.IsUncoded1MPhy, True));
+    TraceEvent(0, '', '2M', BoolToStr(Phy.Transmit.IsUncoded2MPhy, True));
+
+    TraceEvent(0, 'Receive PHY', '', '');
+    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Receive.IsCoded, True));
+    TraceEvent(0, '', '1M', BoolToStr(Phy.Receive.IsUncoded1MPhy, True));
+    TraceEvent(0, '', '2M', BoolToStr(Phy.Receive.IsUncoded2MPhy, True));
+  end;
 end;
 
 end.

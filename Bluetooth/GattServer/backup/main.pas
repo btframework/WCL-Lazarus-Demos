@@ -64,8 +64,6 @@ type
       const Client: TwclGattServerClient);
     procedure wclGattServerConnectionParamsChanged(Sender: TObject;
       const Client: TwclGattServerClient);
-    procedure wclGattServerConnectionPhyChanged(Sender: TObject;
-      const Client: TwclGattServerClient);
 
     function InitBluetooth(out Radio: TwclBluetoothRadio): Boolean;
     procedure UninitBluetooth;
@@ -110,7 +108,6 @@ begin
   wclGattServer.OnNotificationSizeChanged := wclGattServerNotificationSizeChanged;
   wclGattServer.OnMaxPduSizeChanged := wclGattServerMaxPduSizeChanged;
   wclGattServer.OnConnectionParamsChanged := wclGattServerConnectionParamsChanged;
-  wclGattServer.OnConnectionPhyChanged := wclGattServerConnectionPhyChanged;
 
   FStarted := False;
 
@@ -560,12 +557,6 @@ begin
     lbLog.Items.Add('    IsUncoded1MPhy : ' + BoolToStr(Phy.Transmit.IsUncoded1MPhy));
     lbLog.Items.Add('    IsUncoded2MPhy : ' + BoolToStr(Phy.Transmit.IsUncoded2MPhy));
   end;
-end;
-
-procedure TfmMain.wclGattServerConnectionPhyChanged(Sender: TObject;
-  const Client: TwclGattServerClient);
-begin
-  GetConPhy(Client);
 end;
 
 end.
