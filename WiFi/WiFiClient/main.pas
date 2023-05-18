@@ -176,6 +176,10 @@ begin
     auWpaNone: Result := 'auWpaNone';
     auRsna: Result := 'auRsna';
     auRsnaPsk: Result := 'auRsnaPsk';
+    auWpa3: Result := 'auWpa3';
+    auWpa3Sae: Result := 'auWpa3Sae';
+    auOwe: Result := 'auOwe';
+    auWpa3Ent: Result := 'auWpa3Ent';
     auUnknown: Result := 'auUnknown';
   else
     Result := 'UNKNOWN';
@@ -191,6 +195,12 @@ begin
     caCcmp: Result := 'caCcmp';
     caWep104: Result := 'caWep104';
     caBip: Result := 'caBip';
+    caGcmp128: Result := 'caGcmp128';
+    caGcmp256: Result := 'caGcmp256';
+    caCcmp256: Result := 'caCcmp256';
+    caBipGmac128: Result := 'caBipGmac128';
+    caBipGmac256: Result := 'caBipGmac256';
+    caBipCmac256: Result := 'caBipCmac256';
     caUseGroup: Result := 'caUseGroup';
     caUnknown: Result := 'caUnknown';
   else
@@ -870,24 +880,44 @@ begin
 
       if lvClientNetworks.Selected.SubItems[10] = 'auOpen' then
         AuthAlg := 'open'
-      else
+      else begin
         if lvClientNetworks.Selected.SubItems[10] = 'auSharedKey' then
           AuthAlg := 'shared'
-        else
+        else begin
           if lvClientNetworks.Selected.SubItems[10] = 'auWpa' then
             AuthAlg := 'WPA'
-          else
+          else begin
             if lvClientNetworks.Selected.SubItems[10] = 'auWpaPsk' then
               AuthAlg := 'WPAPSK'
-            else
+            else begin
               if lvClientNetworks.Selected.SubItems[10] = 'auRsna' then
                 AuthAlg := 'WPA2'
-              else
-                AuthAlg := 'WPA2PSK';
+              else begin
+                if lvClientNetworks.Selected.SubItems[10] = 'auWpa3' then
+                  AuthAlg := 'WPA3ENT192'
+                else begin
+                  if lvClientNetworks.Selected.SubItems[10] = 'auWpa3Sae' then
+                    AuthAlg := 'WPA3SAE'
+                  else begin
+                    if lvClientNetworks.Selected.SubItems[10] = 'auWpa3Ent' then
+                      AuthAlg := 'WPA3ENT'
+                    else begin
+                      if lvClientNetworks.Selected.SubItems[10] = 'auOwe' then
+                        AuthAlg := 'OWE'
+                      else
+                        AuthAlg := 'WPA2PSK';
+                    end;
+                  end;
+                end;
+              end;
+            end;
+          end;
+        end;
+      end;
 
       if lvClientNetworks.Selected.SubItems[11] = 'caNone' then
         CipherAlg := 'none'
-      else
+      else begin
         if lvClientNetworks.Selected.SubItems[11] = 'caTkip' then
           CipherAlg := 'TKIP'
         else begin
@@ -896,9 +926,14 @@ begin
             (lvClientNetworks.Selected.SubItems[11] = 'caWep');
           if BoolRes then
             CipherAlg := 'WEP'
-          else
-            CipherAlg := 'AES';
+          else begin
+            if lvClientNetworks.Selected.SubItems[11] = 'caGcmp256' then
+              CipherAlg := 'GCMP256'
+            else
+              CipherAlg := 'AES';
+          end;
         end;
+      end;
 
       Xml := Format(Xml, [Ssid, Hex, Ssid, AuthAlg, CipherAlg, Key]);
 

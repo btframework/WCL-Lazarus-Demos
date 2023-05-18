@@ -82,6 +82,10 @@ begin
     auWpaNone: Result := 'auWpaNone';
     auRsna: Result := 'auRsna';
     auRsnaPsk: Result := 'auRsnaPsk';
+    auWpa3: Result := 'auWpa3';
+    auWpa3Sae: Result := 'auWpa3Sae';
+    auOwe: Result := 'auOwe';
+    auWpa3Ent: Result := 'auWpa3Ent';
     auUnknown: Result := 'auUnknown';
   else
     Result := 'UNKNOWN';
@@ -97,6 +101,12 @@ begin
     caCcmp: Result := 'caCcmp';
     caWep104: Result := 'caWep104';
     caBip: Result := 'caBip';
+    caGcmp128: Result := 'caGcmp128';
+    caGcmp256: Result := 'caGcmp256';
+    caCcmp256: Result := 'caCcmp256';
+    caBipGmac128: Result := 'caBipGmac128';
+    caBipGmac256: Result := 'caBipGmac256';
+    caBipCmac256: Result := 'caBipCmac256';
     caUseGroup: Result := 'caUseGroup';
     caUnknown: Result := 'caUnknown';
   else

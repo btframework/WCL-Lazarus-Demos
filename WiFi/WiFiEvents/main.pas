@@ -116,6 +116,10 @@ type
       const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
     procedure wclWiFiEventsMsmSignalQualityChange(Sender: TObject;
       const IfaceId: TGUID; const Quality: Cardinal);
+    procedure wclWiFiEventsMsmLinkDegraded(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure wclWiFiEventsMsmLinkImproved(Sender: TObject;
+      const IfaceId: TGUID);
     procedure wclWiFiEventsOneXAuthRestarted(Sender: TObject;
       const IfaceId: TGUID; const Reason: Integer);
 
@@ -714,6 +718,8 @@ begin
   wclWiFiEvents.OnMsmRoamingEnd := wclWiFiEventsMsmRoamingEnd;
   wclWiFiEvents.OnMsmRoamingStart := wclWiFiEventsMsmRoamingStart;
   wclWiFiEvents.OnMsmSignalQualityChange := wclWiFiEventsMsmSignalQualityChange;
+  wclWiFiEvents.OnMsmLinkDegraded := wclWiFiEventsMsmLinkDegraded;
+  wclWiFiEvents.OnMsmLinkImproved := wclWiFiEventsMsmLinkImproved;
   wclWiFiEvents.OnOneXAuthRestarted := wclWiFiEventsOneXAuthRestarted;
   wclWiFiEvents.OnOneXAuthUpdate := wclWiFiEventsOneXAuthUpdate;
   wclWiFiEvents.OnIpChanged := wclWiFiEventsIpChanged;
@@ -912,6 +918,18 @@ begin
     GUIDToString(State.EapError.HelpLinkGuid));
   TraceEvent(nil, '', 'EapError.RootCauseString', State.EapError.RootCauseString);
   TraceEvent(nil, '', 'EapError.RepairString', State.EapError.RepairString);
+end;
+
+procedure TfmMain.wclWiFiEventsMsmLinkDegraded(Sender: TObject;
+  const IfaceId: TGUID);
+begin
+  TraceEvent(@IfaceId, 'MsmLinkDegraded', '', '');
+end;
+
+procedure TfmMain.wclWiFiEventsMsmLinkImproved(Sender: TObject;
+  const IfaceId: TGUID);
+begin
+  TraceEvent(@IfaceId, 'MsmLinkImproved', '', '');
 end;
 
 end.
