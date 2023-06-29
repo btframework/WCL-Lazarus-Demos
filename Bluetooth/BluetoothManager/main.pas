@@ -13,6 +13,7 @@ type
 
   TfmMain = class(TForm)
     btEnumConnected: TButton;
+    Button1: TButton;
     lvEvents: TListView;
     btClearEvents: TButton;
     btOpen: TButton;
@@ -60,6 +61,7 @@ type
     btDisconnect: TButton;
     procedure btClearEventsClick(Sender: TObject);
     procedure btEnumConnectedClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btRefreshRadioClick(Sender: TObject);
     procedure btOpenClick(Sender: TObject);
@@ -192,6 +194,47 @@ begin
           AddDevice(Radio, Devices[i]);
 
         RefreshDevices;
+      end;
+    end;
+  end;
+end;
+
+procedure TfmMain.Button1Click(Sender: TObject);
+var
+  Item: TListItem;
+  Radio: TwclBluetoothRadio;
+  Address: Int64;
+  Res: Integer;
+  Services: TwclBluetoothInstalledServices;
+  i: Integer;
+begin
+  if lvDevices.Selected = nil then
+    MessageDlg('Select device', mtWarning, [mbOK], 0)
+
+  else begin
+    ClearServices;
+
+    Item := lvDevices.Selected;
+    Radio := TwclBluetoothRadio(Item.Data);
+    Address := StrToInt64('$' + Item.SubItems[0]);
+
+    Res := Radio.EnumInstalledServices(Address, Services);
+    if Res <> WCL_E_SUCCESS then
+      ShowError(Res)
+
+    else begin
+      if Services <> nil then begin
+        for i := 0 to Length(Services) - 1 do begin
+          Item := lvServices.Items.Add;
+
+          Item.Caption := Radio.ApiName;
+          Item.SubItems.Add(IntToHex(Address, 12));
+          Item.SubItems.Add('');
+          Item.SubItems.Add(GUIDToString(Services[i]));
+          Item.SubItems.Add('');
+          Item.SubItems.Add('');
+          Item.SubItems.Add('');
+        end;
       end;
     end;
   end;
