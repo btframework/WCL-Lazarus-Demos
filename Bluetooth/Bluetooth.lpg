@@ -62,6 +62,11 @@
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
+      <Target FileName="AudioSwitcher\AudioSwitcher_D7.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
     </Targets>
   </ProjectGroup>
 </CONFIG>
