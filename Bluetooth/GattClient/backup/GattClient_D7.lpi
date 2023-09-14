@@ -11,7 +11,7 @@
         <MainUnitHasScaledStatement Value="False"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="AudioSwitcher_D7"/>
+      <Title Value="GattClient_D7"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
@@ -32,7 +32,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="AudioSwitcher_D7.lpr"/>
+        <Filename Value="GattClient_D7.dpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -42,33 +42,22 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Bluetooth\wclBluetooth.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclErrors.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <SearchPaths>
-      <IncludeFiles Value="..\..\..\..\..\WCL7\VCL\Source;$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\..\..\..\WCL7\VCL\Source\Common;..\..\..\..\..\WCL7\VCL\Source\Bluetooth;..\..\..\..\..\WCL7\VCL\Source\Communication;..\.."/>
+      <IncludeFiles Value="..\..\..\..\..\WCL7\VCL\Source"/>
+      <OtherUnitFiles Value="..\..;..\..\..\..\..\WCL7\VCL\Source\Common;..\..\..\..\..\WCL7\VCL\Source\Communication;..\..\..\..\..\WCL7\VCL\Source\Bluetooth"/>
       <UnitOutputDirectory Value="build"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
-        <SyntaxMode Value="Delphi"/>
+        <SyntaxMode Value="delphi"/>
       </SyntaxOptions>
     </Parsing>
     <Linking>
-      <Debugging>
-        <DebugInfoType Value="dsDwarf2Set"/>
-      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

@@ -14,6 +14,7 @@ type
   TfmMain = class(TForm)
     btEnumConnected: TButton;
     Button1: TButton;
+    cbHandlePairing: TCheckBox;
     lvEvents: TListView;
     btClearEvents: TButton;
     btOpen: TButton;
@@ -352,7 +353,7 @@ procedure TfmMain.btOpenClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclBluetoothManager.Open();
+  Res := wclBluetoothManager.Open(cbHandlePairing.Checked);
   if Res <> WCL_E_SUCCESS then
     ShowError(Res);
 end;
@@ -796,7 +797,8 @@ end;
 
 procedure TfmMain.wclBluetoothManagerAfterOpen(Sender: TObject);
 begin
-  TraceEvent(nil, 'AfterOpen', '', '');
+  TraceEvent(nil, 'AfterOpen', 'HandlePairing',
+    BoolToStr(wclBluetoothManager.HandlePairing, True));
 end;
 
 procedure TfmMain.wclBluetoothManagerBeforeClose(Sender: TObject);

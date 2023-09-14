@@ -378,7 +378,6 @@ object fmMain: TfmMain
     Top = 40
     Width = 145
     ItemHeight = 13
-    ItemIndex = 0
     Items.Strings = (
       'None'
       'Force Read From Device'
@@ -386,7 +385,6 @@ object fmMain: TfmMain
     )
     Style = csDropDownList
     TabOrder = 20
-    Text = 'None'
   end
   object btCCCDSubscribe: TButton
     Left = 423
