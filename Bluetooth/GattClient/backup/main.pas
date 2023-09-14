@@ -194,12 +194,6 @@ begin
   wclGattClient.OnDisconnect := wclGattClientDisconnect;
   wclGattClient.OnMaxPduSizeChanged := wclGattClientMaxPduSizeChanged;
 
-  // In real application you should always analize the result code.
-  // In this demo we assume that all is always OK.
-  wclBluetoothManager.Open;
-
-  cbOperationFlag.ItemIndex := 0;
-
   Cleanup;
 end;
 

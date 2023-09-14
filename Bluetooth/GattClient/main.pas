@@ -1258,6 +1258,7 @@ end;
 procedure TfmMain.wclBluetoothManagerClosed(Sender: TObject);
 begin
   TraceEvent(0, 'Closed', '', '');
+  lvDevices.Items.Clear;
 end;
 
 procedure TfmMain.wclBluetoothManagerIoCapabilityRequest(Sender: TObject;
