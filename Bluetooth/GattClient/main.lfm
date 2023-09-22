@@ -637,7 +637,7 @@ object fmMain: TfmMain
     Top = 8
     Width = 201
     ItemHeight = 13
-    ItemIndex = 3
+    ItemIndex = 0
     Items.Strings = (
       'mitmProtectionNotRequired'
       'mitmProtectionRequired'
@@ -649,7 +649,7 @@ object fmMain: TfmMain
     )
     Style = csDropDownList
     TabOrder = 41
-    Text = 'mitmProtectionRequiredBonding'
+    Text = 'mitmProtectionNotRequired'
   end
   object laMitmProtection: TLabel
     Left = 288

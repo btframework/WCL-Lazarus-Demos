@@ -9,3 +9,6 @@
 *.compiled
 *.exe
 *.bak
+Bluetooth/GattClient/backup/GattClient_D7.lpi
+Bluetooth/GattClient/backup/main.lfm
+Bluetooth/GattClient/backup/main.pas
