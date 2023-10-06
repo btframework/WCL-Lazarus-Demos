@@ -171,8 +171,6 @@ procedure TfmMain.btDiscoverClick(Sender: TObject);
 var
   Radio: TwclBluetoothRadio;
   Res: Integer;
-  Devices: TwclBluetoothAddresses;
-  i: Integer;
 begin
   Radio := GetRadio;
   if Radio <> nil then begin
