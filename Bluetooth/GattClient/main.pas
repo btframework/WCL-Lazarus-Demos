@@ -213,6 +213,9 @@ var
   Res: Integer;
   Radio: TwclBluetoothRadio;
 begin
+  if not wclBluetoothManager.Active then
+    btOpenClick(btOpen);
+
   Res := wclBluetoothManager.GetLeRadio(Radio);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
@@ -654,14 +657,8 @@ begin
     else WriteKind := wkAuto;
   end;
 
-  if WriteKind = wkAuto then begin
-    Res := wclGattClient.WriteCharacteristicValue(Characteristic, Val,
-      Protection);
-  end else begin
-    Res := wclGattClient.WriteCharacteristicValue(Characteristic, Val,
-      Protection, WriteKind);
-  end;
-
+  Res := wclGattClient.WriteCharacteristicValue(Characteristic, Val, Protection,
+    WriteKind);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
