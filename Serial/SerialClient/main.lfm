@@ -1,562 +1,587 @@
 object fmMain: TfmMain
   Left = 466
+  Height = 561
   Top = 172
+  Width = 865
   BorderStyle = bsDialog
   Caption = 'Serial Client Demo'
   ClientHeight = 561
-  ClientWidth = 880
+  ClientWidth = 865
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
+  Position = poScreenCenter
+  LCLVersion = '2.2.6.0'
   object laBaudRate: TLabel
-    Left = 16
+    Left = 8
+    Height = 13
     Top = 88
     Width = 43
-    Height = 13
     Caption = 'Baudrate'
+    ParentColor = False
   end
   object laDtrControl: TLabel
-    Left = 224
+    Left = 216
+    Height = 13
     Top = 88
     Width = 50
-    Height = 13
     Caption = 'Dtr Control'
+    ParentColor = False
   end
   object laRtsControl: TLabel
-    Left = 16
+    Left = 8
+    Height = 13
     Top = 112
     Width = 52
-    Height = 13
     Caption = 'Rts Control'
+    ParentColor = False
   end
   object laXonLim: TLabel
-    Left = 16
+    Left = 8
+    Height = 13
     Top = 160
     Width = 38
-    Height = 13
     Caption = 'Xon Lim'
+    ParentColor = False
   end
   object laXoffLim: TLabel
-    Left = 224
+    Left = 216
+    Height = 13
     Top = 160
     Width = 38
-    Height = 13
     Caption = 'Xoff Lim'
+    ParentColor = False
   end
   object laByteSize: TLabel
-    Left = 224
+    Left = 216
+    Height = 13
     Top = 112
     Width = 44
-    Height = 13
     Caption = 'Byte Size'
+    ParentColor = False
   end
   object laParity: TLabel
-    Left = 16
+    Left = 8
+    Height = 13
     Top = 136
     Width = 26
-    Height = 13
     Caption = 'Parity'
+    ParentColor = False
   end
   object laStopBites: TLabel
-    Left = 224
+    Left = 216
+    Height = 13
     Top = 136
     Width = 42
-    Height = 13
     Caption = 'Stop Bits'
+    ParentColor = False
   end
   object laXonChar: TLabel
-    Left = 16
+    Left = 8
+    Height = 13
     Top = 192
     Width = 44
-    Height = 13
     Caption = 'Xon Char'
+    ParentColor = False
   end
   object laXoffChar: TLabel
-    Left = 96
+    Left = 88
+    Height = 13
     Top = 192
     Width = 44
-    Height = 13
     Caption = 'Xoff Char'
+    ParentColor = False
   end
   object laErrorChar: TLabel
-    Left = 176
+    Left = 168
+    Height = 13
     Top = 192
     Width = 47
-    Height = 13
     Caption = 'Error Char'
+    ParentColor = False
   end
   object laEofChar: TLabel
-    Left = 264
+    Left = 256
+    Height = 13
     Top = 192
     Width = 41
-    Height = 13
     Caption = 'Eof Char'
+    ParentColor = False
   end
   object laEvtChar: TLabel
-    Left = 344
+    Left = 336
+    Height = 13
     Top = 192
     Width = 41
-    Height = 13
     Caption = 'Evt Char'
+    ParentColor = False
   end
   object laReadBufferSize: TLabel
-    Left = 440
+    Left = 432
+    Height = 13
     Top = 88
     Width = 77
-    Height = 13
     Caption = 'Read buffer size'
+    ParentColor = False
   end
   object laWriteBufferSize: TLabel
-    Left = 440
+    Left = 432
+    Height = 13
     Top = 112
     Width = 76
-    Height = 13
     Caption = 'Write buffer size'
+    ParentColor = False
   end
   object laReadInterval: TLabel
-    Left = 440
+    Left = 432
+    Height = 13
     Top = 192
     Width = 64
-    Height = 13
     Caption = 'Read Interval'
+    ParentColor = False
   end
   object laReadMultiplier: TLabel
-    Left = 440
+    Left = 432
+    Height = 13
     Top = 216
     Width = 70
-    Height = 13
     Caption = 'Read Multiplier'
+    ParentColor = False
   end
   object laReadConstant: TLabel
-    Left = 440
+    Left = 432
+    Height = 13
     Top = 240
     Width = 71
-    Height = 13
     Caption = 'Read Constant'
+    ParentColor = False
   end
   object laWriteMultiplier: TLabel
-    Left = 440
+    Left = 432
+    Height = 13
     Top = 264
     Width = 69
-    Height = 13
     Caption = 'Write Multiplier'
+    ParentColor = False
   end
   object laWriteConstant: TLabel
-    Left = 440
+    Left = 432
+    Height = 13
     Top = 288
     Width = 70
-    Height = 13
     Caption = 'Write Constant'
+    ParentColor = False
   end
   object laFunc: TLabel
-    Left = 632
+    Left = 624
+    Height = 13
     Top = 96
     Width = 41
-    Height = 13
     Caption = 'Function'
+    ParentColor = False
   end
   object laCharCode: TLabel
-    Left = 632
+    Left = 624
+    Height = 13
     Top = 192
     Width = 85
-    Height = 13
     Caption = 'Char code (ASCII)'
+    ParentColor = False
   end
   object laWriteTimeout: TLabel
-    Left = 384
+    Left = 376
+    Height = 13
     Top = 16
     Width = 62
-    Height = 13
     Caption = 'Write timeout'
+    ParentColor = False
   end
   object lbEvents: TListBox
     Left = 8
-    Top = 400
-    Width = 865
-    Height = 153
-    ItemHeight = 13
+    Height = 161
+    Top = 392
+    Width = 848
+    ItemHeight = 0
     TabOrder = 0
   end
   object btClear: TButton
-    Left = 800
-    Top = 368
-    Width = 75
+    Left = 784
     Height = 25
+    Top = 356
+    Width = 75
     Caption = 'Clear'
-    TabOrder = 1
     OnClick = btClearClick
+    TabOrder = 1
   end
   object btEnum: TButton
-    Left = 16
+    Left = 8
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Enum'
-    TabOrder = 2
     OnClick = btEnumClick
+    TabOrder = 2
   end
   object cbPorts: TComboBox
-    Left = 96
+    Left = 88
+    Height = 21
     Top = 8
     Width = 105
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
+    Style = csDropDownList
     TabOrder = 3
   end
   object btConnect: TButton
-    Left = 208
+    Left = 200
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Connect'
-    TabOrder = 4
     OnClick = btConnectClick
+    TabOrder = 4
   end
   object btDisconnect: TButton
-    Left = 288
+    Left = 280
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Disconnect'
-    TabOrder = 5
     OnClick = btDisconnectClick
+    TabOrder = 5
   end
   object btGetConfig: TButton
-    Left = 16
+    Left = 8
+    Height = 25
     Top = 48
     Width = 75
-    Height = 25
     Caption = 'Get Config'
-    TabOrder = 6
     OnClick = btGetConfigClick
+    TabOrder = 6
   end
   object edBaudRate: TEdit
-    Left = 80
+    Left = 72
+    Height = 21
     Top = 80
     Width = 129
-    Height = 21
     TabOrder = 7
   end
   object cbParityCheck: TCheckBox
-    Left = 88
+    Left = 80
+    Height = 19
     Top = 224
-    Width = 129
-    Height = 17
+    Width = 79
     Caption = 'Parity check'
     TabOrder = 8
   end
   object cbOutxCtsFlow: TCheckBox
-    Left = 232
+    Left = 224
+    Height = 19
     Top = 224
-    Width = 129
-    Height = 17
+    Width = 85
     Caption = 'Outx Cts Flow'
     TabOrder = 9
   end
   object cbOutxDsrFlow: TCheckBox
-    Left = 88
+    Left = 80
+    Height = 19
     Top = 248
-    Width = 129
-    Height = 17
+    Width = 86
     Caption = 'Outx Dsr Flow'
     TabOrder = 10
   end
   object cbDtrControl: TComboBox
-    Left = 288
+    Left = 280
+    Height = 21
     Top = 80
     Width = 129
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 11
     Items.Strings = (
       'dtrControlDisable'
       'dtrControlEnable'
-      'dtrControlHandshake')
+      'dtrControlHandshake'
+    )
+    Style = csDropDownList
+    TabOrder = 11
   end
   object cbDsrSensitivity: TCheckBox
-    Left = 232
+    Left = 224
+    Height = 19
     Top = 248
-    Width = 129
-    Height = 17
+    Width = 86
     Caption = 'Dsr Sensitivity'
     TabOrder = 12
   end
   object cbTXContinueOnXoff: TCheckBox
-    Left = 88
+    Left = 80
+    Height = 19
     Top = 272
-    Width = 129
-    Height = 17
+    Width = 118
     Caption = 'TX Continue OnX off'
     TabOrder = 13
   end
   object cbOutX: TCheckBox
-    Left = 232
+    Left = 224
+    Height = 19
     Top = 272
-    Width = 129
-    Height = 17
+    Width = 44
     Caption = 'OutX'
     TabOrder = 14
   end
   object cbInX: TCheckBox
-    Left = 232
+    Left = 224
+    Height = 19
     Top = 296
-    Width = 129
-    Height = 17
+    Width = 36
     Caption = 'InX'
     TabOrder = 15
   end
   object cbErrorCharReplace: TCheckBox
-    Left = 88
+    Left = 80
+    Height = 19
     Top = 296
-    Width = 129
-    Height = 17
+    Width = 110
     Caption = 'Error Char Replace'
     TabOrder = 16
   end
   object cbNullStrip: TCheckBox
-    Left = 88
+    Left = 80
+    Height = 19
     Top = 320
-    Width = 129
-    Height = 17
+    Width = 62
     Caption = 'Null Strip'
     TabOrder = 17
   end
   object cbRtsControl: TComboBox
-    Left = 80
+    Left = 72
+    Height = 21
     Top = 104
     Width = 129
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 18
     Items.Strings = (
       'rtsControlDisable'
       'rtsControlEnable'
       'rtsControlHandshake'
-      'rtsControlToggle')
+      'rtsControlToggle'
+    )
+    Style = csDropDownList
+    TabOrder = 18
   end
   object cbAbortOnError: TCheckBox
-    Left = 232
+    Left = 224
+    Height = 19
     Top = 320
-    Width = 129
-    Height = 17
+    Width = 87
     Caption = 'Abort On Error'
     TabOrder = 19
   end
   object edXonLim: TEdit
-    Left = 80
+    Left = 72
+    Height = 21
     Top = 152
     Width = 129
-    Height = 21
     TabOrder = 20
   end
   object edXoffLim: TEdit
-    Left = 288
+    Left = 280
+    Height = 21
     Top = 152
     Width = 129
-    Height = 21
     TabOrder = 21
   end
   object cbByteSize: TComboBox
-    Left = 288
+    Left = 280
+    Height = 21
     Top = 104
     Width = 129
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 22
     Items.Strings = (
       '4'
       '5'
       '6'
       '7'
-      '8')
+      '8'
+    )
+    Style = csDropDownList
+    TabOrder = 22
   end
   object cbParity: TComboBox
-    Left = 80
+    Left = 72
+    Height = 21
     Top = 128
     Width = 129
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 23
     Items.Strings = (
       'spNo'
       'spOdd'
       'spEven'
       'spMark'
-      'spSpace')
+      'spSpace'
+    )
+    Style = csDropDownList
+    TabOrder = 23
   end
   object cbStopBits: TComboBox
-    Left = 288
+    Left = 280
+    Height = 21
     Top = 128
     Width = 129
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 24
     Items.Strings = (
       'sbOne'
       'sbOne5'
-      'sbTwo')
+      'sbTwo'
+    )
+    Style = csDropDownList
+    TabOrder = 24
   end
   object edXonChar: TEdit
-    Left = 64
+    Left = 56
+    Height = 21
     Top = 184
     Width = 25
-    Height = 21
     TabOrder = 25
   end
   object edXoffChar: TEdit
-    Left = 144
+    Left = 136
+    Height = 21
     Top = 184
     Width = 25
-    Height = 21
     TabOrder = 26
   end
   object edErrorChar: TEdit
-    Left = 232
+    Left = 224
+    Height = 21
     Top = 184
     Width = 25
-    Height = 21
     TabOrder = 27
   end
   object edEofChar: TEdit
-    Left = 312
+    Left = 304
+    Height = 21
     Top = 184
     Width = 25
-    Height = 21
     TabOrder = 28
   end
   object edEvtChar: TEdit
-    Left = 392
+    Left = 384
+    Height = 21
     Top = 184
     Width = 25
-    Height = 21
     TabOrder = 29
   end
   object btSetConfig: TButton
-    Left = 104
+    Left = 96
+    Height = 25
     Top = 48
     Width = 75
-    Height = 25
     Caption = 'Set Config'
-    TabOrder = 30
     OnClick = btSetConfigClick
+    TabOrder = 30
   end
   object edReadBufferSize: TEdit
-    Left = 528
+    Left = 520
+    Height = 21
     Top = 80
     Width = 81
-    Height = 21
     TabOrder = 31
   end
   object edWriteBufferSize: TEdit
-    Left = 528
+    Left = 520
+    Height = 21
     Top = 104
     Width = 81
-    Height = 21
     TabOrder = 32
   end
   object btGetBuffers: TButton
-    Left = 440
+    Left = 432
+    Height = 25
     Top = 48
     Width = 75
-    Height = 25
     Caption = 'Get buffers'
-    TabOrder = 33
     OnClick = btGetBuffersClick
+    TabOrder = 33
   end
   object btSetBuffers: TButton
-    Left = 528
+    Left = 520
+    Height = 25
     Top = 48
     Width = 75
-    Height = 25
     Caption = 'Set buffers'
-    TabOrder = 34
     OnClick = btSetBuffersClick
+    TabOrder = 34
   end
   object edReadInterval: TEdit
-    Left = 528
+    Left = 520
+    Height = 21
     Top = 184
     Width = 81
-    Height = 21
     TabOrder = 35
   end
   object edReadMultiplier: TEdit
-    Left = 528
+    Left = 520
+    Height = 21
     Top = 208
     Width = 81
-    Height = 21
     TabOrder = 36
   end
   object edReadConstant: TEdit
-    Left = 528
+    Left = 520
+    Height = 21
     Top = 232
     Width = 81
-    Height = 21
     TabOrder = 37
   end
   object edWriteMultiplier: TEdit
-    Left = 528
+    Left = 520
+    Height = 21
     Top = 256
     Width = 81
-    Height = 21
     TabOrder = 38
   end
   object edWriteConstant: TEdit
-    Left = 528
+    Left = 520
+    Height = 21
     Top = 280
     Width = 81
-    Height = 21
     TabOrder = 39
   end
   object btGetTimeouts: TButton
-    Left = 440
+    Left = 432
+    Height = 25
     Top = 152
     Width = 75
-    Height = 25
     Caption = 'Get timeouts'
-    TabOrder = 40
     OnClick = btGetTimeoutsClick
+    TabOrder = 40
   end
   object btSetTimeouts: TButton
-    Left = 528
+    Left = 520
+    Height = 25
     Top = 152
     Width = 75
-    Height = 25
     Caption = 'Set timeouts'
-    TabOrder = 41
     OnClick = btSetTimeoutsClick
+    TabOrder = 41
   end
   object btClearCommBreak: TButton
-    Left = 632
+    Left = 624
+    Height = 25
     Top = 48
     Width = 105
-    Height = 25
     Caption = 'Clear comm break'
-    TabOrder = 42
     OnClick = btClearCommBreakClick
+    TabOrder = 42
   end
   object cbFunc: TComboBox
-    Left = 688
+    Left = 680
+    Height = 21
     Top = 88
     Width = 97
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
     ItemIndex = 0
-    TabOrder = 43
-    Text = 'escClrBreak'
     Items.Strings = (
       'escClrBreak'
       'escClrDtr'
@@ -565,125 +590,154 @@ object fmMain: TfmMain
       'escSetDtr'
       'escSetRts'
       'escSetXoff'
-      'escSetXon')
+      'escSetXon'
+    )
+    Style = csDropDownList
+    TabOrder = 43
+    Text = 'escClrBreak'
   end
   object btFunc: TButton
-    Left = 792
+    Left = 784
+    Height = 25
     Top = 80
     Width = 75
-    Height = 25
     Caption = 'Exec func'
-    TabOrder = 44
     OnClick = btFuncClick
+    TabOrder = 44
   end
   object btFlushBuffers: TButton
-    Left = 632
+    Left = 624
+    Height = 25
     Top = 224
     Width = 75
-    Height = 25
     Caption = 'Flush buffers'
-    TabOrder = 45
     OnClick = btFlushBuffersClick
+    TabOrder = 45
   end
   object cbpurgeRxAbort: TCheckBox
-    Left = 632
+    Left = 624
+    Height = 19
     Top = 128
-    Width = 73
-    Height = 17
+    Width = 61
     Caption = 'Rx Abort'
     TabOrder = 46
   end
   object cbpurgeRxClear: TCheckBox
-    Left = 632
+    Left = 624
+    Height = 19
     Top = 152
-    Width = 73
-    Height = 17
+    Width = 60
     Caption = 'Rx Clear'
     TabOrder = 47
   end
   object cbpurgeTxAbort: TCheckBox
-    Left = 712
+    Left = 704
+    Height = 19
     Top = 128
-    Width = 73
-    Height = 17
+    Width = 60
     Caption = 'Tx Abort'
     TabOrder = 48
   end
   object cbpurgeTxClear: TCheckBox
-    Left = 712
+    Left = 704
+    Height = 19
     Top = 152
-    Width = 73
-    Height = 17
+    Width = 59
     Caption = 'Tx Clear'
     TabOrder = 49
   end
   object btPurge: TButton
-    Left = 792
+    Left = 784
+    Height = 25
     Top = 136
     Width = 75
-    Height = 25
     Caption = 'Purge'
-    TabOrder = 50
     OnClick = btPurgeClick
+    TabOrder = 50
   end
   object btSetCommBreak: TButton
-    Left = 744
+    Left = 736
+    Height = 25
     Top = 48
     Width = 89
-    Height = 25
     Caption = 'Set comm break'
-    TabOrder = 51
     OnClick = btSetCommBreakClick
+    TabOrder = 51
   end
   object edChar: TEdit
-    Left = 728
+    Left = 720
+    Height = 21
     Top = 184
     Width = 49
-    Height = 21
     TabOrder = 52
     Text = '0'
   end
   object btTransmit: TButton
-    Left = 792
+    Left = 784
+    Height = 25
     Top = 184
     Width = 75
-    Height = 25
     Caption = 'Transmit'
-    TabOrder = 53
     OnClick = btTransmitClick
+    TabOrder = 53
   end
   object btSend: TButton
-    Left = 496
-    Top = 360
-    Width = 75
+    Left = 480
     Height = 25
+    Top = 356
+    Width = 75
     Caption = 'Send'
-    TabOrder = 54
     OnClick = btSendClick
+    TabOrder = 54
   end
   object edText: TEdit
-    Left = 16
+    Left = 8
+    Height = 21
     Top = 360
     Width = 465
-    Height = 21
     TabOrder = 55
     Text = 'Something to send to serial'
   end
   object edWriteTimeout: TEdit
-    Left = 464
+    Left = 456
+    Height = 21
     Top = 8
     Width = 121
-    Height = 21
     TabOrder = 56
     Text = 'edWriteTimeout'
   end
   object btSetWriteTimeout: TButton
-    Left = 600
+    Left = 592
+    Height = 25
     Top = 8
     Width = 105
-    Height = 25
     Caption = 'Set write timeout'
-    TabOrder = 57
     OnClick = btSetWriteTimeoutClick
+    TabOrder = 57
+  end
+  object laLineFeed: TLabel
+    Left = 560
+    Height = 13
+    Top = 364
+    Width = 44
+    Caption = 'Line feed'
+    ParentColor = False
+  end
+  object cbLineFeed: TComboBox
+    Left = 616
+    Height = 22
+    Top = 356
+    Width = 97
+    ItemHeight = 16
+    ItemIndex = 0
+    Items.Strings = (
+      'None'
+      'CR'
+      'LF'
+      'CR & LF'
+    )
+    Style = csOwnerDrawFixed
+    TabOrder = 58
+    Text = 'None'
   end
 end

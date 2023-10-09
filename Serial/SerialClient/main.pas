@@ -8,7 +8,12 @@ uses
   Forms, StdCtrls, Classes, Controls, wclSerialDevices, wclSerialClients;
 
 type
+
+  { TfmMain }
+
   TfmMain = class(TForm)
+    cbLineFeed: TComboBox;
+    laLineFeed: TLabel;
     lbEvents: TListBox;
     btClear: TButton;
     btEnum: TButton;
@@ -520,6 +525,11 @@ var
   Written: Cardinal;
 begin
   Str := AnsiString(edText.Text);
+  case cbLineFeed.ItemIndex of
+    1: Str := Str + #13;
+    2: Str := Str + #10;
+    3: Str := Str + #13#10;
+  end;
   Res := wclSerialClient.Write(Pointer(Str), Length(Str), Written);
   lbEvents.Items.Add('Sent: ' + IntToStr(Written) + ' bytes from ' +
     IntToStr(Length(Str)));
