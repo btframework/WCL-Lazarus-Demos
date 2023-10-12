@@ -14,6 +14,7 @@ type
   TfmMain = class(TForm)
     btOpen: TButton;
     btClose: TButton;
+    cbUseMac: TCheckBox;
     lvDevices: TListView;
     btEnum: TButton;
     cbActive: TCheckBox;
@@ -65,7 +66,7 @@ var
 implementation
 
 uses
-  wclErrors, Dialogs, SysUtils, ActiveX;
+  wclErrors, Dialogs, SysUtils;
 
 {$R *.lfm}
 
@@ -323,7 +324,18 @@ begin
     ShowMessage('Select device')
 
   else begin
-    Res := wclAudioSwitcher.Connect(lvDevices.Selected.Caption);
+    if cbUseMac.Checked then begin
+      if lvDevices.Selected.SubItems[5] = '' then begin
+        ShowMessage('Selected device is not Bluetooth enabled');
+        Exit;
+      end;
+
+      Res := wclAudioSwitcher.Connect(
+        StrToInt64('$' + lvDevices.Selected.SubItems[5]));
+
+    end else
+      Res := wclAudioSwitcher.Connect(lvDevices.Selected.Caption);
+
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Connect error: 0x' + IntToHex(Res, 8));
   end;
@@ -337,7 +349,18 @@ begin
     ShowMessage('Select device')
 
   else begin
-    Res := wclAudioSwitcher.Disconnect(lvDevices.Selected.Caption);
+    if cbUseMac.Checked then begin
+      if lvDevices.Selected.SubItems[5] = '' then begin
+        ShowMessage('Selected device is not Bluetooth enabled');
+        Exit;
+      end;
+
+      Res := wclAudioSwitcher.Disconnect(
+        StrToInt64('$' + lvDevices.Selected.SubItems[5]));
+
+    end else
+      Res := wclAudioSwitcher.Disconnect(lvDevices.Selected.Caption);
+
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Connect error: 0x' + IntToHex(Res, 8));
   end;
