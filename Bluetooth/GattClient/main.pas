@@ -1157,6 +1157,8 @@ begin
       if Length(Devices) > 0 then begin
         for i := 0 to Length(Devices) - 1 do begin
           Item := lvDevices.Items.Add;
+          Item.Data := Radio;
+
           Item.Caption := IntToHex(Devices[i], 12);
 
           Res := Radio.GetRemoteName(Devices[i], Name);
@@ -1164,7 +1166,6 @@ begin
             Item.SubItems.Add(Name)
           else
             Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8));
-          Item.Data := Radio;
 
           Res := Radio.GetRemoteDeviceType(Devices[i], DevType);
           if Res <> WCL_E_SUCCESS then
