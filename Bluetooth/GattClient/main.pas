@@ -12,12 +12,11 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
-    btClose: TButton;
     btDiscover: TButton;
     btGetMaxPduSize: TButton;
     btGetPhy: TButton;
-    btOpen: TButton;
-    cbHandlePairing: TCheckBox;
+    btEnumPaired: TButton;
+    btUnpair: TButton;
     cbIoCap: TComboBox;
     cbMitmProtection: TComboBox;
     cbWriteKind: TComboBox;
@@ -53,7 +52,6 @@ type
     btTerminate: TButton;
     laProtection: TLabel;
     cbProtection: TComboBox;
-    btGetRssi: TButton;
     cbConnectOnRead: TCheckBox;
     btPair: TButton;
     cbFastSubscribe: TCheckBox;
@@ -61,10 +59,10 @@ type
     btGetParams: TButton;
     btSetParams: TButton;
     cbParams: TComboBox;
-    procedure btCloseClick(Sender: TObject);
+    procedure btEnumPairedClick(Sender: TObject);
     procedure btGetMaxPduSizeClick(Sender: TObject);
     procedure btGetPhyClick(Sender: TObject);
-    procedure btOpenClick(Sender: TObject);
+    procedure btUnpairClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btDiscoverClick(Sender: TObject);
@@ -83,7 +81,6 @@ type
     procedure btCCCDSubscribeClick(Sender: TObject);
     procedure btCCCDUnsubscribeClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
-    procedure btGetRssiClick(Sender: TObject);
     procedure btPairClick(Sender: TObject);
     procedure cbFastSubscribeClick(Sender: TObject);
     procedure btGetParamsClick(Sender: TObject);
@@ -124,8 +121,6 @@ type
     procedure wclBluetoothManagerProtectionLevelRequest(Sender: TObject;
       const Radio: TwclBluetoothRadio; const Address: Int64;
       out Protection: TwclBluetoothLeProtectionLevel);
-    procedure wclBluetoothManagerAfterOpen(Sender: TObject);
-    procedure wclBluetoothManagerClosed(Sender: TObject);
     procedure wclBluetoothManagerIoCapabilityRequest(Sender: TObject;
       const Radio: TwclBluetoothRadio; const Address: Int64;
       out Mitm: TwclBluetoothMitmProtection;
@@ -172,8 +167,6 @@ uses
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
   wclBluetoothManager := TwclBluetoothManager.Create(nil);
-  wclBluetoothManager.AfterOpen := wclBluetoothManagerAfterOpen;
-  wclBluetoothManager.OnClosed := wclBluetoothManagerClosed;
   wclBluetoothManager.OnIoCapabilityRequest := wclBluetoothManagerIoCapabilityRequest;
   wclBluetoothManager.OnAuthenticationCompleted := wclBluetoothManagerAuthenticationCompleted;
   wclBluetoothManager.OnConfirm := wclBluetoothManagerConfirm;
@@ -194,6 +187,8 @@ begin
   wclGattClient.OnDisconnect := wclGattClientDisconnect;
   wclGattClient.OnMaxPduSizeChanged := wclGattClientMaxPduSizeChanged;
 
+  wclBluetoothManager.Open;
+
   Cleanup;
 end;
 
@@ -213,9 +208,6 @@ var
   Res: Integer;
   Radio: TwclBluetoothRadio;
 begin
-  if not wclBluetoothManager.Active then
-    btOpenClick(btOpen);
-
   Res := wclBluetoothManager.GetLeRadio(Radio);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
@@ -892,16 +884,17 @@ var
   Item: TListItem;
   DevType: TwclBluetoothDeviceType;
   Res: Integer;
+  Paired: Boolean;
 begin
-  DevType := dtMixed;
-  Res := Radio.GetRemoteDeviceType(Address, DevType);
-
   Item := lvDevices.Items.Add;
   Item.Caption := IntToHex(Address, 12);
   Item.SubItems.Add(''); // We can not read a device's name here.
   Item.Data := Radio; // To use it later.
+
+  Res := Radio.GetRemoteDeviceType(Address, DevType);
   if Res <> WCL_E_SUCCESS then
     Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8))
+
   else begin
     case DevType of
       dtClassic:
@@ -913,6 +906,16 @@ begin
     else
       Item.SubItems.Add('Unknown');
     end;
+  end;
+
+  Res := Radio.GetRemotePaired(Address, Paired);
+  if Res <> WCL_E_SUCCESS then
+    Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8))
+  else begin
+    if Paired then
+      Item.SubItems.Add('True')
+    else
+      Item.SubItems.Add('False');
   end;
 
   TraceEvent(Address, 'Device found', '', '');
@@ -1041,29 +1044,6 @@ begin
   end;
 end;
 
-procedure TfmMain.btGetRssiClick(Sender: TObject);
-var
-  Item: TListItem;
-  Radio: TwclBluetoothRadio;
-  Address: Int64;
-  Res: Integer;
-  Rssi: ShortInt;
-begin
-  if lvDevices.Selected = nil then
-    MessageDlg('Select device', mtWarning, [mbOK], 0)
-
-  else begin
-    Item := lvDevices.Selected;
-    Address := StrToInt64('$' + Item.Caption);
-    Radio := TwclBluetoothRadio(Item.Data);
-    Res := Radio.GetRemoteRssi(Address, Rssi);
-    if Res <> WCL_E_SUCCESS then
-      MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
-    else
-      MessageDlg('RSSI: ' + IntToStr(Rssi) + 'dB', mtInformation, [mbOK], 0);
-  end;
-end;
-
 procedure TfmMain.wclBluetoothManagerConfirm(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   out Confirm: Boolean);
@@ -1154,13 +1134,63 @@ begin
   GetMaxPduSize;
 end;
 
-procedure TfmMain.btCloseClick(Sender: TObject);
+procedure TfmMain.btEnumPairedClick(Sender: TObject);
 var
   Res: Integer;
+  Radio: TwclBluetoothRadio;
+  Devices: TwclBluetoothAddresses;
+  i: Integer;
+  Item: TListItem;
+  Name: string;
+  DevType: TwclBluetoothDeviceType;
+  Paired: Boolean;
 begin
-  Res := wclBluetoothManager.Close;
-  if Res <> WCL_E_SUCCESS then
-    ShowMessage('Close failed: 0x' + IntToHex(Res, 8));
+  Radio := GetRadio;
+  if Radio <> nil then begin
+    lvDevices.Items.Clear;
+
+    Res := Radio.EnumPairedDevices(Devices);
+    if Res <> WCL_E_SUCCESS then
+      ShowMessage('Enum paired failed: 0x' + IntToHex(Res, 8))
+
+    else begin
+      if Length(Devices) > 0 then begin
+        for i := 0 to Length(Devices) - 1 do begin
+          Item := lvDevices.Items.Add;
+          Item.Caption := IntToHex(Devices[i], 12);
+
+          Res := Radio.GetRemoteName(Devices[i], Name);
+          if Res = WCL_E_SUCCESS then
+            Item.SubItems.Add(Name)
+          else
+            Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8));
+          Item.Data := Radio;
+
+          Res := Radio.GetRemoteDeviceType(Devices[i], DevType);
+          if Res <> WCL_E_SUCCESS then
+            Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8))
+          else begin
+            case DevType of
+              dtClassic: Item.SubItems.Add('Classic');
+              dtBle: Item.SubItems.Add('BLE');
+              dtMixed: Item.SubItems.Add('Mixed');
+              else Item.SubItems.Add('Unknown');
+            end;
+          end;
+
+          Res := Radio.GetRemotePaired(Devices[i], Paired);
+          if Res <> WCL_E_SUCCESS then
+            Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8))
+          else begin
+            if Paired then
+              Item.SubItems.Add('True')
+            else
+              Item.SubItems.Add('False');
+          end;
+        end;
+      end;
+    end;
+  end;
 end;
 
 procedure TfmMain.GetMaxPduSize;
@@ -1209,13 +1239,21 @@ begin
   GetConnectionPhy;
 end;
 
-procedure TfmMain.btOpenClick(Sender: TObject);
+procedure TfmMain.btUnpairClick(Sender: TObject);
 var
   Res: Integer;
+  Item: TListItem;
 begin
-  Res := wclBluetoothManager.Open(cbHandlePairing.Checked);
-  if Res <> WCL_E_SUCCESS then
-    ShowMessage('Open failed: 0x' + IntToHex(Res, 8));
+  if lvDevices.Selected = nil then
+    MessageDlg('Select device', mtWarning, [mbOK], 0)
+
+  else begin
+    Item := lvDevices.Selected;
+    Res := TwclBluetoothRadio(Item.Data).RemoteUnpair(StrToInt64('$' +
+      Item.Caption), pmLe);
+    if Res <> WCL_E_SUCCESS then
+      MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
+  end;
 end;
 
 procedure TfmMain.wclGattClientConnectionPhyChanged(Sender: TObject);
@@ -1244,18 +1282,6 @@ begin
     TraceEvent(0, '', '1M', BoolToStr(Phy.Receive.IsUncoded1MPhy, True));
     TraceEvent(0, '', '2M', BoolToStr(Phy.Receive.IsUncoded2MPhy, True));
   end;
-end;
-
-procedure TfmMain.wclBluetoothManagerAfterOpen(Sender: TObject);
-begin
-  TraceEvent(0, 'AfterOpen', 'Handle pairing',
-    BoolToStr(wclBluetoothManager.HandlePairing, True));
-end;
-
-procedure TfmMain.wclBluetoothManagerClosed(Sender: TObject);
-begin
-  TraceEvent(0, 'Closed', '', '');
-  lvDevices.Items.Clear;
 end;
 
 procedure TfmMain.wclBluetoothManagerIoCapabilityRequest(Sender: TObject;
