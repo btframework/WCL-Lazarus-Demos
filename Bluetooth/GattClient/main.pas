@@ -1010,11 +1010,6 @@ begin
     '0x' + IntToHex(Reason, 8));
 
   Cleanup;
-
-  Res := TwclGattClient(Sender).Radio.RemoteUnpair(
-    TwclGattClient(Sender).Address);
-  if Res = WCL_E_SUCCESS then
-    TraceEvent(TwclGattClient(Sender).Address, 'Unpaired', '', '');
 end;
 
 procedure TfmMain.btTerminateClick(Sender: TObject);
