@@ -11,7 +11,7 @@
         <MainUnitHasScaledStatement Value="False"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="RfCommClient_D7"/>
+      <Title Value="AudioVolume_D7"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
@@ -32,7 +32,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="RfCommClient_D7.dpr"/>
+        <Filename Value="AudioVolume_D7.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -42,6 +42,14 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Bluetooth\wclAudio.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\..\WCL7\VCL\Source\Common\wclErrors.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -49,7 +57,7 @@
     <PathDelim Value="\"/>
     <SearchPaths>
       <IncludeFiles Value="..\..\..\..\..\WCL7\VCL\Source"/>
-      <OtherUnitFiles Value="..\..;..\..\..\..\..\WCL7\VCL\Source\Common;..\..\..\..\..\WCL7\VCL\Source\Communication;..\..\..\..\..\WCL7\VCL\Source\Bluetooth"/>
+      <OtherUnitFiles Value="..\..\..\..\..\WCL7\VCL\Source\Common;..\..\..\..\..\WCL7\VCL\Source\Communication;..\..\..\..\..\WCL7\VCL\Source\Bluetooth;..\.."/>
       <UnitOutputDirectory Value="build"/>
     </SearchPaths>
     <Parsing>
@@ -58,6 +66,9 @@
       </SyntaxOptions>
     </Parsing>
     <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf2Set"/>
+      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

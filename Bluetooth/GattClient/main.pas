@@ -1002,8 +1002,6 @@ end;
 
 procedure TfmMain.wclGattClientDisconnect(Sender: TObject;
   const Reason: Integer);
-var
-  Res: Integer;
 begin
   // Connection property is valid here.
   TraceEvent(TwclGattClient(Sender).Address, 'Disconnected', 'Reason',
@@ -1144,7 +1142,7 @@ begin
   if Radio <> nil then begin
     lvDevices.Items.Clear;
 
-    Res := Radio.EnumPairedDevices(Devices);
+    Res := Radio.EnumPairedDevices(dkBle, Devices);
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Enum paired failed: 0x' + IntToHex(Res, 8))
 

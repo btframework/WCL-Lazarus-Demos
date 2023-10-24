@@ -67,6 +67,11 @@
           <Mode Name="Default"/>
         </BuildModes>
       </Target>
+      <Target FileName="AudioVolume\AudioVolume_D7.lpi">
+        <BuildModes>
+          <Mode Name="Default"/>
+        </BuildModes>
+      </Target>
     </Targets>
   </ProjectGroup>
 </CONFIG>

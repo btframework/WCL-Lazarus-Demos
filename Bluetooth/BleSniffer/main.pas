@@ -261,7 +261,7 @@ begin
   lbPackets.Items.Add('    Interval: ' + IntToStr(LlData.Interval));
   lbPackets.Items.Add('    Latency: ' + IntToStr(LlData.Latency));
   lbPackets.Items.Add('    Timeout: ' + IntToStr(LlData.Timeout));
-  lbPackets.Items.Add('    ChM: ' + IntToHex(LlData.ChM, 16));
+  lbPackets.Items.Add('    ChMap: ' + IntToHex(LlData.ChMap, 16));
   lbPackets.Items.Add('    Hop: ' + IntToStr(LlData.Hop));
   lbPackets.Items.Add('    Sca: ' + IntToStr(LlData.Sca));
   DumpPduHeader(PduHeader);

@@ -5,15 +5,13 @@ unit main;
 interface
 
 uses
-  Forms, Controls, StdCtrls, Classes, wclBluetooth, ComCtrls;
+  Forms, Controls, StdCtrls, Classes, wclAudio, ComCtrls;
 
 type
 
   { TfmMain }
 
   TfmMain = class(TForm)
-    btOpen: TButton;
-    btClose: TButton;
     cbUseMac: TCheckBox;
     lvDevices: TListView;
     btEnum: TButton;
@@ -29,8 +27,6 @@ type
     btRefresh: TButton;
     btConnect: TButton;
     btDisconnect: TButton;
-    procedure btOpenClick(Sender: TObject);
-    procedure btCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btEnumClick(Sender: TObject);
@@ -70,25 +66,9 @@ uses
 
 {$R *.lfm}
 
-procedure TfmMain.btOpenClick(Sender: TObject);
-var
-  Res: Integer;
-begin
-  Res := wclAudioSwitcher.Open;
-  if Res <> WCL_E_SUCCESS then
-    ShowMessage('Open failed: 0x' + IntToHex(Res, 8));
-end;
-
-procedure TfmMain.btCloseClick(Sender: TObject);
-var
-  Res: Integer;
-begin
-  Res := wclAudioSwitcher.Close;
-  if Res <> WCL_E_SUCCESS then
-    ShowMessage('Close failed: 0x' + IntToHex(Res, 8));
-end;
-
 procedure TfmMain.FormCreate(Sender: TObject);
+var
+  Res: Integer;
 begin
   wclAudioSwitcher := TwclAudioSwitcher.Create(nil);
   wclAudioSwitcher.OnClosed := wclAudioSwitcherClosed;
@@ -97,6 +77,10 @@ begin
   wclAudioSwitcher.OnOpened := wclAudioSwitcherOpened;
   wclAudioSwitcher.OnDeviceRemoved := wclAudioSwitcherDeviceRemoved;
   wclAudioSwitcher.OnStateChanged := wclAudioSwitcherStateChanged;
+
+  Res := wclAudioSwitcher.Open;
+  if Res <> WCL_E_SUCCESS then
+    lbLog.Items.Add('Open failed: 0x' + IntToHex(Res, 8));
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
