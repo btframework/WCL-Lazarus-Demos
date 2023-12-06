@@ -12,7 +12,10 @@ type
   { TfmMain }
 
   TfmMain = class(TForm)
+    btGetDefault: TButton;
+    cbFlow: TComboBox;
     cbUseMac: TCheckBox;
+    laFlow: TLabel;
     lvDevices: TListView;
     btEnum: TButton;
     cbActive: TCheckBox;
@@ -27,6 +30,7 @@ type
     btRefresh: TButton;
     btConnect: TButton;
     btDisconnect: TButton;
+    procedure btGetDefaultClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btEnumClick(Sender: TObject);
@@ -81,6 +85,31 @@ begin
   Res := wclAudioSwitcher.Open;
   if Res <> WCL_E_SUCCESS then
     lbLog.Items.Add('Open failed: 0x' + IntToHex(Res, 8));
+end;
+
+procedure TfmMain.btGetDefaultClick(Sender: TObject);
+var
+  Role: TwclAudioDeviceRole;
+  Flow: TwclAudioDeviceDataFlow;
+  Id: string;
+  Res: Integer;
+begin
+  case cbRole.ItemIndex of
+    0: Role := drConsole;
+    1: Role := drMultimedia;
+    else Role := drCommunications;
+  end;
+
+  if cbFlow.ItemIndex = 0 then
+    Flow := dfCapture
+  else
+    Flow := dfRender;
+
+  Res := wclAudioSwitcher.GetDefault(Role, Flow, Id);
+  if Res <> WCL_E_SUCCESS then
+    ShowMessage('Unable to get default device: 0x' + IntToHex(Res, 8))
+  else
+    ShowMessage('Default device ID: ' + Id);
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);

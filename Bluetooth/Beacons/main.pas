@@ -74,69 +74,69 @@ type
     procedure wclBluetoothLeBeaconWatcherStopped(Sender: TObject);
     procedure wclBluetoothLeBeaconWatcherAdvertisementRawFrame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const DataType: Byte;
+      const Rssi: SByte; const DataType: Byte;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherManufacturerRawFrame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const CompanyId: Word;
+      const Rssi: SByte; const CompanyId: Word;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherProximityBeaconFrame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const CompanyId: Word; const Major: Word;
-      const Minor: Word; const Uuid: TGUID; const TxRssi: Shortint;
+      const Rssi: SByte; const CompanyId: Word; const Major: Word;
+      const Minor: Word; const Uuid: TGUID; const TxRssi: SByte;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherEddystoneUidFrame(Sender: TObject;
-      const Address: Int64; const Timestamp: Int64; const Rssi: ShortInt;
-      const TxRssi: Shortint; const Uuid: TGUID;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const TxRssi: SByte; const Uuid: TGUID;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherEddystoneUrlFrame(Sender: TObject;
-      const Address: Int64; const Timestamp: Int64; const Rssi: ShortInt;
-      const TxRssi: Shortint; const Url: String);
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const TxRssi: SByte; const Url: String);
     procedure wclBluetoothLeBeaconWatcherEddystoneTlmFrame(Sender: TObject;
-      const Address: Int64; const Timestamp: Int64; const Rssi: Shortint;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
       const AdvCnt: Cardinal; const Batt: Word; const SecCnt: Cardinal;
       const Temp: Double; const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherAltBeaconFrame(Sender: TObject;
-      const Address: Int64; const  Timestamp: Int64; const Rssi: Shortint;
+      const Address: Int64; const  Timestamp: Int64; const Rssi: SByte;
       const CompanyId: Word; const Major: Word; const Minor: Word;
-      const Uuid: TGUID; const TxRssi: Shortint; const Reserved: Byte;
+      const Uuid: TGUID; const TxRssi: SByte; const Reserved: Byte;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherAdvertisementFrameInformation(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const Name: String;
+      const Rssi: SByte; const Name: String;
       const PacketType: TwclBluetoothLeAdvertisementType;
       const Flags: TwclBluetoothLeAdvertisementFlags);
     procedure wclBluetoothLeBeaconWatcherAdvertisementUuidFrame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const Uuid: TGUID);
+      const Rssi: SByte; const Uuid: TGUID);
     procedure wclBluetoothLeBeaconWatcherAdvertisementExtFrameInformation(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const AddressType: TwclBluetoothAddressType;
-      const TxPower: Shortint; const Flags: TwclBluetoothLeExtendedFrameFlags);
+      const Rssi: SByte; const AddressType: TwclBluetoothAddressType;
+      const TxPower: SByte; const Flags: TwclBluetoothLeExtendedFrameFlags);
     procedure wclBluetoothLeBeaconWatcherAdvertisementService128DataFrame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const Uuid: TGUID;
+      const Rssi: SByte; const Uuid: TGUID;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherAdvertisementService16DataFrame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const Uuid: Word;
+      const Rssi: SByte; const Uuid: Word;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherAdvertisementService32DataFrame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const Uuid: Cardinal;
+      const Rssi: SByte; const Uuid: Cardinal;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
     procedure wclBluetoothLeBeaconWatcherAdvertisementServiceSol128Frame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const Uuid: TGUID);
+      const Rssi: SByte; const Uuid: TGUID);
     procedure wclBluetoothLeBeaconWatcherAdvertisementServiceSol16Frame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const Uuid: Word);
+      const Rssi: SByte; const Uuid: Word);
     procedure wclBluetoothLeBeaconWatcherAdvertisementServiceSol32Frame(
       Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: Shortint; const Uuid: Cardinal);
+      const Rssi: SByte; const Uuid: Cardinal);
     procedure wclBluetoothLeBeaconWatcherAdvertisementReceived(
       Sender: TObject; const Address, Timestamp: Int64;
-      const Rssi: Shortint;
+      const Rssi: SByte;
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
 
     procedure wclBluetoothLeAdvertiserStarted(Sender: TObject);
@@ -292,7 +292,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementRawFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const DataType: Byte;
+  const Rssi: SByte; const DataType: Byte;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 begin
   lbFrames.Items.Add('UNKNOWN RAW FRAME');
@@ -310,7 +310,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherManufacturerRawFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const CompanyId: Word;
+  const Rssi: SByte; const CompanyId: Word;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 begin
   lbFrames.Items.Add('UNKNOWN MANUFACTURER RAW FRAME');
@@ -327,8 +327,8 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherProximityBeaconFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const CompanyId: Word; const Major: Word;
-  const Minor: Word; const Uuid: TGUID; const TxRssi: Shortint;
+  const Rssi: SByte; const CompanyId: Word; const Major: Word;
+  const Minor: Word; const Uuid: TGUID; const TxRssi: SByte;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 var
   Dist: Double;
@@ -356,7 +356,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherEddystoneUidFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: ShortInt; const TxRssi: Shortint; const Uuid: TGUID;
+  const Rssi: SByte; const TxRssi: SByte; const Uuid: TGUID;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 var
   Dist: Double;
@@ -382,7 +382,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherEddystoneUrlFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: ShortInt; const TxRssi: Shortint; const Url: String);
+  const Rssi: SByte; const TxRssi: SByte; const Url: String);
 var
   Dist: Double;
 begin
@@ -405,7 +405,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherEddystoneTlmFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const AdvCnt: Cardinal; const Batt: Word;
+  const Rssi: SByte; const AdvCnt: Cardinal; const Batt: Word;
   const SecCnt: Cardinal; const Temp: Double;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 begin
@@ -612,8 +612,8 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAltBeaconFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const CompanyId: Word; const Major: Word;
-  const Minor: Word; const Uuid: TGUID; const TxRssi: Shortint;
+  const Rssi: SByte; const CompanyId: Word; const Major: Word;
+  const Minor: Word; const Uuid: TGUID; const TxRssi: SByte;
   const Reserved: Byte; const Data: TwclBluetoothLeAdvertisementFrameRawData);
 var
   Dist: Double;
@@ -642,7 +642,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementFrameInformation(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const Name: String;
+  const Rssi: SByte; const Name: String;
   const PacketType: TwclBluetoothLeAdvertisementType;
   const Flags: TwclBluetoothLeAdvertisementFlags);
 var
@@ -690,7 +690,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementUuidFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const Uuid: TGUID);
+  const Rssi: SByte; const Uuid: TGUID);
 begin
   lbFrames.Items.Add('UUID FRAME');
 
@@ -704,8 +704,8 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementExtFrameInformation(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const AddressType: TwclBluetoothAddressType;
-  const TxPower: Shortint; const Flags: TwclBluetoothLeExtendedFrameFlags);
+  const Rssi: SByte; const AddressType: TwclBluetoothAddressType;
+  const TxPower: SByte; const Flags: TwclBluetoothLeExtendedFrameFlags);
 var
   Str: string;
 begin
@@ -748,7 +748,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementService128DataFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const Uuid: TGUID;
+  const Rssi: SByte; const Uuid: TGUID;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 begin
   lbFrames.Items.Add('128 UUID SERVICE DATA');
@@ -765,7 +765,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementService16DataFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const Uuid: Word;
+  const Rssi: SByte; const Uuid: Word;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 begin
   lbFrames.Items.Add('16 UUID SERVICE DATA');
@@ -782,7 +782,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementService32DataFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const Uuid: Cardinal;
+  const Rssi: SByte; const Uuid: Cardinal;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 begin
   lbFrames.Items.Add('32 UUID SERVICE DATA');
@@ -799,7 +799,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementServiceSol128Frame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const Uuid: TGUID);
+  const Rssi: SByte; const Uuid: TGUID);
 begin
   lbFrames.Items.Add('128 UUID SOL SERVICE');
 
@@ -813,7 +813,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementServiceSol16Frame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const Uuid: Word);
+  const Rssi: SByte; const Uuid: Word);
 begin
   lbFrames.Items.Add('16 UUID SOL SERVICE');
 
@@ -827,7 +827,7 @@ end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementServiceSol32Frame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: Shortint; const Uuid: Cardinal);
+  const Rssi: SByte; const Uuid: Cardinal);
 begin
   lbFrames.Items.Add('32 UUID SOL SERVICE');
 
@@ -957,7 +957,7 @@ begin
 end;
 
 procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementReceived(
-  Sender: TObject; const Address, Timestamp: Int64; const Rssi: Shortint;
+  Sender: TObject; const Address, Timestamp: Int64; const Rssi: SByte;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
 begin
   lbFrames.Items.Add('RAW ADVERTISEMENT FRAME');
