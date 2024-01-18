@@ -141,9 +141,6 @@ type
     procedure wclBluetoothLeBeaconWatcherAdvertisementTxPowerLevelFrame(
       Sender: TObject; const Address, Timestamp: Int64; const Rssi,
       TxPower: SByte);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementAppearanceFrame(
-      Sender: TObject; const Address, Timestamp: Int64; const Rssi: SByte;
-      const Appearance: Word);
 
     procedure wclBluetoothLeAdvertiserStarted(Sender: TObject);
     procedure wclBluetoothLeAdvertiserStopped(Sender: TObject);
@@ -929,7 +926,6 @@ begin
   wclBluetoothLeBeaconWatcher.OnManufacturerRawFrame := wclBluetoothLeBeaconWatcherManufacturerRawFrame;
   wclBluetoothLeBeaconWatcher.OnProximityBeaconFrame := wclBluetoothLeBeaconWatcherProximityBeaconFrame;
   wclBluetoothLeBeaconWatcher.OnAdvertisementTxPowerLevelFrame := wclBluetoothLeBeaconWatcherAdvertisementTxPowerLevelFrame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementAppearanceFrame := wclBluetoothLeBeaconWatcherAdvertisementAppearanceFrame;
   wclBluetoothLeBeaconWatcher.OnStarted := wclBluetoothLeBeaconWatcherStarted;
   wclBluetoothLeBeaconWatcher.OnStopped := wclBluetoothLeBeaconWatcherStopped;
 
@@ -989,21 +985,6 @@ begin
   lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
 
   lbFrames.Items.Add('  TX Power: ' + IntToStr(TxPower));
-
-  lbFrames.Items.Add('-------------------------------------------------------');
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementAppearanceFrame(
-  Sender: TObject; const Address, Timestamp: Int64; const Rssi: SByte;
-  const Appearance: Word);
-begin
-  lbFrames.Items.Add('APPEARANCE FRAME');
-
-  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
-  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
-
-  lbFrames.Items.Add('  Appearance: ' + IntToHex(Appearance, 4));
 
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
