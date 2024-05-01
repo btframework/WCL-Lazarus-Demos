@@ -19,7 +19,9 @@ type
   TfmMain = class(TForm)
     btStart: TButton;
     btStop: TButton;
+    btClear: TButton;
     lbLog: TListBox;
+    procedure btClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btStartClick(Sender: TObject);
     procedure btStopClick(Sender: TObject);
@@ -118,6 +120,11 @@ begin
     FShortData[i] := i + 1;
   for i := 0 to LONG_DATA_LEN - 1 do
     FLongData[i] := LOBYTE(i);
+end;
+
+procedure TfmMain.btClearClick(Sender: TObject);
+begin
+  lbLog.Items.Clear;
 end;
 
 procedure TfmMain.wclBluetoothManagerAfterOpen(Sender: TObject);

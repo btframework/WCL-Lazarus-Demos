@@ -14,7 +14,7 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.4.0'
+  LCLVersion = '2.2.6.0'
   object btStart: TButton
     Left = 8
     Height = 25
@@ -40,5 +40,14 @@ object fmMain: TfmMain
     Width = 569
     ItemHeight = 0
     TabOrder = 2
+  end
+  object btClear: TButton
+    Left = 502
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Clear'
+    OnClick = btClearClick
+    TabOrder = 3
   end
 end
