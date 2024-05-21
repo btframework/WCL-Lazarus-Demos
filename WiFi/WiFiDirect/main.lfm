@@ -14,13 +14,14 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  LCLVersion = '2.2.6.0'
   object laDiscoverability: TLabel
     Left = 16
     Height = 13
     Top = 16
     Width = 68
     Caption = 'Discoverability'
+    ParentColor = False
   end
   object laPairingProcedure: TLabel
     Left = 200
@@ -28,6 +29,7 @@ object fmMain: TfmMain
     Top = 16
     Width = 83
     Caption = 'Pairing procedure'
+    ParentColor = False
   end
   object laGroupOwnerIntent: TLabel
     Left = 16
@@ -35,6 +37,7 @@ object fmMain: TfmMain
     Top = 72
     Width = 90
     Caption = 'Group owner intent'
+    ParentColor = False
   end
   object laConfigurationMethods: TLabel
     Left = 200
@@ -42,6 +45,7 @@ object fmMain: TfmMain
     Top = 40
     Width = 105
     Caption = 'Configuration methods'
+    ParentColor = False
   end
   object cbAutonomousGroupOwner: TCheckBox
     Left = 16

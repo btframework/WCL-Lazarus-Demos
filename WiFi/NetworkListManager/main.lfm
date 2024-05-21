@@ -14,13 +14,14 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  LCLVersion = '2.2.6.0'
   object laNetworkType: TLabel
     Left = 424
     Height = 13
     Top = 16
     Width = 67
     Caption = 'Network Type'
+    ParentColor = False
   end
   object laNewNameOrDescription: TLabel
     Left = 8
@@ -28,6 +29,7 @@ object fmMain: TfmMain
     Top = 200
     Width = 117
     Caption = 'New name or description'
+    ParentColor = False
   end
   object laCategory: TLabel
     Left = 456
@@ -35,6 +37,7 @@ object fmMain: TfmMain
     Top = 200
     Width = 42
     Caption = 'Category'
+    ParentColor = False
   end
   object btOpen: TButton
     Left = 8

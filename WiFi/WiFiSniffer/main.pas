@@ -1,17 +1,14 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, wclWiFi, StdCtrls, ComCtrls;
+  Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
+  wclWiFi, StdCtrls, ComCtrls;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     laMacAddressTitle: TLabel;
     laMacAddress: TLabel;
@@ -42,21 +39,21 @@ type
     procedure btSetChannelClick(Sender: TObject);
     procedure btSetPhyClick(Sender: TObject);
     procedure btClearClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
-    wclWiFiClient: TwclWiFiClient;
-    wclWiFiSniffer: TwclWiFiSniffer;
-
-    procedure wclWiFiSnifferAfterOpen(Sender: TObject);
-    procedure wclWiFiSnifferBeforeClose(Sender: TObject);
-    procedure wclWiFiSnifferRawFrameReceived(Sender: TObject;
-      const Buffer: Pointer; const Size: Cardinal);
+    WiFiClient: TwclWiFiClient;
+    WiFiSniffer: TwclWiFiSniffer;
 
     procedure ShowError(const s: string; const Error: Integer);
     procedure RefreshChannel;
     procedure RefreshPhy;
+
+    procedure WiFiSnifferAfterOpen(Sender: TObject);
+    procedure WiFiSnifferBeforeClose(Sender: TObject);
+    procedure WiFiSnifferRawFrameReceived(Sender: TObject;
+      const Buffer: Pointer; const Size: Cardinal);
   end;
 
 var
@@ -76,7 +73,7 @@ var
   Ch: Cardinal;
   Res: Integer;
 begin
-  Res := wclWiFiSniffer.GetChannel(Ch);
+  Res := WiFiSniffer.GetChannel(Ch);
   if Res = WCL_E_SUCCESS then
     laChannel.Caption := IntToStr(Ch)
   else
@@ -88,8 +85,8 @@ var
   Phy: TwclWiFiSnifferPhy;
   Res: Integer;
 begin
-  Res := wclWiFiSniffer.GetPhy(Phy);
-  if Res = WCL_E_SUCCESS then
+  Res := WiFiSniffer.GetPhy(Phy);
+  if Res = WCL_E_SUCCESS then begin
     case Phy of
       ph802_11a: laPhy.Caption := '802.11a';
       ph802_11b: laPhy.Caption := '802.11b';
@@ -98,7 +95,7 @@ begin
     else
       laPhy.Caption := 'UNKNOWN';
     end
-  else
+  end else
     laPhy.Caption := 'Error: 0x' + IntToHex(Res, 8);
 end;
 
@@ -116,30 +113,33 @@ var
 begin
   lvInterfaces.Items.Clear;
 
-  Res := wclWiFiClient.Open;
+  Res := WiFiClient.Open;
   if Res <> WCL_E_SUCCESS then
     ShowError('Unable to open WiFi Client', Res)
-  else
+  else begin
     try
-      Res := wclWiFiClient.EnumInterfaces(Ifaces);
+      Res := WiFiClient.EnumInterfaces(Ifaces);
       if Res <> WCL_E_SUCCESS then
         ShowError('Unable to enumerate WiFi Interfaces', Res)
-      else
+      else begin
         try
           if Length(Ifaces) = 0 then
             MessageDlg('No WiFi Interfaces were found', mtWarning, [mbOK], 0)
-          else
+          else begin
             for i := 0 to Length(Ifaces) - 1 do begin
               Item := lvInterfaces.Items.Add;
               Item.Caption := Ifaces[i].Description;
               Item.SubItems.Add(GUIDToString(Ifaces[i].Id));
             end;
+          end;
         finally
           Ifaces := nil;
         end;
+      end;
     finally
-      wclWiFiClient.Close;
+      WiFiClient.Close;
     end;
+  end;
 end;
 
 procedure TfmMain.btStartCaptureClick(Sender: TObject);
@@ -152,8 +152,8 @@ begin
   else begin
     Id := StringToGUID(lvInterfaces.Selected.SubItems[0]);
     try
-      wclWiFiSniffer.DoNotChangeMode := cbDoNotChangeMode.Checked;
-      Res := wclWiFiSniffer.Open(Id);
+      WiFiSniffer.DoNotChangeMode := cbDoNotChangeMode.Checked;
+      Res := WiFiSniffer.Open(Id);
       if Res <> WCL_E_SUCCESS then
         ShowError('Unable start capturing', Res);
     except
@@ -167,7 +167,7 @@ procedure TfmMain.btStopCaptureClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiFiSniffer.Close;
+  Res := WiFiSniffer.Close;
   if Res <> WCL_E_SUCCESS then
     ShowError('Unable to stop capturing', Res);
 end;
@@ -178,7 +178,7 @@ var
   Res: Integer;
 begin
   Ch := StrToInt(edChannel.Text);
-  Res := wclWiFiSniffer.SetChannel(Ch);
+  Res := WiFiSniffer.SetChannel(Ch);
   if Res <> WCL_E_SUCCESS then
     ShowError('Unable to change channel', Res)
   else
@@ -191,24 +191,24 @@ var
   Res: Integer;
 begin
   Phy := TwclWiFiSnifferPhy(cbPhy.ItemIndex);
-  Res := wclWiFiSniffer.SetPhy(Phy);
+  Res := WiFiSniffer.SetPhy(Phy);
   if Res <> WCL_E_SUCCESS then
     ShowError('Unable to change PHY', Res)
   else
     RefreshPhy;
 end;
 
-procedure TfmMain.wclWiFiSnifferAfterOpen(Sender: TObject);
+procedure TfmMain.WiFiSnifferAfterOpen(Sender: TObject);
 var
   Mac: Int64;
   Res: Integer;
 begin
   RefreshChannel;
   RefreshPhy;
-  Res := wclWiFiSniffer.GetMacAddr(Mac);
+  Res := WiFiSniffer.GetMacAddr(Mac);
   if Res = WCL_E_SUCCESS then begin
     laMacAddress.Caption := IntToHex(Mac, 12);
-    case wclWiFiSniffer.Mode of
+    case WiFiSniffer.Mode of
       omUnknown: laIfaceMode.Caption := 'Unknown';
       omStation: laIfaceMode.Caption := 'Station';
       omAccessPoint: laIfaceMode.Caption := 'Access point';
@@ -225,7 +225,7 @@ begin
     laMacAddress.Caption := 'Error: 0x' + IntToHex(Res, 8);
 end;
 
-procedure TfmMain.wclWiFiSnifferBeforeClose(Sender: TObject);
+procedure TfmMain.WiFiSnifferBeforeClose(Sender: TObject);
 begin
   laMacAddress.Caption := '000000000000';
   laPhy.Caption := 'NONE';
@@ -238,22 +238,13 @@ begin
   lbFrames.Clear;
 end;
 
-procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  wclWiFiClient := TwclWiFiClient.Create(nil);
-
-  wclWiFiSniffer := TwclWiFiSniffer.Create(nil);
-  wclWiFiSniffer.AfterOpen := wclWiFiSnifferAfterOpen;
-  wclWiFiSniffer.BeforeClose := wclWiFiSnifferBeforeClose;
-  wclWiFiSniffer.OnRawFrameReceived := wclWiFiSnifferRawFrameReceived;
-end;
-
-procedure TfmMain.wclWiFiSnifferRawFrameReceived(Sender: TObject;
+procedure TfmMain.WiFiSnifferRawFrameReceived(Sender: TObject;
   const Buffer: Pointer; const Size: Cardinal);
 var
   s: string;
   i: Cardinal;
 begin
+  s := '';
   for i := 0 to Size - 1 do begin
     s := s + IntToHex(Byte(PAnsiChar(Buffer)[i]), 2) + ' ';
     if Length(s) = 96 then begin
@@ -268,10 +259,17 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclWiFiSniffer.Close;
-  wclWiFiSniffer.Free;
+  WiFiSniffer.Close;
+end;
 
-  wclWiFiClient.Free;
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  WiFiClient := TwclWiFiClient.Create(nil);
+
+  WiFiSniffer := TwclWiFiSniffer.Create(nil);
+  WiFiSniffer.AfterOpen := WiFiSnifferAfterOpen;
+  WiFiSniffer.BeforeClose := WiFiSnifferBeforeClose;
+  WiFiSniffer.OnRawFrameReceived := WiFiSnifferRawFrameReceived;
 end;
 
 end.

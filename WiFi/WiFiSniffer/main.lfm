@@ -1,82 +1,83 @@
 object fmMain: TfmMain
   Left = 192
-  Height = 539
   Top = 117
-  Width = 764
   BorderStyle = bsSingle
   Caption = 'WiFi Sniffer Demo'
   ClientHeight = 539
   ClientWidth = 764
   Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  PixelsPerInch = 96
   object laMacAddressTitle: TLabel
     Left = 8
-    Height = 13
     Top = 152
     Width = 66
+    Height = 13
     Caption = 'MAC address:'
   end
   object laMacAddress: TLabel
     Left = 88
-    Height = 13
     Top = 152
     Width = 72
+    Height = 13
     Caption = '000000000000'
   end
   object laChannelTitle: TLabel
     Left = 192
-    Height = 13
     Top = 152
     Width = 42
+    Height = 13
     Caption = 'Channel:'
   end
   object laChannel: TLabel
     Left = 240
-    Height = 13
     Top = 152
     Width = 6
+    Height = 13
     Caption = '0'
   end
   object laPhyTitle: TLabel
     Left = 304
-    Height = 13
     Top = 152
     Width = 63
+    Height = 13
     Caption = 'Media (PHY):'
   end
   object laPhy: TLabel
     Left = 376
-    Height = 13
     Top = 152
     Width = 31
+    Height = 13
     Caption = 'NONE'
   end
   object laSetChannelTitle: TLabel
     Left = 8
-    Height = 13
     Top = 184
     Width = 60
+    Height = 13
     Caption = 'Set channel:'
   end
   object laSetPhyTitle: TLabel
     Left = 216
-    Height = 13
     Top = 184
     Width = 44
+    Height = 13
     Caption = 'Set PHY:'
   end
   object laWarning: TLabel
     Left = 520
-    Height = 13
     Top = 184
     Width = 222
+    Height = 13
     Caption = 'ADMINITRATIVE RIGHTS REQUIRED!'
+    Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
@@ -85,62 +86,62 @@ object fmMain: TfmMain
   end
   object laRawFrames: TLabel
     Left = 8
-    Height = 13
     Top = 216
     Width = 73
+    Height = 13
     Caption = 'RAW FRAMES'
   end
   object laIfaceModeCaption: TLabel
     Left = 520
-    Height = 13
     Top = 16
     Width = 74
+    Height = 13
     Caption = 'Interface mode:'
   end
   object laIfaceMode: TLabel
     Left = 608
-    Height = 13
     Top = 16
     Width = 46
+    Height = 13
     Caption = 'Unknown'
   end
   object btEnumInterfaces: TButton
     Left = 8
-    Height = 25
     Top = 8
     Width = 105
+    Height = 25
     Caption = 'Enum interfaces'
-    OnClick = btEnumInterfacesClick
     TabOrder = 0
+    OnClick = btEnumInterfacesClick
   end
   object btStartCapture: TButton
     Left = 144
-    Height = 25
     Top = 8
     Width = 89
+    Height = 25
     Caption = 'Start capture'
-    OnClick = btStartCaptureClick
     TabOrder = 1
+    OnClick = btStartCaptureClick
   end
   object btStopCapture: TButton
     Left = 240
-    Height = 25
     Top = 8
     Width = 89
+    Height = 25
     Caption = 'Stop capture'
-    OnClick = btStopCaptureClick
     TabOrder = 2
+    OnClick = btStopCaptureClick
   end
   object lvInterfaces: TListView
     Left = 8
-    Height = 97
     Top = 40
     Width = 745
-    Columns = <    
+    Height = 97
+    Columns = <
       item
         Caption = 'Friendly name'
         Width = 300
-      end    
+      end
       item
         Caption = 'Id'
         Width = 300
@@ -154,69 +155,68 @@ object fmMain: TfmMain
   end
   object edChannel: TEdit
     Left = 80
-    Height = 21
     Top = 176
     Width = 41
+    Height = 21
     TabOrder = 4
     Text = '6'
   end
   object btSetChannel: TButton
     Left = 128
-    Height = 25
     Top = 176
     Width = 75
+    Height = 25
     Caption = 'Set channel'
-    OnClick = btSetChannelClick
     TabOrder = 5
+    OnClick = btSetChannelClick
   end
   object cbPhy: TComboBox
     Left = 264
-    Height = 21
     Top = 176
     Width = 73
+    Height = 21
+    Style = csDropDownList
     ItemHeight = 13
     ItemIndex = 0
+    TabOrder = 6
+    Text = '802.11a'
     Items.Strings = (
       '802.11a'
       '802.11b'
       '802.11g'
-      '802.11n'
-    )
-    Style = csDropDownList
-    TabOrder = 6
-    Text = '802.11a'
+      '802.11n')
   end
   object btSetPhy: TButton
     Left = 344
-    Height = 25
     Top = 176
     Width = 75
+    Height = 25
     Caption = 'Set PHY'
-    OnClick = btSetPhyClick
     TabOrder = 7
+    OnClick = btSetPhyClick
   end
   object lbFrames: TListBox
     Left = 8
-    Height = 297
     Top = 240
     Width = 745
-    ItemHeight = 0
+    Height = 297
+    ItemHeight = 13
     TabOrder = 8
   end
   object btClear: TButton
     Left = 672
-    Height = 25
     Top = 208
     Width = 75
+    Height = 25
     Caption = 'Clear'
-    OnClick = btClearClick
     TabOrder = 9
+    OnClick = btClearClick
   end
   object cbDoNotChangeMode: TCheckBox
     Left = 344
-    Height = 19
     Top = 16
-    Width = 120
+    Width = 137
+    Height = 17
     Caption = 'Do not change mode'
     TabOrder = 10
   end

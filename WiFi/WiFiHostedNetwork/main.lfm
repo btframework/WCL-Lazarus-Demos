@@ -1,78 +1,78 @@
 object fmMain: TfmMain
   Left = 513
-  Height = 415
   Top = 223
-  Width = 613
   BorderStyle = bsSingle
   Caption = 'WiFi Hosted Network Demo'
   ClientHeight = 415
   ClientWidth = 613
   Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  PixelsPerInch = 96
   object laHnSSID: TLabel
     Left = 16
-    Height = 13
     Top = 296
     Width = 25
+    Height = 13
     Caption = 'SSID'
   end
   object laHnNumberOfPeers: TLabel
     Left = 16
-    Height = 13
     Top = 320
     Width = 78
+    Height = 13
     Caption = 'Number of peers'
   end
   object laHnKey: TLabel
     Left = 376
-    Height = 13
     Top = 264
     Width = 18
+    Height = 13
     Caption = 'Key'
   end
   object btHnOpen: TButton
     Left = 8
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Open'
-    OnClick = btHnOpenClick
     TabOrder = 0
+    OnClick = btHnOpenClick
   end
   object btHnClose: TButton
     Left = 88
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Close'
-    OnClick = btHnCloseClick
     TabOrder = 1
+    OnClick = btHnCloseClick
   end
   object btHnGetConnectionSettings: TButton
     Left = 8
-    Height = 25
     Top = 48
     Width = 153
+    Height = 25
     Caption = 'Get Connection Settings'
-    OnClick = btHnGetConnectionSettingsClick
     TabOrder = 2
+    OnClick = btHnGetConnectionSettingsClick
   end
   object lvHnData: TListView
     Left = 8
-    Height = 169
     Top = 80
     Width = 593
-    Columns = <    
+    Height = 169
+    Columns = <
       item
         Caption = 'Parameter name'
         Width = 200
-      end    
+      end
       item
         Caption = 'Parameter value'
         Width = 360
@@ -87,142 +87,142 @@ object fmMain: TfmMain
   end
   object btHnClear: TButton
     Left = 529
-    Height = 25
     Top = 8
     Width = 72
+    Height = 25
     Caption = 'Clear'
-    OnClick = btHnClearClick
     TabOrder = 4
+    OnClick = btHnClearClick
   end
   object btHnGetKey: TButton
     Left = 168
-    Height = 25
     Top = 48
     Width = 75
+    Height = 25
     Caption = 'Get key'
-    OnClick = btHnGetKeyClick
     TabOrder = 5
+    OnClick = btHnGetKeyClick
   end
   object btHnGetProfile: TButton
     Left = 248
-    Height = 25
     Top = 48
     Width = 75
+    Height = 25
     Caption = 'Get profile'
-    OnClick = btHnGetProfileClick
     TabOrder = 6
+    OnClick = btHnGetProfileClick
   end
   object btHnGetSecuritySettings: TButton
     Left = 328
-    Height = 25
     Top = 48
     Width = 113
+    Height = 25
     Caption = 'Get security settings'
-    OnClick = btHnGetSecuritySettingsClick
     TabOrder = 7
+    OnClick = btHnGetSecuritySettingsClick
   end
   object btHnGetStatus: TButton
     Left = 448
-    Height = 25
     Top = 48
     Width = 75
+    Height = 25
     Caption = 'Get status'
-    OnClick = btHnGetStatusClick
     TabOrder = 8
+    OnClick = btHnGetStatusClick
   end
   object btHnRefreshSecuritySettings: TButton
     Left = 8
-    Height = 25
     Top = 256
     Width = 153
+    Height = 25
     Caption = 'Refresh securoty settings'
-    OnClick = btHnRefreshSecuritySettingsClick
     TabOrder = 9
+    OnClick = btHnRefreshSecuritySettingsClick
   end
   object edHnSSID: TEdit
     Left = 104
-    Height = 21
     Top = 288
     Width = 121
+    Height = 21
     TabOrder = 10
     Text = 'MyHostedNetwork'
   end
   object edHnNumberOfPeers: TEdit
     Left = 104
-    Height = 21
     Top = 312
     Width = 57
+    Height = 21
     TabOrder = 11
     Text = '5'
   end
   object btHnSetSettings: TButton
     Left = 152
-    Height = 25
     Top = 344
     Width = 75
+    Height = 25
     Caption = 'Set settings'
-    OnClick = btHnSetSettingsClick
     TabOrder = 12
+    OnClick = btHnSetSettingsClick
   end
   object edHnKey: TEdit
     Left = 408
-    Height = 21
     Top = 256
     Width = 177
+    Height = 21
     TabOrder = 13
     Text = '123456789'
   end
   object btHnSetKey: TButton
     Left = 512
-    Height = 25
     Top = 312
     Width = 75
+    Height = 25
     Caption = 'Set key'
-    OnClick = btHnSetKeyClick
     TabOrder = 14
+    OnClick = btHnSetKeyClick
   end
   object cbHnPersistent: TCheckBox
     Left = 408
-    Height = 19
     Top = 288
-    Width = 66
+    Width = 97
+    Height = 17
     Caption = 'Persistent'
     TabOrder = 15
   end
   object btHnEnable: TButton
     Left = 8
-    Height = 25
     Top = 376
     Width = 75
+    Height = 25
     Caption = 'Enable'
-    OnClick = btEnableDisableClick
     TabOrder = 16
+    OnClick = btEnableDisableClick
   end
   object btHnDisable: TButton
     Left = 96
-    Height = 25
     Top = 376
     Width = 75
+    Height = 25
     Caption = 'Disable'
-    OnClick = btEnableDisableClick
     TabOrder = 17
+    OnClick = btEnableDisableClick
   end
   object btHnGetState: TButton
     Left = 528
-    Height = 25
     Top = 48
     Width = 75
+    Height = 25
     Caption = 'Get state'
-    OnClick = btHnGetStateClick
     TabOrder = 18
+    OnClick = btHnGetStateClick
   end
   object btHnRestart: TButton
     Left = 168
-    Height = 25
     Top = 256
     Width = 75
+    Height = 25
     Caption = 'Restart'
-    OnClick = btHnRestartClick
     TabOrder = 19
+    OnClick = btHnRestartClick
   end
 end

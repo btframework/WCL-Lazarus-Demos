@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -20,113 +20,8 @@ type
     procedure FormCreate(Sender: TObject);
 
   private
-    wclWiFiEvents: TwclWiFiEvents;
-    FPowerMonitor: TwclPowerEventsMonitor;
-
-    procedure wclWiFiEventsAfterOpen(Sender: TObject);
-    procedure wclWiFiEventsBeforeClose(Sender: TObject);
-    procedure wclWiFiEventsAcmAdHocNetworkStateChange(Sender: TObject;
-      const IfaceId: TGUID; const State: TwclWiFiAdHocNetworkState);
-    procedure wclWiFiEventsAcmAutoconfDisabled(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmAutoconfEnabled(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmBackgroundScanDisabled(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmBackgroundScanEnabled(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmBssTypeChange(Sender: TObject;
-      const IfaceId: TGUID; const BssType: TwclWiFiBssType);
-    procedure wclWiFiEventsAcmConnectionAttemptFail(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
-    procedure wclWiFiEventsAcmConnectionComplete(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
-    procedure wclWiFiEventsAcmConnectionStart(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
-    procedure wclWiFiEventsAcmDisconnected(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
-    procedure wclWiFiEventsAcmDisconnecting(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
-    procedure wclWiFiEventsAcmFilterListChange(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmInterfaceArrival(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmInterfaceRemoval(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmNetworkAvailable(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmNetworkNotAvailable(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmOperationalStateChange(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmPowerSettingChange(Sender: TObject;
-      const IfaceId: TGUID; const Setting: TwclWiFiPowerSetting);
-    procedure wclWiFiEventsAcmProfileBlocked(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmProfileChange(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmProfileNameChange(Sender: TObject;
-      const IfaceId: TGUID; const OldName, NewName: String);
-    procedure wclWiFiEventsAcmProfilesExhausted(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmProfileUnblocked(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmScanComplete(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmScanFail(Sender: TObject;
-      const IfaceId: TGUID; const Reason: Integer);
-    procedure wclWiFiEventsAcmScanListRefresh(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsAcmScreenPowerChange(Sender: TObject;
-      const IfaceId: TGUID; const SwitchedOn: Boolean);
-    procedure wclWiFiEventsHostedNetworkPeerStateChange(Sender: TObject;
-      const IfaceId: TGUID; const OldState,
-      NewState: TwclWiFiHostedNetworkPeerState; const Reason: Integer);
-    procedure wclWiFiEventsHostedNetworkRadioStateChange(Sender: TObject;
-      const IfaceId: TGUID; const SoftwareState,
-      HardwareState: TwclWiFiRadioState);
-    procedure wclWiFiEventsHostedNetworkStateChange(Sender: TObject;
-      const IfaceId: TGUID; const OldState,
-      NewState: TwclWiFiHostedNetworkState; const Reason: Integer);
-    procedure wclWiFiEventsMsmAdapterOperationModeChange(Sender: TObject;
-      const IfaceId: TGUID; const Mode: TwclWiFiOperationMode);
-    procedure wclWiFiEventsMsmAdapterRemoval(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmAssociated(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmAssociating(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmAuthenticating(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmConnected(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmDisassociating(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmDisconnected(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmPeerJoin(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmPeerLeave(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmRadioStateChange(Sender: TObject;
-      const IfaceId: TGUID; const State: TwclWiFiPhyRadioState);
-    procedure wclWiFiEventsMsmRoamingEnd(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmRoamingStart(Sender: TObject;
-      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
-    procedure wclWiFiEventsMsmSignalQualityChange(Sender: TObject;
-      const IfaceId: TGUID; const Quality: Cardinal);
-    procedure wclWiFiEventsMsmLinkDegraded(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsMsmLinkImproved(Sender: TObject;
-      const IfaceId: TGUID);
-    procedure wclWiFiEventsOneXAuthRestarted(Sender: TObject;
-      const IfaceId: TGUID; const Reason: Integer);
-
-    procedure wclWiFiEventsIpChanged(Sender: TObject; const IfaceId: TGUID;
-      const Old, New: TwclWiFiIpSettings);
-    procedure wclWiFiEventsOneXAuthUpdate(Sender: TObject;
-      const IfaceId: TGUID; const State: TwclWiFiOneXStatusUpdate);
+    WiFiEvents: TwclWiFiEvents;
+    PowerMonitor: TwclPowerEventsMonitor;
 
     procedure TraceEvent(const Iface: PGUID; const EventName: string;
       const ParamName: string; const ParamValue: string);
@@ -136,6 +31,110 @@ type
       const EventName: string; const Data: TwclWiFiMsmConnectionEventData);
 
     procedure PowerStateChanged(Sender: TObject; const State: TwclPowerState);
+
+    procedure WiFiEventsAfterOpen(Sender: TObject);
+    procedure WiFiEventsBeforeClose(Sender: TObject);
+    procedure WiFiEventsAcmAdHocNetworkStateChange(Sender: TObject;
+      const IfaceId: TGUID; const State: TwclWiFiAdHocNetworkState);
+    procedure WiFiEventsAcmAutoconfDisabled(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmAutoconfEnabled(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmBackgroundScanDisabled(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmBackgroundScanEnabled(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmBssTypeChange(Sender: TObject;
+      const IfaceId: TGUID; const BssType: TwclWiFiBssType);
+    procedure WiFiEventsAcmConnectionAttemptFail(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
+    procedure WiFiEventsAcmConnectionComplete(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
+    procedure WiFiEventsAcmConnectionStart(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
+    procedure WiFiEventsAcmDisconnected(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
+    procedure WiFiEventsAcmDisconnecting(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
+    procedure WiFiEventsAcmFilterListChange(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmInterfaceArrival(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmInterfaceRemoval(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmNetworkAvailable(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmNetworkNotAvailable(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmOperationalStateChange(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmPowerSettingChange(Sender: TObject;
+      const IfaceId: TGUID; const Setting: TwclWiFiPowerSetting);
+    procedure WiFiEventsAcmProfileBlocked(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmProfileChange(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmProfileNameChange(Sender: TObject;
+      const IfaceId: TGUID; const OldName, NewName: String);
+    procedure WiFiEventsAcmProfilesExhausted(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmProfileUnblocked(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmScanComplete(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmScanFail(Sender: TObject;
+      const IfaceId: TGUID; const Reason: Integer);
+    procedure WiFiEventsAcmScanListRefresh(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsAcmScreenPowerChange(Sender: TObject;
+      const IfaceId: TGUID; const SwitchedOn: Boolean);
+    procedure WiFiEventsHostedNetworkPeerStateChange(Sender: TObject;
+      const IfaceId: TGUID; const OldState,
+      NewState: TwclWiFiHostedNetworkPeerState; const Reason: Integer);
+    procedure WiFiEventsHostedNetworkRadioStateChange(Sender: TObject;
+      const IfaceId: TGUID; const SoftwareState,
+      HardwareState: TwclWiFiRadioState);
+    procedure WiFiEventsHostedNetworkStateChange(Sender: TObject;
+      const IfaceId: TGUID; const OldState,
+      NewState: TwclWiFiHostedNetworkState; const Reason: Integer);
+    procedure WiFiEventsMsmAdapterOperationModeChange(Sender: TObject;
+      const IfaceId: TGUID; const Mode: TwclWiFiOperationMode);
+    procedure WiFiEventsMsmAdapterRemoval(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmAssociated(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmAssociating(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmAuthenticating(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmConnected(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmDisassociating(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmDisconnected(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmPeerJoin(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmPeerLeave(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmRadioStateChange(Sender: TObject;
+      const IfaceId: TGUID; const State: TwclWiFiPhyRadioState);
+    procedure WiFiEventsMsmRoamingEnd(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmRoamingStart(Sender: TObject;
+      const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
+    procedure WiFiEventsMsmSignalQualityChange(Sender: TObject;
+      const IfaceId: TGUID; const Quality: Cardinal);
+    procedure WiFiEventsOneXAuthRestarted(Sender: TObject;
+      const IfaceId: TGUID; const Reason: Integer);
+    procedure WiFiEventsIpChanged(Sender: TObject; const IfaceId: TGUID;
+      const Old, New: TwclWiFiIpSettings);
+    procedure WiFiEventsOneXAuthUpdate(Sender: TObject;
+      const IfaceId: TGUID; const State: TwclWiFiOneXStatusUpdate);
+    procedure WiFiEventsMsmLinkDegraded(Sender: TObject;
+      const IfaceId: TGUID);
+    procedure WiFiEventsMsmLinkImproved(Sender: TObject;
+      const IfaceId: TGUID);
   end;
 
 var
@@ -285,12 +284,12 @@ end;
 
 procedure TfmMain.btEventsOpenClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiEvents.Open);
+  ShowResult(WiFiEvents.Open);
 end;
 
 procedure TfmMain.btEventsCloseClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiEvents.Close);
+  ShowResult(WiFiEvents.Close);
 end;
 
 procedure TfmMain.btEventsClearClick(Sender: TObject);
@@ -298,7 +297,7 @@ begin
   lvEvents.Items.Clear;
 end;
 
-procedure TfmMain.wclWiFiEventsAfterOpen(Sender: TObject);
+procedure TfmMain.WiFiEventsAfterOpen(Sender: TObject);
 begin
   TraceEvent(nil, 'AfterOpen', '', '');
 end;
@@ -321,49 +320,49 @@ begin
   Item.SubItems.Add(ParamValue);
 end;
 
-procedure TfmMain.wclWiFiEventsBeforeClose(Sender: TObject);
+procedure TfmMain.WiFiEventsBeforeClose(Sender: TObject);
 begin
   TraceEvent(nil, 'BeforeClose', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmAdHocNetworkStateChange(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmAdHocNetworkStateChange(Sender: TObject;
   const IfaceId: TGUID; const State: TwclWiFiAdHocNetworkState);
 begin
   TraceEvent(@IfaceId, 'AcmAdHocNetworkStateChange', 'State',
     GetEnumName(State));
 end;
 
-procedure TfmMain.wclWiFiEventsAcmAutoconfDisabled(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmAutoconfDisabled(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmAutoconfDisabled', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmAutoconfEnabled(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmAutoconfEnabled(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmAutoconfEnabled', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmBackgroundScanDisabled(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmBackgroundScanDisabled(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmBackgroundScanDisabled', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmBackgroundScanEnabled(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmBackgroundScanEnabled(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmBackgroundScanEnabled', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmBssTypeChange(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmBssTypeChange(Sender: TObject;
   const IfaceId: TGUID; const BssType: TwclWiFiBssType);
 begin
   TraceEvent(@IfaceId, 'AcmBssTypeChange', 'BSS type', GetEnumName(BssType));
 end;
 
-procedure TfmMain.wclWiFiEventsAcmConnectionAttemptFail(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmConnectionAttemptFail(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
 begin
   TraceAcmConnectionEvent(IfaceId, 'AcmConnectionAttemptFail', Data);
@@ -385,138 +384,139 @@ begin
   TraceEvent(nil, '', 'Reason', '0x' + IntToHex(Data.Reason, 8));
 
   Str := '';
-  for i := Low(TwclWiFiConnectionFlag) to High(TwclWiFiConnectionFlag) do
+  for i := Low(TwclWiFiConnectionFlag) to High(TwclWiFiConnectionFlag) do begin
     if i in Data.Flags then
       Str := Str + GetEnumName(i) + ' ';
+  end;
   TraceEvent(nil, '', 'Flags', Str);
 
   TraceEvent(nil, '', 'Profile XML', Data.ProfileXml);
 end;
 
-procedure TfmMain.wclWiFiEventsAcmConnectionComplete(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmConnectionComplete(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
 begin
   TraceAcmConnectionEvent(IfaceId, 'AcmConnectionComplete', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsAcmConnectionStart(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmConnectionStart(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
 begin
   TraceAcmConnectionEvent(IfaceId, 'AcmConnectionStart', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsAcmDisconnected(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmDisconnected(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
 begin
   TraceAcmConnectionEvent(IfaceId, 'AcmDisconnected', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsAcmDisconnecting(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmDisconnecting(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiAcmConnectionEventData);
 begin
   TraceAcmConnectionEvent(IfaceId, 'AcmDisconnecting', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsAcmFilterListChange(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmFilterListChange(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmFilterListChange', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmInterfaceArrival(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmInterfaceArrival(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmInterfaceArrival', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmInterfaceRemoval(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmInterfaceRemoval(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmInterfaceRemoval', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmNetworkAvailable(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmNetworkAvailable(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmNetworkAvailable', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmNetworkNotAvailable(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmNetworkNotAvailable(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmNetworkNotAvailable', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmOperationalStateChange(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmOperationalStateChange(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmOperationalStateChange', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmPowerSettingChange(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmPowerSettingChange(Sender: TObject;
   const IfaceId: TGUID; const Setting: TwclWiFiPowerSetting);
 begin
   TraceEvent(@IfaceId, 'AcmOperationalStateChange', 'Setting',
     GetEnumName(Setting));
 end;
 
-procedure TfmMain.wclWiFiEventsAcmProfileBlocked(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmProfileBlocked(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmProfileBlocked', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmProfileChange(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmProfileChange(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmProfileChange', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmProfileNameChange(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmProfileNameChange(Sender: TObject;
   const IfaceId: TGUID; const OldName, NewName: String);
 begin
   TraceEvent(@IfaceId, 'AcmProfileNameChange', 'OldName', OldName);
   TraceEvent(nil, '', 'NewName', NewName);
 end;
 
-procedure TfmMain.wclWiFiEventsAcmProfilesExhausted(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmProfilesExhausted(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmProfilesExhausted', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmProfileUnblocked(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmProfileUnblocked(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmProfileUnblocked', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmScanComplete(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmScanComplete(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmScanComplete', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmScanFail(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmScanFail(Sender: TObject;
   const IfaceId: TGUID; const Reason: Integer);
 begin
   TraceEvent(@IfaceId, 'AcmScanFail', 'Reason', '0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclWiFiEventsAcmScanListRefresh(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmScanListRefresh(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'AcmScanListRefresh', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsAcmScreenPowerChange(Sender: TObject;
+procedure TfmMain.WiFiEventsAcmScreenPowerChange(Sender: TObject;
   const IfaceId: TGUID; const SwitchedOn: Boolean);
 begin
   TraceEvent(@IfaceId, 'AcmScreenPowerChange', 'SwitchedOn',
     BoolToStr(SwitchedOn, True));
 end;
 
-procedure TfmMain.wclWiFiEventsHostedNetworkPeerStateChange(
+procedure TfmMain.WiFiEventsHostedNetworkPeerStateChange(
   Sender: TObject; const IfaceId: TGUID; const OldState,
   NewState: TwclWiFiHostedNetworkPeerState; const Reason: Integer);
 begin
@@ -530,7 +530,7 @@ begin
   TraceEvent(nil, '', 'Reason', '0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclWiFiEventsHostedNetworkRadioStateChange(
+procedure TfmMain.WiFiEventsHostedNetworkRadioStateChange(
   Sender: TObject; const IfaceId: TGUID; const SoftwareState,
   HardwareState: TwclWiFiRadioState);
 begin
@@ -539,7 +539,7 @@ begin
   TraceEvent(nil, '', 'Hardware state', GetEnumName(HardwareState));
 end;
 
-procedure TfmMain.wclWiFiEventsHostedNetworkStateChange(Sender: TObject;
+procedure TfmMain.WiFiEventsHostedNetworkStateChange(Sender: TObject;
   const IfaceId: TGUID; const OldState,
   NewState: TwclWiFiHostedNetworkState; const Reason: Integer);
 begin
@@ -549,7 +549,7 @@ begin
   TraceEvent(nil, '', 'Reason', '0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclWiFiEventsMsmAdapterOperationModeChange(
+procedure TfmMain.WiFiEventsMsmAdapterOperationModeChange(
   Sender: TObject; const IfaceId: TGUID;
   const Mode: TwclWiFiOperationMode);
 begin
@@ -557,61 +557,61 @@ begin
     GetEnumName(Mode));
 end;
 
-procedure TfmMain.wclWiFiEventsMsmAdapterRemoval(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmAdapterRemoval(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmAdapterRemoval', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmAssociated(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmAssociated(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmAssociated', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmAssociating(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmAssociating(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmAssociating', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmAuthenticating(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmAuthenticating(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmAuthenticating', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmConnected(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmConnected(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmConnected', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmDisassociating(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmDisassociating(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmDisassociating', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmDisconnected(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmDisconnected(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmDisconnected', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmPeerJoin(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmPeerJoin(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmPeerJoin', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmPeerLeave(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmPeerLeave(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmPeerLeave', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmRadioStateChange(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmRadioStateChange(Sender: TObject;
   const IfaceId: TGUID; const State: TwclWiFiPhyRadioState);
 begin
   TraceEvent(@IfaceId, 'MsmRadioStateChange', 'PHY', GetEnumName(State.Phy));
@@ -619,19 +619,19 @@ begin
   TraceEvent(nil, '', 'Hardware state', GetEnumName(State.HardwareState));
 end;
 
-procedure TfmMain.wclWiFiEventsMsmRoamingEnd(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmRoamingEnd(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmRoamingEnd', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmRoamingStart(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmRoamingStart(Sender: TObject;
   const IfaceId: TGUID; const Data: TwclWiFiMsmConnectionEventData);
 begin
   TraceMsmConnectionEvent(IfaceId, 'MsmRoamingStart', Data);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmSignalQualityChange(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmSignalQualityChange(Sender: TObject;
   const IfaceId: TGUID; const Quality: Cardinal);
 begin
   TraceEvent(@IfaceId, 'MsmSignalQualityChange', 'Quality', IntToStr(Quality));
@@ -653,7 +653,7 @@ begin
   TraceEvent(nil, '', 'Reason', '0x' + IntToHex(Data.Reason, 8));
 end;
 
-procedure TfmMain.wclWiFiEventsOneXAuthRestarted(Sender: TObject;
+procedure TfmMain.WiFiEventsOneXAuthRestarted(Sender: TObject;
   const IfaceId: TGUID; const Reason: Integer);
 begin
   TraceEvent(@IfaceId, 'OneXAuthRestarted', 'Reason',
@@ -662,71 +662,76 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclWiFiEvents.Close;
-  wclWiFiEvents.Free;
-  
-  FPowerMonitor.Close;
-  FPowerMonitor.Free;
+  WiFiEvents.Close;
+  WiFiEvents.Free;
+
+  PowerMonitor.Close;
+  PowerMonitor.Free;
 end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclWiFiEvents := TwclWiFiEvents.Create(nil);
-  wclWiFiEvents.AfterOpen := wclWiFiEventsAfterOpen;
-  wclWiFiEvents.BeforeClose := wclWiFiEventsBeforeClose;
-  wclWiFiEvents.OnAcmAdHocNetworkStateChange := wclWiFiEventsAcmAdHocNetworkStateChange;
-  wclWiFiEvents.OnAcmAutoconfDisabled := wclWiFiEventsAcmAutoconfDisabled;
-  wclWiFiEvents.OnAcmAutoconfEnabled := wclWiFiEventsAcmAutoconfEnabled;
-  wclWiFiEvents.OnAcmBackgroundScanDisabled := wclWiFiEventsAcmBackgroundScanDisabled;
-  wclWiFiEvents.OnAcmBackgroundScanEnabled := wclWiFiEventsAcmBackgroundScanEnabled;
-  wclWiFiEvents.OnAcmBssTypeChange := wclWiFiEventsAcmBssTypeChange;
-  wclWiFiEvents.OnAcmConnectionAttemptFail := wclWiFiEventsAcmConnectionAttemptFail;
-  wclWiFiEvents.OnAcmConnectionComplete := wclWiFiEventsAcmConnectionComplete;
-  wclWiFiEvents.OnAcmConnectionStart := wclWiFiEventsAcmConnectionStart;
-  wclWiFiEvents.OnAcmDisconnected := wclWiFiEventsAcmDisconnected;
-  wclWiFiEvents.OnAcmDisconnecting := wclWiFiEventsAcmDisconnecting;
-  wclWiFiEvents.OnAcmFilterListChange := wclWiFiEventsAcmFilterListChange;
-  wclWiFiEvents.OnAcmInterfaceArrival := wclWiFiEventsAcmInterfaceArrival;
-  wclWiFiEvents.OnAcmInterfaceRemoval := wclWiFiEventsAcmInterfaceRemoval;
-  wclWiFiEvents.OnAcmNetworkAvailable := wclWiFiEventsAcmNetworkAvailable;
-  wclWiFiEvents.OnAcmNetworkNotAvailable := wclWiFiEventsAcmNetworkNotAvailable;
-  wclWiFiEvents.OnAcmOperationalStateChange := wclWiFiEventsAcmOperationalStateChange;
-  wclWiFiEvents.OnAcmPowerSettingChange := wclWiFiEventsAcmPowerSettingChange;
-  wclWiFiEvents.OnAcmProfileBlocked := wclWiFiEventsAcmProfileBlocked;
-  wclWiFiEvents.OnAcmProfileChange := wclWiFiEventsAcmProfileChange;
-  wclWiFiEvents.OnAcmProfileNameChange := wclWiFiEventsAcmProfileNameChange;
-  wclWiFiEvents.OnAcmProfilesExhausted := wclWiFiEventsAcmProfilesExhausted;
-  wclWiFiEvents.OnAcmProfileUnblocked := wclWiFiEventsAcmProfileUnblocked;
-  wclWiFiEvents.OnAcmScanComplete := wclWiFiEventsAcmScanComplete;
-  wclWiFiEvents.OnAcmScanFail := wclWiFiEventsAcmScanFail;
-  wclWiFiEvents.OnAcmScanListRefresh := wclWiFiEventsAcmScanListRefresh;
-  wclWiFiEvents.OnAcmScreenPowerChange := wclWiFiEventsAcmScreenPowerChange;
-  wclWiFiEvents.OnHostedNetworkPeerStateChange := wclWiFiEventsHostedNetworkPeerStateChange;
-  wclWiFiEvents.OnHostedNetworkRadioStateChange := wclWiFiEventsHostedNetworkRadioStateChange;
-  wclWiFiEvents.OnHostedNetworkStateChange := wclWiFiEventsHostedNetworkStateChange;
-  wclWiFiEvents.OnMsmAdapterOperationModeChange := wclWiFiEventsMsmAdapterOperationModeChange;
-  wclWiFiEvents.OnMsmAdapterRemoval := wclWiFiEventsMsmAdapterRemoval;
-  wclWiFiEvents.OnMsmAssociated := wclWiFiEventsMsmAssociated;
-  wclWiFiEvents.OnMsmAssociating := wclWiFiEventsMsmAssociating;
-  wclWiFiEvents.OnMsmAuthenticating := wclWiFiEventsMsmAuthenticating;
-  wclWiFiEvents.OnMsmConnected := wclWiFiEventsMsmConnected;
-  wclWiFiEvents.OnMsmDisassociating := wclWiFiEventsMsmDisassociating;
-  wclWiFiEvents.OnMsmDisconnected := wclWiFiEventsMsmDisconnected;
-  wclWiFiEvents.OnMsmPeerJoin := wclWiFiEventsMsmPeerJoin;
-  wclWiFiEvents.OnMsmPeerLeave := wclWiFiEventsMsmPeerLeave;
-  wclWiFiEvents.OnMsmRadioStateChange := wclWiFiEventsMsmRadioStateChange;
-  wclWiFiEvents.OnMsmRoamingEnd := wclWiFiEventsMsmRoamingEnd;
-  wclWiFiEvents.OnMsmRoamingStart := wclWiFiEventsMsmRoamingStart;
-  wclWiFiEvents.OnMsmSignalQualityChange := wclWiFiEventsMsmSignalQualityChange;
-  wclWiFiEvents.OnMsmLinkDegraded := wclWiFiEventsMsmLinkDegraded;
-  wclWiFiEvents.OnMsmLinkImproved := wclWiFiEventsMsmLinkImproved;
-  wclWiFiEvents.OnOneXAuthRestarted := wclWiFiEventsOneXAuthRestarted;
-  wclWiFiEvents.OnOneXAuthUpdate := wclWiFiEventsOneXAuthUpdate;
-  wclWiFiEvents.OnIpChanged := wclWiFiEventsIpChanged;
+  WiFiEvents := TwclWiFiEvents.Create(nil);
+  WiFiEvents.AfterOpen := WiFiEventsAfterOpen;
+  WiFiEvents.BeforeClose := WiFiEventsBeforeClose;
 
-  FPowerMonitor := TwclPowerEventsMonitor.Create;
-  FPowerMonitor.OnPowerStateChanged := PowerStateChanged;
-  FPowerMonitor.Open;
+  WiFiEvents.OnAcmAdHocNetworkStateChange := WiFiEventsAcmAdHocNetworkStateChange;
+  WiFiEvents.OnAcmAutoconfDisabled := WiFiEventsAcmAutoconfDisabled;
+  WiFiEvents.OnAcmAutoconfEnabled := WiFiEventsAcmAutoconfEnabled;
+  WiFiEvents.OnAcmBackgroundScanDisabled := WiFiEventsAcmBackgroundScanDisabled;
+  WiFiEvents.OnAcmBackgroundScanEnabled := WiFiEventsAcmBackgroundScanEnabled;
+  WiFiEvents.OnAcmBssTypeChange := WiFiEventsAcmBssTypeChange;
+  WiFiEvents.OnAcmConnectionAttemptFail := WiFiEventsAcmConnectionAttemptFail;
+  WiFiEvents.OnAcmConnectionComplete := WiFiEventsAcmConnectionComplete;
+  WiFiEvents.OnAcmConnectionStart := WiFiEventsAcmConnectionStart;
+  WiFiEvents.OnAcmDisconnected := WiFiEventsAcmDisconnected;
+  WiFiEvents.OnAcmDisconnecting := WiFiEventsAcmDisconnecting;
+  WiFiEvents.OnAcmFilterListChange := WiFiEventsAcmFilterListChange;
+  WiFiEvents.OnAcmInterfaceArrival := WiFiEventsAcmInterfaceArrival;
+  WiFiEvents.OnAcmInterfaceRemoval := WiFiEventsAcmInterfaceRemoval;
+  WiFiEvents.OnAcmNetworkAvailable := WiFiEventsAcmNetworkAvailable;
+  WiFiEvents.OnAcmNetworkNotAvailable := WiFiEventsAcmNetworkNotAvailable;
+  WiFiEvents.OnAcmOperationalStateChange := WiFiEventsAcmOperationalStateChange;
+  WiFiEvents.OnAcmPowerSettingChange := WiFiEventsAcmPowerSettingChange;
+  WiFiEvents.OnAcmProfileBlocked := WiFiEventsAcmProfileBlocked;
+  WiFiEvents.OnAcmProfileChange := WiFiEventsAcmProfileChange;
+  WiFiEvents.OnAcmProfileNameChange := WiFiEventsAcmProfileNameChange;
+  WiFiEvents.OnAcmProfilesExhausted := WiFiEventsAcmProfilesExhausted;
+  WiFiEvents.OnAcmProfileUnblocked := WiFiEventsAcmProfileUnblocked;
+  WiFiEvents.OnAcmScanComplete := WiFiEventsAcmScanComplete;
+  WiFiEvents.OnAcmScanFail := WiFiEventsAcmScanFail;
+  WiFiEvents.OnAcmScanListRefresh := WiFiEventsAcmScanListRefresh;
+  WiFiEvents.OnAcmScreenPowerChange := WiFiEventsAcmScreenPowerChange;
+
+  WiFiEvents.OnHostedNetworkPeerStateChange := WiFiEventsHostedNetworkPeerStateChange;
+  WiFiEvents.OnHostedNetworkRadioStateChange := WiFiEventsHostedNetworkRadioStateChange;
+  WiFiEvents.OnHostedNetworkStateChange := WiFiEventsHostedNetworkStateChange;
+
+  WiFiEvents.OnIpChanged := WiFiEventsIpChanged;
+
+  WiFiEvents.OnMsmAdapterOperationModeChange := WiFiEventsMsmAdapterOperationModeChange;
+  WiFiEvents.OnMsmAdapterRemoval := WiFiEventsMsmAdapterRemoval;
+  WiFiEvents.OnMsmAssociated := WiFiEventsMsmAssociated;
+  WiFiEvents.OnMsmAssociating := WiFiEventsMsmAssociating;
+  WiFiEvents.OnMsmAuthenticating := WiFiEventsMsmAuthenticating;
+  WiFiEvents.OnMsmConnected := WiFiEventsMsmConnected;
+  WiFiEvents.OnMsmDisassociating := WiFiEventsMsmDisassociating;
+  WiFiEvents.OnMsmDisconnected := WiFiEventsMsmDisconnected;
+  WiFiEvents.OnMsmPeerJoin := WiFiEventsMsmPeerJoin;
+  WiFiEvents.OnMsmPeerLeave := WiFiEventsMsmPeerLeave;
+  WiFiEvents.OnMsmRadioStateChange := WiFiEventsMsmRadioStateChange;
+  WiFiEvents.OnMsmRoamingEnd := WiFiEventsMsmRoamingEnd;
+  WiFiEvents.OnMsmRoamingStart := WiFiEventsMsmRoamingStart;
+  WiFiEvents.OnMsmSignalQualityChange := WiFiEventsMsmSignalQualityChange;
+  WiFiEvents.OnMsmLinkDegraded := WiFiEventsMsmLinkDegraded;
+  WiFiEvents.OnMsmLinkImproved := WiFiEventsMsmLinkImproved;
+
+  WiFiEvents.OnOneXAuthRestarted := WiFiEventsOneXAuthRestarted;
+  WiFiEvents.OnOneXAuthUpdate := WiFiEventsOneXAuthUpdate;
+
+  PowerMonitor := TwclPowerEventsMonitor.Create;
+  PowerMonitor.OnPowerStateChanged := PowerStateChanged;
+  PowerMonitor.Open;
 end;
 
 procedure TfmMain.PowerStateChanged(Sender: TObject;
@@ -744,14 +749,14 @@ begin
   end;
 end;
 
-procedure TfmMain.wclWiFiEventsIpChanged(Sender: TObject;
+procedure TfmMain.WiFiEventsIpChanged(Sender: TObject;
   const IfaceId: TGUID; const Old, New: TwclWiFiIpSettings);
 begin
   TraceEvent(@IfaceId, 'IP changed', 'Old address', Old.Address);
   TraceEvent(nil, '', 'New address', New.Address);
 end;
 
-procedure TfmMain.wclWiFiEventsOneXAuthUpdate(Sender: TObject;
+procedure TfmMain.WiFiEventsOneXAuthUpdate(Sender: TObject;
   const IfaceId: TGUID; const State: TwclWiFiOneXStatusUpdate);
 var
   Str: string;
@@ -920,13 +925,13 @@ begin
   TraceEvent(nil, '', 'EapError.RepairString', State.EapError.RepairString);
 end;
 
-procedure TfmMain.wclWiFiEventsMsmLinkDegraded(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmLinkDegraded(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'MsmLinkDegraded', '', '');
 end;
 
-procedure TfmMain.wclWiFiEventsMsmLinkImproved(Sender: TObject;
+procedure TfmMain.WiFiEventsMsmLinkImproved(Sender: TObject;
   const IfaceId: TGUID);
 begin
   TraceEvent(@IfaceId, 'MsmLinkImproved', '', '');

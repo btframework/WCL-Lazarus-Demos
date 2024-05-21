@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -8,9 +8,6 @@ uses
   Forms, Controls, StdCtrls, Classes, wclWiFi, ComCtrls;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     btOpen: TButton;
     btClose: TButton;
@@ -52,20 +49,20 @@ type
     procedure btGetBandClick(Sender: TObject);
     procedure btSetBandClick(Sender: TObject);
     procedure btConnectedClientsClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btCheckTimeoutClick(Sender: TObject);
     procedure btEnableTimeoutClick(Sender: TObject);
     procedure btDisableTimeoutClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
-    wclMobileHotspot: TwclMobileHotspot;
-
-    procedure wclMobileHotspotClosed(Sender: TObject);
-    procedure wclMobileHotspotOpened(Sender: TObject);
+    MobileHotspot: TwclMobileHotspot;
 
     procedure Trace(const Msg: string); overload;
     procedure Trace(const Msg: string; const Error: Integer); overload;
+
+    procedure MobileHotspotClosed(Sender: TObject);
+    procedure MobileHotspotOpened(Sender: TObject);
   end;
 
 var
@@ -82,7 +79,7 @@ procedure TfmMain.btOpenClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclMobileHotspot.Open;
+  Res := MobileHotspot.Open;
   if Res <> WCL_E_SUCCESS then
     Trace('Open failed', Res);
 end;
@@ -101,12 +98,12 @@ procedure TfmMain.btCloseClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclMobileHotspot.Close;
+  Res := MobileHotspot.Close;
   if Res <> WCL_E_SUCCESS then
     Trace('Close failed', Res);
 end;
 
-procedure TfmMain.wclMobileHotspotClosed(Sender: TObject);
+procedure TfmMain.MobileHotspotClosed(Sender: TObject);
 begin
   Trace('Mobile hotspot closed.');
 
@@ -116,15 +113,15 @@ begin
   lvConnectedClients.Items.Clear;
 end;
 
-procedure TfmMain.wclMobileHotspotOpened(Sender: TObject);
+procedure TfmMain.MobileHotspotOpened(Sender: TObject);
 var
   Ssid: string;
   Passphrase: string;
 begin
   Trace('Mobile hotspot opened.');
-  if wclMobileHotspot.GetSsid(Ssid) = WCL_E_SUCCESS then
+  if MobileHotspot.GetSsid(Ssid) = WCL_E_SUCCESS then
     edSsid.Text := Ssid;
-  if wclMobileHotspot.GetPassphrase(Passphrase) = WCL_E_SUCCESS then
+  if MobileHotspot.GetPassphrase(Passphrase) = WCL_E_SUCCESS then
     edPassword.Text := Passphrase;
 end;
 
@@ -132,7 +129,7 @@ procedure TfmMain.btStartClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclMobileHotspot.Start;
+  Res := MobileHotspot.Start;
   if Res <> WCL_E_SUCCESS then
     Trace('Start failed', Res);
 end;
@@ -141,7 +138,7 @@ procedure TfmMain.btStopClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclMobileHotspot.Stop;
+  Res := MobileHotspot.Stop;
   if Res <> WCL_E_SUCCESS then
     Trace('Stop failed', Res);
 end;
@@ -151,7 +148,7 @@ var
   Res: Integer;
   State: TwclMobileHotspotState;
 begin
-  Res := wclMobileHotspot.GetState(State);
+  Res := MobileHotspot.GetState(State);
   if Res <> WCL_E_SUCCESS then
     Trace('Get state failed', Res)
   else begin
@@ -173,7 +170,7 @@ var
   Res: Integer;
   Ssid: string;
 begin
-  Res := wclMobileHotspot.GetSsid(Ssid);
+  Res := MobileHotspot.GetSsid(Ssid);
   if Res <> WCL_E_SUCCESS then
     Trace('Get SSID failed', Res)
   else
@@ -184,7 +181,7 @@ procedure TfmMain.btSetSsidClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclMobileHotspot.SetSsid(edSsid.Text);
+  Res := MobileHotspot.SetSsid(edSsid.Text);
   if Res <> WCL_E_SUCCESS then
     Trace('Set SSID failed', Res);
 end;
@@ -194,7 +191,7 @@ var
   Res: Integer;
   Pwd: string;
 begin
-  Res := wclMobileHotspot.GetPassphrase(Pwd);
+  Res := MobileHotspot.GetPassphrase(Pwd);
   if Res <> WCL_E_SUCCESS then
     Trace('Get passphrase failed', Res)
   else
@@ -205,7 +202,7 @@ procedure TfmMain.btSetPwdClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclMobileHotspot.SetPassphrase(edPassword.Text);
+  Res := MobileHotspot.SetPassphrase(edPassword.Text);
   if Res <> WCL_E_SUCCESS then
     Trace('Set passphrase failed', Res);
 end;
@@ -215,7 +212,7 @@ var
   Res: Integer;
   Count: Cardinal;
 begin
-  Res := wclMobileHotspot.GetMaxClientCount(Count);
+  Res := MobileHotspot.GetMaxClientCount(Count);
   if Res <> WCL_E_SUCCESS then
     Trace('Get max client connections failed', Res)
   else
@@ -227,7 +224,7 @@ var
   Res: Integer;
   Count: Cardinal;
 begin
-  Res := wclMobileHotspot.GetClientCount(Count);
+  Res := MobileHotspot.GetClientCount(Count);
   if Res <> WCL_E_SUCCESS then
     Trace('Get connectioned clients count failed', Res)
   else
@@ -246,7 +243,7 @@ begin
     else Band := mhbFiveGigahertz;
   end;
 
-  Res := wclMobileHotspot.IsBandSupported(Band, Supp);
+  Res := MobileHotspot.IsBandSupported(Band, Supp);
   if Res <> WCL_E_SUCCESS then
     Trace('Check band failed', Res)
   else begin
@@ -262,7 +259,7 @@ var
   Band: TwclMobileHotspotBand;
   Res: Integer;
 begin
-  Res := wclMobileHotspot.GetBand(Band);
+  Res := MobileHotspot.GetBand(Band);
   if Res <> WCL_E_SUCCESS then
     Trace('Get band failed', Res)
   else begin
@@ -285,7 +282,7 @@ begin
     else Band := mhbFiveGigahertz;
   end;
 
-  Res := wclMobileHotspot.SetBand(Band);
+  Res := MobileHotspot.SetBand(Band);
   if Res <> WCL_E_SUCCESS then
     Trace('Set band failed', Res);
 end;
@@ -298,7 +295,7 @@ var
   Item: TListItem;
 begin
   lvConnectedClients.Items.Clear;
-  Res := wclMobileHotspot.GetClients(Clients);
+  Res := MobileHotspot.GetClients(Clients);
   if Res <> WCL_E_SUCCESS then
     Trace('Get connected clients failed', Res)
   else begin
@@ -312,17 +309,10 @@ begin
   end;
 end;
 
-procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  wclMobileHotspot := TwclMobileHotspot.Create(nil);
-  wclMobileHotspot.OnClosed := wclMobileHotspotClosed;
-  wclMobileHotspot.OnOpened := wclMobileHotspotOpened;
-end;
-
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclMobileHotspot.Close;
-  wclMobileHotspot.Free;
+  MobileHotspot.Close;
+  MobileHotspot.Free;
 end;
 
 procedure TfmMain.btCheckTimeoutClick(Sender: TObject);
@@ -330,7 +320,7 @@ var
   Res: Integer;
   Enabled: Boolean;
 begin
-  Res := wclMobileHotspot.IsNoConnectionsTimeoutEnabled(Enabled);
+  Res := MobileHotspot.IsNoConnectionsTimeoutEnabled(Enabled);
   if Res <> WCL_E_SUCCESS then
     Trace('Get no connection timeout status failed', Res)
   else begin
@@ -345,7 +335,7 @@ procedure TfmMain.btEnableTimeoutClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclMobileHotspot.EnableNoConnectionsTimeout;
+  Res := MobileHotspot.EnableNoConnectionsTimeout;
   if Res <> WCL_E_SUCCESS then
     Trace('Enable No Connection Timeout failed', Res);
 end;
@@ -354,9 +344,16 @@ procedure TfmMain.btDisableTimeoutClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclMobileHotspot.DisableNoConnectionsTimeout;
+  Res := MobileHotspot.DisableNoConnectionsTimeout;
   if Res <> WCL_E_SUCCESS then
     Trace('Disable No Connection Timeout failed', Res);
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  MobileHotspot := TwclMobileHotspot.Create(nil);;
+  MobileHotspot.OnClosed := MobileHotspotClosed;
+  MobileHotspot.OnOpened := MobileHotspotOpened;
 end;
 
 end.

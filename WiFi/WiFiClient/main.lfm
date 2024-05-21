@@ -11,16 +11,16 @@ object fmMain: TfmMain
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  LCLVersion = '2.2.6.0'
   object laClientScanSSID: TLabel
     Left = 512
     Height = 13
     Top = 152
     Width = 25
     Caption = 'SSID'
+    ParentColor = False
   end
   object laClientBssType: TLabel
     Left = 168
@@ -28,6 +28,7 @@ object fmMain: TfmMain
     Top = 264
     Width = 44
     Caption = 'BSS type'
+    ParentColor = False
   end
   object laClientAcmSettings: TLabel
     Left = 8
@@ -39,6 +40,7 @@ object fmMain: TfmMain
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
+    ParentColor = False
     ParentFont = False
   end
   object laClientPasskey: TLabel
@@ -47,6 +49,7 @@ object fmMain: TfmMain
     Top = 496
     Width = 141
     Caption = 'Passkey (for temporary profile)'
+    ParentColor = False
   end
   object btClientOpen: TButton
     Left = 8
@@ -88,6 +91,9 @@ object fmMain: TfmMain
       item
         Caption = 'Description'
         Width = 350
+      end    
+      item
+        Caption = 'Primary'
       end>
     ColumnClick = False
     GridLines = True
@@ -581,7 +587,7 @@ object fmMain: TfmMain
     TabOrder = 41
   end
   object btGetIpSettings: TButton
-    Left = 96
+    Left = 88
     Height = 25
     Top = 40
     Width = 97
@@ -590,7 +596,7 @@ object fmMain: TfmMain
     TabOrder = 42
   end
   object btEnableDhcp: TButton
-    Left = 208
+    Left = 192
     Height = 25
     Top = 40
     Width = 89
@@ -599,11 +605,11 @@ object fmMain: TfmMain
     TabOrder = 43
   end
   object btEnableStaticIp: TButton
-    Left = 304
+    Left = 288
     Height = 25
     Top = 40
     Width = 97
-    Caption = 'Enabpe Static IP'
+    Caption = 'Enable Static IP'
     OnClick = btEnableStaticIpClick
     TabOrder = 44
   end
@@ -624,6 +630,42 @@ object fmMain: TfmMain
     Caption = 'Set profile XML user data'
     OnClick = btSetProfileXmlUserDataClick
     TabOrder = 46
+  end
+  object btGetDualStaState: TButton
+    Left = 400
+    Height = 25
+    Top = 40
+    Width = 113
+    Caption = 'Get dual STA state'
+    OnClick = btGetDualStaStateClick
+    TabOrder = 47
+  end
+  object btEnableDualSta: TButton
+    Left = 520
+    Height = 25
+    Top = 40
+    Width = 97
+    Caption = 'Enable dual STA'
+    OnClick = btEnableDualStaClick
+    TabOrder = 48
+  end
+  object btDisableDualSta: TButton
+    Left = 624
+    Height = 25
+    Top = 40
+    Width = 97
+    Caption = 'Disable dual STA'
+    OnClick = btDisableDualStaClick
+    TabOrder = 49
+  end
+  object btEnumSecondaryInterfaces: TButton
+    Left = 728
+    Height = 25
+    Top = 40
+    Width = 129
+    Caption = 'Enum sec. interfaces'
+    OnClick = btEnumSecondaryInterfacesClick
+    TabOrder = 50
   end
   object SaveDialog: TSaveDialog
     DefaultExt = '.xml'

@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -8,9 +8,6 @@ uses
   Forms, wclWiFi, Classes, Controls, StdCtrls, ComCtrls;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     cbAutonomousGroupOwner: TCheckBox;
     cbDisplayPin: TCheckBox;
@@ -29,38 +26,38 @@ type
     lvDevices: TListView;
     btClear: TButton;
     btDisconnect: TButton;
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btClearClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
     procedure btStopClick(Sender: TObject);
     procedure btDisconnectClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
-    wclWiFiDirectAdvertiser: TwclWiFiDirectAdvertiser;
+    WiFiDirectAdvertiser: TwclWiFiDirectAdvertiser;
 
-    procedure wclWiFiDirectAdvertiserStarted(Sender: TObject);
-    procedure wclWiFiDirectAdvertiserStopped(Sender: TObject);
-    procedure wclWiFiDirectAdvertiserAcceptDevice(Sender: TObject;
+    function GetItem(const Id: string): TListItem;
+
+    procedure WiFiDirectAdvertiserStarted(Sender: TObject);
+    procedure WiFiDirectAdvertiserStopped(Sender: TObject);
+    procedure WiFiDirectAdvertiserAcceptDevice(Sender: TObject;
       const Device: TwclWiFiDirectDevice; out Accept: Boolean);
-    procedure wclWiFiDirectAdvertiserDeviceConnected(Sender: TObject;
+    procedure WiFiDirectAdvertiserDeviceConnected(Sender: TObject;
       const Device: TwclWiFiDirectDevice; const Error: Integer);
-    procedure wclWiFiDirectAdvertiserDeviceDisconnected(Sender: TObject;
+    procedure WiFiDirectAdvertiserDeviceDisconnected(Sender: TObject;
       const Device: TwclWiFiDirectDevice; const Reason: Integer);
-    procedure wclWiFiDirectAdvertiserPairCompleted(Sender: TObject;
+    procedure WiFiDirectAdvertiserPairCompleted(Sender: TObject;
       const Device: TwclWiFiDirectDevice; const Result: Integer);
-    procedure wclWiFiDirectAdvertiserPairConfirm(Sender: TObject;
+    procedure WiFiDirectAdvertiserPairConfirm(Sender: TObject;
       const Device: TwclWiFiDirectDevice; out Confirm: Boolean);
-    procedure wclWiFiDirectAdvertiserPairDisplayPin(Sender: TObject;
+    procedure WiFiDirectAdvertiserPairDisplayPin(Sender: TObject;
       const Device: TwclWiFiDirectDevice; const Pin: String);
-    procedure wclWiFiDirectAdvertiserPairGetParams(Sender: TObject;
+    procedure WiFiDirectAdvertiserPairGetParams(Sender: TObject;
       const Device: TwclWiFiDirectDevice; out GroupOwnerIntent: Smallint;
       out ConfigurationMethods: TwclWiFiDirectConfigurationMethods;
       out PairingProcedure: TwclWiFiDirectPairingProcedure);
-    procedure wclWiFiDirectAdvertiserPairProvidePin(Sender: TObject;
+    procedure WiFiDirectAdvertiserPairProvidePin(Sender: TObject;
       const Device: TwclWiFiDirectDevice; out Pin: String);
-
-    function GetItem(const Id: string): TListItem;
   end;
 
 var
@@ -69,29 +66,14 @@ var
 implementation
 
 uses
-  Dialogs, SysUtils, wclErrors, wclWiFiErrors;
+  Dialogs, SysUtils, wclErrors;
 
 {$R *.lfm}
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclWiFiDirectAdvertiser.Stop;
-  wclWiFiDirectAdvertiser.Free;
-end;
-
-procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  wclWiFiDirectAdvertiser := TwclWiFiDirectAdvertiser.Create(nil);
-  wclWiFiDirectAdvertiser.OnDeviceConnected := wclWiFiDirectAdvertiserDeviceConnected;
-  wclWiFiDirectAdvertiser.OnDeviceDisconnected := wclWiFiDirectAdvertiserDeviceDisconnected;
-  wclWiFiDirectAdvertiser.OnPairCompleted := wclWiFiDirectAdvertiserPairCompleted;
-  wclWiFiDirectAdvertiser.OnPairConfirm := wclWiFiDirectAdvertiserPairConfirm;
-  wclWiFiDirectAdvertiser.OnPairDisplayPin := wclWiFiDirectAdvertiserPairDisplayPin;
-  wclWiFiDirectAdvertiser.OnPairGetParams := wclWiFiDirectAdvertiserPairGetParams;
-  wclWiFiDirectAdvertiser.OnPairProvidePin := wclWiFiDirectAdvertiserPairProvidePin;
-  wclWiFiDirectAdvertiser.OnAcceptDevice := wclWiFiDirectAdvertiserAcceptDevice;
-  wclWiFiDirectAdvertiser.OnStarted := wclWiFiDirectAdvertiserStarted;
-  wclWiFiDirectAdvertiser.OnStopped := wclWiFiDirectAdvertiserStopped;
+  WiFiDirectAdvertiser.Stop;
+  WiFiDirectAdvertiser.Free;
 end;
 
 procedure TfmMain.btClearClick(Sender: TObject);
@@ -108,10 +90,10 @@ begin
     MessageDlg('Select device', mtWarning, [mbOK], 0)
 
   else begin
-    for i := 0 to wclWiFiDirectAdvertiser.Count - 1 do
-      if wclWiFiDirectAdvertiser[i].Id = lvDevices.Selected.SubItems[0] then
+    for i := 0 to WiFiDirectAdvertiser.Count - 1 do begin
+      if WiFiDirectAdvertiser[i].Id = lvDevices.Selected.SubItems[0] then
       begin
-        Res := wclWiFiDirectAdvertiser[i].Disconnect;
+        Res := WiFiDirectAdvertiser[i].Disconnect;
         if Res <> WCL_E_SUCCESS then begin
           MessageDlg('Disconnect error: 0x' + IntToHex(Res, 8), mtError,
             [mbOK], 0);
@@ -119,6 +101,7 @@ begin
 
         Break;
       end;
+    end;
   end;
 end;
 
@@ -126,7 +109,7 @@ procedure TfmMain.btStopClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiFiDirectAdvertiser.Stop;
+  Res := WiFiDirectAdvertiser.Stop;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Stop error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -135,18 +118,19 @@ procedure TfmMain.btStartClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if wclWiFiDirectAdvertiser.Active then
+  if WiFiDirectAdvertiser.Active then
     MessageDlg('Already running', mtWarning, [mbOK], 0)
 
   else begin
     case cbDiscoverability.ItemIndex of
-      0: wclWiFiDirectAdvertiser.Discoverability := adIntensive;
-      1: wclWiFiDirectAdvertiser.Discoverability := adNone;
-      2: wclWiFiDirectAdvertiser.Discoverability := adNormal;
+      0: WiFiDirectAdvertiser.Discoverability := adIntensive;
+      1: WiFiDirectAdvertiser.Discoverability := adNone;
+      2: WiFiDirectAdvertiser.Discoverability := adNormal;
     end;
-    wclWiFiDirectAdvertiser.AutonomousGroupOwnerEnabled := cbAutonomousGroupOwner.Checked;
+    WiFiDirectAdvertiser.AutonomousGroupOwnerEnabled :=
+      cbAutonomousGroupOwner.Checked;
 
-    Res := wclWiFiDirectAdvertiser.Start;
+    Res := WiFiDirectAdvertiser.Start;
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Start error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
   end;
@@ -158,26 +142,27 @@ var
 begin
   Result := nil;
 
-  for i := 0 to lvDevices.Items.Count - 1 do
+  for i := 0 to lvDevices.Items.Count - 1 do begin
     if lvDevices.Items[i].SubItems[0] = Id then begin
       Result := lvDevices.Items[i];
       Break;
     end;
+  end;
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserStarted(Sender: TObject);
+procedure TfmMain.WiFiDirectAdvertiserStarted(Sender: TObject);
 begin
   lbLog.Items.Add('Advertiser has been started');
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserStopped(Sender: TObject);
+procedure TfmMain.WiFiDirectAdvertiserStopped(Sender: TObject);
 begin
   lvDevices.Items.Clear;
 
   lbLog.Items.Add('Advertiser has been stopped');
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserAcceptDevice(Sender: TObject;
+procedure TfmMain.WiFiDirectAdvertiserAcceptDevice(Sender: TObject;
   const Device: TwclWiFiDirectDevice; out Accept: Boolean);
 var
   Item: TListItem;
@@ -193,7 +178,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserDeviceConnected(Sender: TObject;
+procedure TfmMain.WiFiDirectAdvertiserDeviceConnected(Sender: TObject;
   const Device: TwclWiFiDirectDevice; const Error: Integer);
 var
   Item: TListItem;
@@ -214,7 +199,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserDeviceDisconnected(
+procedure TfmMain.WiFiDirectAdvertiserDeviceDisconnected(
   Sender: TObject; const Device: TwclWiFiDirectDevice;
   const Reason: Integer);
 var
@@ -227,27 +212,27 @@ begin
   end;
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserPairCompleted(Sender: TObject;
+procedure TfmMain.WiFiDirectAdvertiserPairCompleted(Sender: TObject;
   const Device: TwclWiFiDirectDevice; const Result: Integer);
 begin
   lbLog.Items.Add(Device.Name + ' paired. Result: 0x' + IntToHex(Result, 8));
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserPairConfirm(Sender: TObject;
+procedure TfmMain.WiFiDirectAdvertiserPairConfirm(Sender: TObject;
   const Device: TwclWiFiDirectDevice; out Confirm: Boolean);
 begin
   Confirm := MessageDlg('Confirm ' + Device.Name + ' connection',
     mtConfirmation, [mbYes, mbNo], 0) = mrYes;
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserPairDisplayPin(Sender: TObject;
+procedure TfmMain.WiFiDirectAdvertiserPairDisplayPin(Sender: TObject;
   const Device: TwclWiFiDirectDevice; const Pin: String);
 begin
   MessageDlg('Use ' + Pin + ' PIN to pair with ' + Device.Name,
     mtInformation, [mbOK], 0);
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserPairGetParams(Sender: TObject;
+procedure TfmMain.WiFiDirectAdvertiserPairGetParams(Sender: TObject;
   const Device: TwclWiFiDirectDevice; out GroupOwnerIntent: Smallint;
   out ConfigurationMethods: TwclWiFiDirectConfigurationMethods;
   out PairingProcedure: TwclWiFiDirectPairingProcedure);
@@ -268,11 +253,26 @@ begin
     ConfigurationMethods := ConfigurationMethods + [cmPushButton];
 end;
 
-procedure TfmMain.wclWiFiDirectAdvertiserPairProvidePin(Sender: TObject;
+procedure TfmMain.WiFiDirectAdvertiserPairProvidePin(Sender: TObject;
   const Device: TwclWiFiDirectDevice; out Pin: String);
 begin
   Pin := '';
   InputQuery('Pairing', 'Enter PIN for ' + Device.Name, Pin);
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  WiFiDirectAdvertiser := TwclWiFiDirectAdvertiser.Create(nil);
+  WiFiDirectAdvertiser.OnStarted := WiFiDirectAdvertiserStarted;
+  WiFiDirectAdvertiser.OnStopped := WiFiDirectAdvertiserStopped;
+  WiFiDirectAdvertiser.OnAcceptDevice := WiFiDirectAdvertiserAcceptDevice;
+  WiFiDirectAdvertiser.OnDeviceConnected := WiFiDirectAdvertiserDeviceConnected;
+  WiFiDirectAdvertiser.OnDeviceDisconnected := WiFiDirectAdvertiserDeviceDisconnected;
+  WiFiDirectAdvertiser.OnPairCompleted := WiFiDirectAdvertiserPairCompleted;
+  WiFiDirectAdvertiser.OnPairConfirm := WiFiDirectAdvertiserPairConfirm;
+  WiFiDirectAdvertiser.OnPairDisplayPin := WiFiDirectAdvertiserPairDisplayPin;
+  WiFiDirectAdvertiser.OnPairGetParams := WiFiDirectAdvertiserPairGetParams;
+  WiFiDirectAdvertiser.OnPairProvidePin := WiFiDirectAdvertiserPairProvidePin;
 end;
 
 end.

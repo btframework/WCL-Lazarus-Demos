@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -50,30 +50,30 @@ type
     procedure btDeleteClick(Sender: TObject);
 
   private
-    wclNetworkListManager: TwclNetworkListManager;
-
-    procedure wclNetworkListManagerAfterOpen(Sender: TObject);
-    procedure wclNetworkListManagerBeforeClose(Sender: TObject);
-    procedure wclNetworkListManagerConnectivityChanged(Sender: TObject;
-      const Connectivity: TwclNlmConnectivityFlags);
-    procedure wclNetworkListManagerNetworkAdded(Sender: TObject;
-      const NetworkId: TGUID);
-    procedure wclNetworkListManagerNetworkConnectivityChanged(
-      Sender: TObject; const NetworkId: TGUID;
-      const Connectivity: TwclNlmConnectivityFlags);
-    procedure wclNetworkListManagerNetworkDeleted(Sender: TObject;
-      const NetworkId: TGUID);
-    procedure wclNetworkListManagerNetworkPropertyChanged(Sender: TObject;
-      const NetworkId: TGUID;
-      const Change: TwclNlmNetworkPropertyChangeFlags);
-    procedure wclNetworkListManagerConnectionConnectivityChanged(
-      Sender: TObject; const ConnectionId: TGUID;
-      const Connectivity: TwclNlmConnectivityFlags);
-    procedure wclNetworkListManagerConnectionPropertyChanged(
-      Sender: TObject; const ConnectionId: TGUID;
-      const Prop: TwclNlmConnectionProperty);
+    NetworkListManager: TwclNetworkListManager;
 
     procedure ShowConnections(var Connections: TwclNlmConnections);
+
+    procedure NetworkListManagerAfterOpen(Sender: TObject);
+    procedure NetworkListManagerBeforeClose(Sender: TObject);
+    procedure NetworkListManagerConnectivityChanged(Sender: TObject;
+      const Connectivity: TwclNlmConnectivityFlags);
+    procedure NetworkListManagerNetworkAdded(Sender: TObject;
+      const NetworkId: TGUID);
+    procedure NetworkListManagerNetworkConnectivityChanged(
+      Sender: TObject; const NetworkId: TGUID;
+      const Connectivity: TwclNlmConnectivityFlags);
+    procedure NetworkListManagerNetworkDeleted(Sender: TObject;
+      const NetworkId: TGUID);
+    procedure NetworkListManagerNetworkPropertyChanged(Sender: TObject;
+      const NetworkId: TGUID;
+      const Change: TwclNlmNetworkPropertyChangeFlags);
+    procedure NetworkListManagerConnectionConnectivityChanged(
+      Sender: TObject; const ConnectionId: TGUID;
+      const Connectivity: TwclNlmConnectivityFlags);
+    procedure NetworkListManagerConnectionPropertyChanged(
+      Sender: TObject; const ConnectionId: TGUID;
+      const Prop: TwclNlmConnectionProperty);
   end;
 
 var
@@ -153,9 +153,10 @@ var
   i: TwclNlmConnectivity;
 begin
   Result := '';
-  for i := Low(TwclNlmConnectivity) to High(TwclNlmConnectivity) do
+  for i := Low(TwclNlmConnectivity) to High(TwclNlmConnectivity) do begin
     if i in Flags then
       Result := Result + GetEnumName(i) + ' ';
+  end;
 end;
 
 function DecodeFlags(
@@ -165,8 +166,10 @@ var
 begin
   Result := '';
   for i := Low(TwclNlmNetworkPropertyChange) to High(TwclNlmNetworkPropertyChange) do
+  begin
     if i in Flags then
       Result := Result + GetEnumName(i);
+  end;
 end;
 
 procedure ShowInfo(const Info: string);
@@ -190,19 +193,19 @@ end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclNetworkListManager := TwclNetworkListManager.Create(nil);
-  wclNetworkListManager.AfterOpen := wclNetworkListManagerAfterOpen;
-  wclNetworkListManager.BeforeClose := wclNetworkListManagerBeforeClose;
-  wclNetworkListManager.OnConnectivityChanged := wclNetworkListManagerConnectivityChanged;
-  wclNetworkListManager.OnNetworkAdded := wclNetworkListManagerNetworkAdded;
-  wclNetworkListManager.OnNetworkConnectivityChanged := wclNetworkListManagerNetworkConnectivityChanged;
-  wclNetworkListManager.OnNetworkDeleted := wclNetworkListManagerNetworkDeleted;
-  wclNetworkListManager.OnNetworkPropertyChanged := wclNetworkListManagerNetworkPropertyChanged;
-  wclNetworkListManager.OnConnectionConnectivityChanged := wclNetworkListManagerConnectionConnectivityChanged;
-  wclNetworkListManager.OnConnectionPropertyChanged := wclNetworkListManagerConnectionPropertyChanged;
-
   cbNetworkType.ItemIndex := 2;
   cbCategory.ItemIndex := 0;
+
+  NetworkListManager := TwclNetworkListManager.Create(nil);
+  NetworkListManager.AfterOpen := NetworkListManagerAfterOpen;
+  NetworkListManager.BeforeClose := NetworkListManagerBeforeClose;
+  NetworkListManager.OnConnectivityChanged := NetworkListManagerConnectivityChanged;
+  NetworkListManager.OnNetworkAdded := NetworkListManagerNetworkAdded;
+  NetworkListManager.OnNetworkConnectivityChanged := NetworkListManagerNetworkConnectivityChanged;
+  NetworkListManager.OnNetworkDeleted := NetworkListManagerNetworkDeleted;
+  NetworkListManager.OnNetworkPropertyChanged := NetworkListManagerNetworkPropertyChanged;
+  NetworkListManager.OnConnectionConnectivityChanged := NetworkListManagerConnectionConnectivityChanged;
+  NetworkListManager.OnConnectionPropertyChanged := NetworkListManagerConnectionPropertyChanged;
 end;
 
 procedure TfmMain.btClearClick(Sender: TObject);
@@ -212,41 +215,44 @@ end;
 
 procedure TfmMain.btOpenClick(Sender: TObject);
 begin
-  ShowError(wclNetworkListManager.Open);
+  ShowError(NetworkListManager.Open);
 end;
 
 procedure TfmMain.btCloseClick(Sender: TObject);
 begin
-  ShowError(wclNetworkListManager.Close);
+  ShowError(NetworkListManager.Close);
 end;
 
 procedure TfmMain.btIsConnectedClick(Sender: TObject);
 var
   Connected: Boolean;
 begin
-  if not ShowError(wclNetworkListManager.GetConnected(Connected)) then
+  if not ShowError(NetworkListManager.GetConnected(Connected)) then begin
     if Connected then
       ShowInfo('Connected')
     else
       ShowInfo('NOT Connected');
+  end;
 end;
 
 procedure TfmMain.btIsInternetClick(Sender: TObject);
 var
   Connected: Boolean;
 begin
-  if not ShowError(wclNetworkListManager.GetConnectedToInternet(Connected)) then
+  if not ShowError(NetworkListManager.GetConnectedToInternet(Connected)) then
+  begin
     if Connected then
       ShowInfo('Connected')
     else
       ShowInfo('NOT Connected');
+  end;
 end;
 
 procedure TfmMain.btGetConnectivityClick(Sender: TObject);
 var
   Connectivity: TwclNlmConnectivityFlags;
 begin
-  if not ShowError(wclNetworkListManager.GetConnectivity(Connectivity)) then
+  if not ShowError(NetworkListManager.GetConnectivity(Connectivity)) then
     ShowInfo('Connectivity: ' + DecodeFlags(Connectivity));
 end;
 
@@ -271,9 +277,9 @@ begin
   lvNetworks.Items.Clear;
 
   Flag := TwclNlmEnumNetwork(cbNetworkType.ItemIndex);
-  Res := wclNetworkListManager.GetNetworks(Flag, Networks);
+  Res := NetworkListManager.GetNetworks(Flag, Networks);
   try
-    if not ShowError(Res) then
+    if not ShowError(Res) then begin
       for i := 0 to Length(Networks) - 1 do begin
         Item := lvNetworks.Items.Add;
         Network := Networks[i];
@@ -336,6 +342,7 @@ begin
         else
           Item.SubItems.Add('Error: 0x' + IntToHex(Res, 8));
       end;
+    end;
 
   finally
     // Cleanup
@@ -366,7 +373,8 @@ begin
   else begin
     Item := lvNetworks.Selected;
     Id := StringToGUID(Item.Caption);
-    if not ShowError(wclNetworkListManager.GetNetwork(Id, Network)) then
+    if not ShowError(NetworkListManager.GetNetwork(Id, Network)) then
+    begin
       try
         Res := Network.GetCategory(Category);
         if Res = WCL_E_SUCCESS then
@@ -423,6 +431,7 @@ begin
       finally
         Network.Free;
       end;
+    end;
   end;
 end;
 
@@ -435,7 +444,7 @@ begin
     ShowWarning('Select network')
 
   else begin
-    Res := wclNetworkListManager.GetNetwork(
+    Res := NetworkListManager.GetNetwork(
       StringToGUID(lvNetworks.Selected.Caption), Network);
     if not ShowError(Res) then begin
       if ShowError(Network.SetName(edNewNameOrDescription.Text)) then
@@ -454,7 +463,7 @@ begin
     ShowWarning('Select network')
 
   else begin
-    Res := wclNetworkListManager.GetNetwork(
+    Res := NetworkListManager.GetNetwork(
       StringToGUID(lvNetworks.Selected.Caption), Network);
     if not ShowError(Res) then begin
       if ShowError(Network.SetDescription(edNewNameOrDescription.Text)) then
@@ -473,7 +482,7 @@ begin
     ShowWarning('Select network')
 
   else begin
-    Res := wclNetworkListManager.GetNetwork(
+    Res := NetworkListManager.GetNetwork(
       StringToGUID(lvNetworks.Selected.Caption), Network);
     if not ShowError(Res) then begin
       Res := Network.SetCategory(TwclNlmNetworkCategory(cbCategory.ItemIndex));
@@ -497,7 +506,7 @@ var
 begin
   lvConnections.Items.Clear;
 
-  if Connections <> nil then
+  if Connections <> nil then begin
     try
       for i := 0 to Length(Connections) - 1 do begin
         Connection := Connections[i];
@@ -545,13 +554,14 @@ begin
         Connections[i].Free;
       Connections := nil;
     end;
+  end;
 end;
 
 procedure TfmMain.btGetMachineConnectionsClick(Sender: TObject);
 var
   Connections: TwclNlmConnections;
 begin
-  if not ShowError(wclNetworkListManager.GetConnections(Connections)) then
+  if not ShowError(NetworkListManager.GetConnections(Connections)) then
     ShowConnections(Connections);
 end;
 
@@ -568,7 +578,8 @@ begin
   else begin
     Item := lvNetworks.Selected;
     Id := StringToGUID(Item.Caption);
-    if not ShowError(wclNetworkListManager.GetNetwork(Id, Network)) then
+    if not ShowError(NetworkListManager.GetNetwork(Id, Network)) then
+    begin
       try
         if not ShowError(Network.GetConnections(Connections)) then
           ShowConnections(Connections);
@@ -576,32 +587,33 @@ begin
       finally
         Network.Free;
       end;
+    end;
   end;
 end;
 
-procedure TfmMain.wclNetworkListManagerAfterOpen(Sender: TObject);
+procedure TfmMain.NetworkListManagerAfterOpen(Sender: TObject);
 begin
   lbEvents.Items.Add('AfterOpen');
 end;
 
-procedure TfmMain.wclNetworkListManagerBeforeClose(Sender: TObject);
+procedure TfmMain.NetworkListManagerBeforeClose(Sender: TObject);
 begin
   lbEvents.Items.Add('BeforeClose');
 end;
 
-procedure TfmMain.wclNetworkListManagerConnectivityChanged(Sender: TObject;
+procedure TfmMain.NetworkListManagerConnectivityChanged(Sender: TObject;
   const Connectivity: TwclNlmConnectivityFlags);
 begin
   lbEvents.Items.Add('Connectivity changed: ' + DecodeFlags(Connectivity));
 end;
 
-procedure TfmMain.wclNetworkListManagerNetworkAdded(Sender: TObject;
+procedure TfmMain.NetworkListManagerNetworkAdded(Sender: TObject;
   const NetworkId: TGUID);
 begin
   lbEvents.Items.Add('Network added: ' + GUIDToString(NetworkId));
 end;
 
-procedure TfmMain.wclNetworkListManagerNetworkConnectivityChanged(
+procedure TfmMain.NetworkListManagerNetworkConnectivityChanged(
   Sender: TObject; const NetworkId: TGUID;
   const Connectivity: TwclNlmConnectivityFlags);
 begin
@@ -609,13 +621,13 @@ begin
     ' connectivity changed: ' + DecodeFlags(Connectivity));
 end;
 
-procedure TfmMain.wclNetworkListManagerNetworkDeleted(Sender: TObject;
+procedure TfmMain.NetworkListManagerNetworkDeleted(Sender: TObject;
   const NetworkId: TGUID);
 begin
   lbEvents.Items.Add('Network deleted: ' + GUIDToString(NetworkId));
 end;
 
-procedure TfmMain.wclNetworkListManagerNetworkPropertyChanged(
+procedure TfmMain.NetworkListManagerNetworkPropertyChanged(
   Sender: TObject; const NetworkId: TGUID;
   const Change: TwclNlmNetworkPropertyChangeFlags);
 begin
@@ -623,7 +635,7 @@ begin
     ' property changed: ' + DecodeFlags(Change));
 end;
 
-procedure TfmMain.wclNetworkListManagerConnectionConnectivityChanged(
+procedure TfmMain.NetworkListManagerConnectionConnectivityChanged(
   Sender: TObject; const ConnectionId: TGUID;
   const Connectivity: TwclNlmConnectivityFlags);
 begin
@@ -631,7 +643,7 @@ begin
     ' connectivity changed: ' + DecodeFlags(Connectivity));
 end;
 
-procedure TfmMain.wclNetworkListManagerConnectionPropertyChanged(
+procedure TfmMain.NetworkListManagerConnectionPropertyChanged(
   Sender: TObject; const ConnectionId: TGUID;
   const Prop: TwclNlmConnectionProperty);
 begin
@@ -641,8 +653,8 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclNetworkListManager.Close;
-  wclNetworkListManager.Free;
+  NetworkListManager.Close;
+  NetworkListManager.Free;
 end;
 
 procedure TfmMain.btDeleteClick(Sender: TObject);
@@ -653,7 +665,7 @@ begin
     ShowWarning('Select network')
 
   else begin
-    Res := wclNetworkListManager.DeleteNetwork(
+    Res := NetworkListManager.DeleteNetwork(
       StringToGUID(lvNetworks.Selected.Caption));
     if not ShowError(Res) then
       lvNetworks.Selected.Delete;
@@ -661,3 +673,4 @@ begin
 end;
 
 end.
+

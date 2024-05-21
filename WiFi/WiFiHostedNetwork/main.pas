@@ -1,16 +1,13 @@
 unit main;
 
-interface
+{$MODE Delphi}
 
-{$I wcl.inc}
+interface
 
 uses
   Forms, Classes, wclWiFi, Controls, StdCtrls, ComCtrls, ExtCtrls;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     btHnOpen: TButton;
     btHnClose: TButton;
@@ -47,19 +44,19 @@ type
     procedure btHnSetSettingsClick(Sender: TObject);
     procedure btHnSetKeyClick(Sender: TObject);
     procedure btEnableDisableClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btHnGetStateClick(Sender: TObject);
     procedure btHnRestartClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
-    wclWiFiHostedNetwork: TwclWiFiHostedNetwork;
-
-    procedure wclWiFiHostedNetworkAfterOpen(Sender: TObject);
-    procedure wclWiFiHostedNetworkBeforeClose(Sender: TObject);
+    WiFiHostedNetwork: TwclWiFiHostedNetwork;
 
     procedure HnClear;
     procedure HnAddData(const ParamName: string; const ParamValue: string);
+
+    procedure WiFiHostedNetworkAfterOpen(Sender: TObject);
+    procedure WiFiHostedNetworkBeforeClose(Sender: TObject);
   end;
 
 var
@@ -108,6 +105,7 @@ begin
     caBipGmac256: Result := 'caBipGmac256';
     caBipCmac256: Result := 'caBipCmac256';
     caUseGroup: Result := 'caUseGroup';
+    caWep: Result := 'caWep';
     caUnknown: Result := 'caUnknown';
   else
     Result := 'UNKNOWN';
@@ -173,20 +171,20 @@ end;
 
 procedure TfmMain.btHnOpenClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiHostedNetwork.Open);
+  ShowResult(WiFiHostedNetwork.Open);
 end;
 
 procedure TfmMain.btHnCloseClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiHostedNetwork.Close);
+  ShowResult(WiFiHostedNetwork.Close);
 end;
 
-procedure TfmMain.wclWiFiHostedNetworkAfterOpen(Sender: TObject);
+procedure TfmMain.WiFiHostedNetworkAfterOpen(Sender: TObject);
 begin
   ShowInfo('WiFi Hosted Network opened');
 end;
 
-procedure TfmMain.wclWiFiHostedNetworkBeforeClose(Sender: TObject);
+procedure TfmMain.WiFiHostedNetworkBeforeClose(Sender: TObject);
 begin
   ShowInfo('WiFi Hosted Network closing');
 end;
@@ -197,7 +195,7 @@ var
 begin
   HnClear;
 
-  if ShowResult(wclWiFiHostedNetwork.GetConnectionSettings(Settings)) then begin
+  if ShowResult(WiFiHostedNetwork.GetConnectionSettings(Settings)) then begin
     HnAddData('SSID', Settings.Ssid);
     HnAddData('Max. number of peers', IntToStr(Settings.MaxNumberOfPeers));
   end;
@@ -234,9 +232,8 @@ var
 begin
   HnClear;
 
-  Res := wclWiFiHostedNetwork.GetKey(KeyLength, KeyData, IsPassPhrase,
-    Persistent);
-  if ShowResult(Res) then
+  Res := WiFiHostedNetwork.GetKey(KeyLength, KeyData, IsPassPhrase, Persistent);
+  if ShowResult(Res) then begin
     try
       if IsPassPhrase then
         Str := string(AnsiString(PAnsiChar(KeyData)))
@@ -253,8 +250,9 @@ begin
       HnAddData('Persistent', BoolToStr(Persistent, True));
 
     finally
-      wclWiFiHostedNetwork.FreeMemory(KeyData);
+      WiFiHostedNetwork.FreeMemory(KeyData);
     end;
+  end;
 end;
 
 procedure TfmMain.btHnGetProfileClick(Sender: TObject);
@@ -263,7 +261,7 @@ var
 begin
   HnClear;
 
-  if ShowResult(wclWiFiHostedNetwork.GetProfile(XML)) then
+  if ShowResult(WiFiHostedNetwork.GetProfile(XML)) then
     HnAddData('Profile XML', XML);
 end;
 
@@ -273,7 +271,7 @@ var
 begin
   HnClear;
 
-  if ShowResult(wclWiFiHostedNetwork.GetSecuritySettings(Settings)) then begin
+  if ShowResult(WiFiHostedNetwork.GetSecuritySettings(Settings)) then begin
     HnAddData('Auth algorithm', GetEnumName(Settings.AuthAlgorithm));
     HnAddData('Cipher algorithm', GetEnumName(Settings.CipherAlgorithm));
   end;
@@ -283,10 +281,12 @@ procedure TfmMain.btHnGetStatusClick(Sender: TObject);
 var
   Status: TwclWiFiHostedNetworkStatus;
   i: Integer;
+  Res: Integer;
+  Address: string;
 begin
   HnClear;
 
-  if ShowResult(wclWiFiHostedNetwork.GetStatus(Status)) then
+  if ShowResult(WiFiHostedNetwork.GetStatus(Status)) then begin
     try
       HnAddData('State', GetEnumName(Status.State));
       HnAddData('Interface ID', GUIDToString(Status.Id));
@@ -294,8 +294,20 @@ begin
       HnAddData('Phy', GetEnumName(Status.Phy));
       HnAddData('ChannelFrequency', IntToStr(Status.ChannelFrequency));
 
+      Res := WiFiHostedNetwork.GetLocalIp(Address);
+      if Res <> WCL_E_SUCCESS then
+        Address := 'Get failed: 0x' + IntToHex(Res, 8);
+      HnAddData('Local IP', Address);
+
       for i := 0 to Length(Status.Peers) - 1 do begin
         HnAddData('Peer[' + IntToStr(i) + '] MAC', Status.Peers[i].Mac);
+        Res := WiFiHostedNetwork.GetRemoteIp(Status.Peers[i].Mac, Address);
+        if Res = WCL_E_SUCCESS then
+          HnAddData('Peer[' + IntToStr(i) + '] IP', Address)
+        else begin
+          HnAddData('Peer[' + IntToStr(i) + '] IP', 'Get failed: 0x' +
+            IntToHex(Res, 8));
+        end;
         HnAddData('Peer[' + IntToStr(i) + '] auth state',
           GetEnumName(Status.Peers[i].AuthState));
       end;
@@ -303,11 +315,12 @@ begin
     finally
       Status.Peers := nil;
     end;
+  end;
 end;
 
 procedure TfmMain.btHnRefreshSecuritySettingsClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiHostedNetwork.RefreshSecuritySettings);
+  ShowResult(WiFiHostedNetwork.RefreshSecuritySettings);
 end;
 
 procedure TfmMain.btHnSetSettingsClick(Sender: TObject);
@@ -317,7 +330,7 @@ begin
   Settings.Ssid := edHnSSID.Text;
   Settings.MaxNumberOfPeers := StrToInt(edHnNumberOfPeers.Text);
 
-  ShowResult(wclWiFiHostedNetwork.SetConnectionSettings(Settings));
+  ShowResult(WiFiHostedNetwork.SetConnectionSettings(Settings));
 end;
 
 procedure TfmMain.btHnSetKeyClick(Sender: TObject);
@@ -325,26 +338,18 @@ var
   KeyData: AnsiString;
 begin
   KeyData := AnsiString(edHnKey.Text);
-  ShowResult(wclWiFiHostedNetwork.SetKey(Length(KeyData) + 1, Pointer(KeyData),
+  ShowResult(WiFiHostedNetwork.SetKey(Length(KeyData) + 1, Pointer(KeyData),
     True, cbHnPersistent.Checked));
 end;
 
 procedure TfmMain.btEnableDisableClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiHostedNetwork.SetState(Sender = btHnEnable));
-end;
-
-procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  wclWiFiHostedNetwork := TwclWiFiHostedNetwork.Create(nil);
-  wclWiFiHostedNetwork.AfterOpen := wclWiFiHostedNetworkAfterOpen;
-  wclWiFiHostedNetwork.BeforeClose := wclWiFiHostedNetworkBeforeClose;
+  ShowResult(WiFiHostedNetwork.SetState(Sender = btHnEnable));
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclWiFiHostedNetwork.Close;
-  wclWiFiHostedNetwork.Free;
+  WiFiHostedNetwork.Close;
 end;
 
 procedure TfmMain.btHnGetStateClick(Sender: TObject);
@@ -353,13 +358,20 @@ var
 begin
   HnClear;
 
-  if ShowResult(wclWiFiHostedNetwork.GetState(State)) then
+  if ShowResult(WiFiHostedNetwork.GetState(State)) then
     HnAddData('Enabled', BoolToStr(State, True));
 end;
 
 procedure TfmMain.btHnRestartClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiHostedNetwork.Restart);
+  ShowResult(WiFiHostedNetwork.Restart);
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  WiFiHostedNetwork := TwclWiFiHostedNetwork.Create(nil);
+  WiFiHostedNetwork.AfterOpen := WiFiHostedNetworkAfterOpen;
+  WiFiHostedNetwork.BeforeClose := WiFiHostedNetworkBeforeClose;
 end;
 
 end.

@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -8,9 +8,6 @@ uses
   Forms, Classes, wclWiFi, Controls, StdCtrls;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     btStart: TButton;
     btStop: TButton;
@@ -31,17 +28,17 @@ type
     procedure FormDestroy(Sender: TObject);
 
   private
-    wclWiFiSoftAP: TwclWiFiSoftAP;
+    WiFiSoftAP: TwclWiFiSoftAP;
 
-    procedure wclWiFiSoftAPStopped(Sender: TObject);
-    procedure wclWiFiSoftAPStarted(Sender: TObject);
-    procedure wclWiFiSoftAPDeviceConnected(Sender: TObject;
+    procedure WiFiSoftAPStopped(Sender: TObject);
+    procedure WiFiSoftAPStarted(Sender: TObject);
+    procedure WiFiSoftAPDeviceConnected(Sender: TObject;
       const Device: TwclWiFiDirectDevice);
-    procedure wclWiFiSoftAPDeviceDisconnected(Sender: TObject;
+    procedure WiFiSoftAPDeviceDisconnected(Sender: TObject;
       const Device: TwclWiFiDirectDevice);
-    procedure wclWiFiSoftAPDeviceConnectError(Sender: TObject;
+    procedure WiFiSoftAPDeviceConnectError(Sender: TObject;
       const Device: TwclWiFiDirectDevice; const Error: Integer);
-    procedure wclWiFiSoftAPDeviceAccept(Sender: TObject;
+    procedure WiFiSoftAPDeviceAccept(Sender: TObject;
       const Device: TwclWiFiDirectDevice; out Accept: Boolean);
   end;
 
@@ -59,7 +56,7 @@ procedure TfmMain.btStartClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiFiSoftAP.Start(edSSID.Text, edPassphrase.Text);
+  Res := WiFiSoftAP.Start(edSSID.Text, edPassphrase.Text);
   lbEvents.Items.Add('Start: 0x' + IntToHex(Res, 8));
 end;
 
@@ -67,34 +64,34 @@ procedure TfmMain.btStopClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiFiSoftAP.Stop;
+  Res := WiFiSoftAP.Stop;
   lbEvents.Items.Add('Stop: 0x' + IntToHex(Res, 8));
 end;
 
-procedure TfmMain.wclWiFiSoftAPStopped(Sender: TObject);
+procedure TfmMain.WiFiSoftAPStopped(Sender: TObject);
 begin
   lbEvents.Items.Add('Stopped');
 end;
 
-procedure TfmMain.wclWiFiSoftAPStarted(Sender: TObject);
+procedure TfmMain.WiFiSoftAPStarted(Sender: TObject);
 var
   Res: Integer;
   Str: string;
 begin
   lbEvents.Items.Add('Started');
 
-  Res := wclWiFiSoftAP.GetSsid(Str);
+  Res := WiFiSoftAP.GetSsid(Str);
   if Res <> WCL_E_SUCCESS then
     Str := 'Read error 0x' + IntToHex(Res, 8);
   lbEvents.Items.Add('SSID: ' + Str);
 
-  Res := wclWiFiSoftAP.GetPassphrase(Str);
+  Res := WiFiSoftAP.GetPassphrase(Str);
   if Res <> WCL_E_SUCCESS then
     Str := 'Read error 0x' + IntToHex(Res, 8);
   lbEvents.Items.Add('Passphrase: ' + Str);
 end;
 
-procedure TfmMain.wclWiFiSoftAPDeviceConnected(Sender: TObject;
+procedure TfmMain.WiFiSoftAPDeviceConnected(Sender: TObject;
   const Device: TwclWiFiDirectDevice);
 begin
   lbEvents.Items.Add('Device connected: ' + Device.Name);
@@ -102,7 +99,7 @@ begin
   lbEvents.Items.Add('  Remote IP: ' + Device.RemoteAddress);
 end;
 
-procedure TfmMain.wclWiFiSoftAPDeviceDisconnected(Sender: TObject;
+procedure TfmMain.WiFiSoftAPDeviceDisconnected(Sender: TObject;
   const Device: TwclWiFiDirectDevice);
 begin
   lbEvents.Items.Add('Device disconnected: ' + Device.Name);
@@ -112,18 +109,18 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclWiFiSoftAP.Stop;
-  wclWiFiSoftAP.Free;
+  WiFiSoftAP.Stop;
+  WiFiSoftAP.Free;
 end;
 
-procedure TfmMain.wclWiFiSoftAPDeviceConnectError(Sender: TObject;
+procedure TfmMain.WiFiSoftAPDeviceConnectError(Sender: TObject;
   const Device: TwclWiFiDirectDevice; const Error: Integer);
 begin
   lbEvents.Items.Add('Device ' + Device.Name + ' connect error: ' +
     IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclWiFiSoftAPDeviceAccept(Sender: TObject;
+procedure TfmMain.WiFiSoftAPDeviceAccept(Sender: TObject;
   const Device: TwclWiFiDirectDevice; out Accept: Boolean);
 begin
   Accept := (MessageDlg('Accept device: ' + Device.Id, mtConfirmation,
@@ -139,7 +136,7 @@ var
   Dns1: string;
   Dns2: string;
 begin
-  Res := wclWiFiSoftAP.GetIpSettings(Address, Mask, Gateway, Dns1, Dns2);
+  Res := WiFiSoftAP.GetIpSettings(Address, Mask, Gateway, Dns1, Dns2);
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Read IP settings failed: 0x' + IntToHex(Res, 8))
   else begin
@@ -156,7 +153,7 @@ procedure TfmMain.btChangeIpSettingsClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiFiSoftAP.SetIpSettings('192.168.2.10', '255.255.255.0',
+  Res := WiFiSoftAP.SetIpSettings('192.168.2.10', '255.255.255.0',
     '192.168.2.1', '', '');
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Write IP settings failed: 0x' + IntToHex(Res, 8));
@@ -166,20 +163,20 @@ procedure TfmMain.btResetIpSettingsClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiFiSoftAP.ResetIpSettings;
+  Res := WiFiSoftAP.ResetIpSettings;
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Reset IP settings failed: 0x' + IntToHex(Res, 8));
 end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclWiFiSoftAP := TwclWiFiSoftAP.Create(nil);
-  wclWiFiSoftAP.OnDeviceAccept := wclWiFiSoftAPDeviceAccept;
-  wclWiFiSoftAP.OnDeviceConnected := wclWiFiSoftAPDeviceConnected;
-  wclWiFiSoftAP.OnDeviceConnectError := wclWiFiSoftAPDeviceConnectError;
-  wclWiFiSoftAP.OnDeviceDisconnected := wclWiFiSoftAPDeviceDisconnected;
-  wclWiFiSoftAP.OnStarted := wclWiFiSoftAPStarted;
-  wclWiFiSoftAP.OnStopped := wclWiFiSoftAPStopped;
+  WiFiSoftAP := TwclWiFiSoftAP.Create(nil);
+  WiFiSoftAP.OnStopped := WiFiSoftAPStopped;
+  WiFiSoftAP.OnStarted := WiFiSoftAPStarted;
+  WiFiSoftAP.OnDeviceConnected := WiFiSoftAPDeviceConnected;
+  WiFiSoftAP.OnDeviceDisconnected := WiFiSoftAPDeviceDisconnected;
+  WiFiSoftAP.OnDeviceConnectError := WiFiSoftAPDeviceConnectError;
+  WiFiSoftAP.OnDeviceAccept := WiFiSoftAPDeviceAccept;
 end;
 
 end.

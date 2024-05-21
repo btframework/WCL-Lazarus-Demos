@@ -1,10 +1,9 @@
-program WiFiDirectSoftAP_D7;
+program MobileHotspot;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 uses
-  Interfaces,
-  Forms,
+  Forms, Interfaces,
   main in 'main.pas' {fmMain};
 
 {$R *.res}

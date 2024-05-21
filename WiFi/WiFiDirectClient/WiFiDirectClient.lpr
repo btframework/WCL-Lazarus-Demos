@@ -1,10 +1,9 @@
-program WiFiHostedNetwork_D7;
+program WiFiDirectClient;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 uses
-  Interfaces,
-  Forms,
+  Forms, Interfaces,
   main in 'main.pas' {fmMain};
 
 {$R *.res}

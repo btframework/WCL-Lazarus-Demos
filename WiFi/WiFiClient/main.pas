@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -8,9 +8,6 @@ uses
   Forms, Controls, StdCtrls, Classes, wclWiFi, ComCtrls, Dialogs;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     btClientOpen: TButton;
     btClientClose: TButton;
@@ -65,9 +62,12 @@ type
     btEnableStaticIp: TButton;
     btEditUi: TButton;
     btSetProfileXmlUserData: TButton;
+    btGetDualStaState: TButton;
+    btEnableDualSta: TButton;
+    btDisableDualSta: TButton;
+    btEnumSecondaryInterfaces: TButton;
     procedure btClientOpenClick(Sender: TObject);
     procedure btClientCloseClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btClientEnumInterfacesClick(Sender: TObject);
     procedure btClientEnumNetworksClick(Sender: TObject);
@@ -99,13 +99,15 @@ type
     procedure btEnableStaticIpClick(Sender: TObject);
     procedure btEditUiClick(Sender: TObject);
     procedure btSetProfileXmlUserDataClick(Sender: TObject);
+    procedure btGetDualStaStateClick(Sender: TObject);
+    procedure btEnableDualStaClick(Sender: TObject);
+    procedure btDisableDualStaClick(Sender: TObject);
+    procedure btEnumSecondaryInterfacesClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
-    wclWiFiClient: TwclWiFiClient;
-    wclWiFiProfilesManager: TwclWiFiProfilesManager;
-
-    procedure wclWiFiClientAfterOpen(Sender: TObject);
-    procedure wclWiFiClientBeforeClose(Sender: TObject);
+    WiFiClient: TwclWiFiClient;
+    WiFiProfilesManager: TwclWiFiProfilesManager;
 
     function ClientGetInterfaceId(out Id: TGUID): Boolean;
     function ClientGetProfile(out Name: string): Boolean;
@@ -123,8 +125,12 @@ type
     procedure ClientConenctUsingTemporaryProfile;
 
     procedure ClientSwitchState(const Id: TGUID; const Off: Boolean);
+    procedure ClientSetDualState(const Enable: Boolean);
 
     function ClientGetNetworkBss: TwclWiFiBssType;
+
+    procedure WiFiClientAfterOpen(Sender: TObject);
+    procedure WiFiClientBeforeClose(Sender: TObject);
   end;
 
 var
@@ -202,6 +208,7 @@ begin
     caBipGmac256: Result := 'caBipGmac256';
     caBipCmac256: Result := 'caBipCmac256';
     caUseGroup: Result := 'caUseGroup';
+    caWep: Result := 'caWep';
     caUnknown: Result := 'caUnknown';
   else
     Result := 'UNKNOWN';
@@ -302,41 +309,32 @@ end;
 
 procedure TfmMain.btClientOpenClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiClient.Open);
+  ShowResult(WiFiClient.Open);
 end;
 
 procedure TfmMain.btClientCloseClick(Sender: TObject);
 begin
-  ShowResult(wclWiFiClient.Close);
-end;
-
-procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  wclWiFiClient := TwclWiFiClient.Create(nil);
-  wclWiFiClient.AfterOpen := wclWiFiClientAfterOpen;
-  wclWiFiClient.BeforeClose := wclWiFiClientBeforeClose;
-
-  wclWiFiProfilesManager := TwclWiFiProfilesManager.Create(nil);
+  ShowResult(WiFiClient.Close);
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclWiFiProfilesManager.Free;
+  WiFiClient.Close;
 
-  wclWiFiClient.Close;
-  wclWiFiClient.Free;
+  WiFiClient.Free;
+  WiFiProfilesManager.Free;
 end;
 
-procedure TfmMain.wclWiFiClientAfterOpen(Sender: TObject);
+procedure TfmMain.WiFiClientAfterOpen(Sender: TObject);
 begin
   ShowInfo('WiFi client opened');
 
-  wclWiFiProfilesManager.Open;
+  WiFiProfilesManager.Open;
 end;
 
-procedure TfmMain.wclWiFiClientBeforeClose(Sender: TObject);
+procedure TfmMain.WiFiClientBeforeClose(Sender: TObject);
 begin
-  wclWiFiProfilesManager.Close;
+  WiFiProfilesManager.Close;
 
   ClientClearInterfaces;
   ClientClearNetworks;
@@ -358,17 +356,19 @@ var
   Item: TListItem;
 begin
   ClientClearInterfaces;
-  if ShowResult(wclWiFiClient.EnumInterfaces(Interfaces)) then
+  if ShowResult(WiFiClient.EnumInterfaces(Interfaces)) then begin
     try
       for i := 0 to Length(Interfaces) - 1 do begin
         Item := lvClientInterfaces.Items.Add;
         Item.Caption := GUIDToString(Interfaces[i].Id);
         Item.SubItems.Add(Interfaces[i].Description);
+        Item.SubItems.Add(BoolToStr(Interfaces[i].Primary, True));
       end;
-        
+
     finally
       Interfaces := nil;
     end;
+  end;
 end;
 
 function TfmMain.ClientGetInterfaceId(out Id: TGUID): Boolean;
@@ -408,7 +408,8 @@ begin
     if cbClientHiddenProfiles.Checked then
       Include(Filters, ffIncludeAllManualHiddenProfiles);
 
-    if ShowResult(wclWiFiClient.EnumAvailableNetworks(Id, Filters, Networks)) then
+    if ShowResult(WiFiClient.EnumAvailableNetworks(Id, Filters, Networks)) then
+    begin
       try
         for i := 0 to Length(Networks) - 1 do begin
           Item := lvClientNetworks.Items.Add;
@@ -420,9 +421,10 @@ begin
           Item.SubItems.Add('0x' + IntToHex(Networks[i].NotConnectableReason, 8));
 
           Str := '';
-          for j := Low(TwclWiFiPhy) to High(TwclWiFiPhy) do
+          for j := Low(TwclWiFiPhy) to High(TwclWiFiPhy) do begin
             if j in Networks[I].PhyTypes then
               Str := Str + GetEnumName(j) + ' ';
+          end;
           Item.SubItems.Add(Str);
 
           Item.SubItems.Add(BoolToStr(Networks[i].MorePhyTypes, True));
@@ -433,14 +435,17 @@ begin
 
           Str := '';
           for f := Low(TwclWiFiAvailableNetworkFlag) to High(TwclWiFiAvailableNetworkFlag) do
+          begin
             if f in Networks[i].Flags then
               Str := Str + GetEnumName(f) + ' ';
+          end;
           Item.SubItems.Add(Str);
         end;
 
       finally
         Networks := nil;
       end;
+    end;
   end;
 end;
 
@@ -448,9 +453,10 @@ procedure TfmMain.btClientScanClick(Sender: TObject);
 var
   Id: TGUID;
 begin
-  if ClientGetInterfaceId(Id) then
-    if ShowResult(wclWiFiClient.Scan(Id, edClientScanSSID.Text)) then
+  if ClientGetInterfaceId(Id) then begin
+    if ShowResult(WiFiClient.Scan(Id, edClientScanSSID.Text)) then
       ShowInfo('Scan started. Use EventsDemo to see scan events.');
+  end;
 end;
 
 procedure TfmMain.btClientEnumBSSClick(Sender: TObject);
@@ -482,9 +488,9 @@ begin
 
     BssType := TwclWiFiBssType(cbClientBssType.ItemIndex);
 
-    Res := wclWiFiClient.EnumBss(Id, Ssid, BssType,
+    Res := WiFiClient.EnumBss(Id, Ssid, BssType,
       cbClientSecurityEnabled.Checked, BssList);
-    if ShowResult(Res) then
+    if ShowResult(Res) then begin
       try
         for i := 0 to Length(BssList) - 1 do begin
           Item := lvClientBss.Items.Add;
@@ -501,17 +507,19 @@ begin
           Item.SubItems.Add(IntToStr(BssList[i].HostTimestamp));
 
           Str := '';
-          for j := Low(TwclWiFiBssCap) to High(TwclWiFiBssCap) do
+          for j := Low(TwclWiFiBssCap) to High(TwclWiFiBssCap) do begin
             if j in BssList[i].Capability then
               Str := Str + GetEnumName(j) + ' ';
+          end;
           Item.SubItems.Add(Str);
 
           Item.SubItems.Add(IntToStr(BssList[i].ChCenterFrequency));
 
           Str := '';
-          if Length(BssList[i].IeRaw) > 0 then
+          if Length(BssList[i].IeRaw) > 0 then begin
             for x := 0 to Length(BssList[i].IeRaw) - 1 do
               Str := Str + IntToHex(BssList[i].IeRaw[x], 2);
+          end;
           Item.SubItems.Add(Str);
         end;
 
@@ -523,6 +531,7 @@ begin
 
         BssList := nil;
       end;
+    end;
   end;
 end;
 
@@ -536,18 +545,19 @@ var
   Id: TGUID;
 begin
   if ClientGetInterfaceId(Id) then
-    ShowResult(wclWiFiClient.Disconnect(Id));
+    ShowResult(WiFiClient.Disconnect(Id));
 end;
 
 procedure TfmMain.btClientGetShowDeniedNetworksClick(Sender: TObject);
 var
   Enabled: Boolean;
 begin
-  if ShowResult(wclWiFiClient.AcmGetShowDeniedNetworks(Enabled)) then
+  if ShowResult(WiFiClient.AcmGetShowDeniedNetworks(Enabled)) then begin
     if Enabled then
       ShowInfo('Show denied networks')
     else
       ShowInfo('Do not show denied networks');
+  end;
 end;
 
 procedure TfmMain.btClientSetShowDeniedNetworksClick(Sender: TObject);
@@ -558,14 +568,14 @@ begin
   if Res = mrCancel then
     Exit;
 
-  ShowResult(wclWiFiClient.AcmSetShowDeniedNetworks(Res = mrYes));
+  ShowResult(WiFiClient.AcmSetShowDeniedNetworks(Res = mrYes));
 end;
 
 procedure TfmMain.btClientGetPowerSettingsClick(Sender: TObject);
 var
   Setting: TwclWiFiPowerSetting;
 begin
-  if ShowResult(wclWiFiClient.AcmGetPowerSetting(Setting)) then
+  if ShowResult(WiFiClient.AcmGetPowerSetting(Setting)) then
     ShowInfo(GetEnumName(Setting));
 end;
 
@@ -573,22 +583,24 @@ procedure TfmMain.btClientGetOnlyUseGpProfilesClick(Sender: TObject);
 var
   Enabled: Boolean;
 begin
-  if ShowResult(wclWiFiClient.AcmGetOnlyUseGpProfiles(Enabled)) then
+  if ShowResult(WiFiClient.AcmGetOnlyUseGpProfiles(Enabled)) then begin
     if Enabled then
       ShowInfo('Only use GP profiles ENABLED')
     else
       ShowInfo('Only use GP profiles DISABLED');
+  end;
 end;
 
 procedure TfmMain.btClientGetAllowExplicitCredsClick(Sender: TObject);
 var
   Enabled: Boolean;
 begin
-  if ShowResult(wclWiFiClient.AcmGetAllowExplicitCreds(Enabled)) then
+  if ShowResult(WiFiClient.AcmGetAllowExplicitCreds(Enabled)) then begin
     if Enabled then
       ShowInfo('Explicit creds ALLOWED')
     else
       ShowInfo('Explicit creds NOT ALLOWED');
+  end;
 end;
 
 procedure TfmMain.btClientSetAllowExplicitCredsClick(Sender: TObject);
@@ -599,14 +611,14 @@ begin
   if Res = mrCancel then
     Exit;
 
-  ShowResult(wclWiFiClient.AcmSetAllowExplicitCreds(Res = mrYes));
+  ShowResult(WiFiClient.AcmSetAllowExplicitCreds(Res = mrYes));
 end;
 
 procedure TfmMain.btClientGetBlockPeriodClick(Sender: TObject);
 var
   Period: Cardinal;
 begin
-  if ShowResult(wclWiFiClient.AcmGetBlockPeriod(Period)) then
+  if ShowResult(WiFiClient.AcmGetBlockPeriod(Period)) then
     ShowInfo('Block period: ' + IntToStr(Period));
 end;
 
@@ -614,19 +626,22 @@ procedure TfmMain.btClientSetBlockPeriodClick(Sender: TObject);
 var
   Period: string;
 begin
+  Period := '';
   if InputQuery('Change ACM setting', 'Block period', Period) then
-    ShowResult(wclWiFiClient.AcmSetBlockPeriod(StrToInt(Period)));
+    ShowResult(WiFiClient.AcmSetBlockPeriod(StrToInt(Period)));
 end;
 
 procedure TfmMain.btClientGetVirtualStationExtensibilityClick(Sender: TObject);
 var
   Allowed: Boolean;
 begin
-  if ShowResult(wclWiFiClient.AcmGetVirtualStationExtensibility(Allowed)) then
+  if ShowResult(WiFiClient.AcmGetVirtualStationExtensibility(Allowed)) then
+  begin
     if Allowed then
       ShowInfo('Virtual station extensibility ALLOWED')
     else
       ShowInfo('Virtual station extensibility NOT ALLOWED');
+  end;
 end;
 
 procedure TfmMain.btClientSetVirtualStationExtensibilityClick(Sender: TObject);
@@ -637,7 +652,7 @@ begin
   if Res = mrCancel then
     Exit;
 
-  ShowResult(wclWiFiClient.AcmSetVirtualStationExtensibility(Res = mrYes));
+  ShowResult(WiFiClient.AcmSetVirtualStationExtensibility(Res = mrYes));
 end;
 
 procedure TfmMain.btClientGetInterfaceStateClick(Sender: TObject);
@@ -649,7 +664,7 @@ begin
   if ClientGetInterfaceId(Id) then begin
     Iface := TwclWiFiInterface.Create(Id);
     try
-      if ShowResult(Iface.Open) then
+      if ShowResult(Iface.Open) then begin
         try
           if ShowResult(Iface.GetState(State)) then
             ShowInfo('Interface state: ' + GetEnumName(State));
@@ -657,6 +672,7 @@ begin
         finally
           Iface.Close;
         end;
+      end;
 
     finally
       Iface.Free;
@@ -679,10 +695,12 @@ var
   Id: TGUID;
   Profile: string;
 begin
-  if ClientGetInterfaceId(Id) then
-    if ClientGetProfile(Profile) then
-      if ShowResult(wclWiFiProfilesManager.DeleteProfile(Id, Profile)) then
+  if ClientGetInterfaceId(Id) then begin
+    if ClientGetProfile(Profile) then begin
+      if ShowResult(WiFiProfilesManager.DeleteProfile(Id, Profile)) then
         ClientEnumProfiles;
+    end;
+  end;
 end;
 
 procedure TfmMain.ClientEnumProfiles;
@@ -696,24 +714,30 @@ var
 begin
   ClientClearProfiles;
 
-  if ClientGetInterfaceId(Id) then
-    if ShowResult(wclWiFiProfilesManager.GetProfileList(Id, Profiles)) then
+  if ClientGetInterfaceId(Id) then begin
+    if ShowResult(WiFiProfilesManager.GetProfileList(Id, Profiles)) then
+    begin
       try
-        if Profiles <> nil then
+        if Profiles <> nil then begin
           for i := 0 to Length(Profiles) - 1 do begin
             Item := lvClientProfiles.Items.Add;
             Item.Caption := Profiles[i].Name;
 
             Str := '';
             for j := Low(TwclWiFiProfileFlag) to High(TwclWiFiProfileFlag) do
+            begin
               if j in Profiles[i].Flags then
                 Str := Str + GetEnumName(j) + ' ';
+            end;
             Item.SubItems.Add(Str);
           end;
+        end;
 
       finally
         Profiles := nil;
       end;
+    end;
+  end;
 end;
 
 function TfmMain.ClientGetProfile(out Name: string): Boolean;
@@ -735,13 +759,16 @@ var
   NewName: string;
   Res: Integer;
 begin
-  if ClientGetInterfaceId(Id) then
-    if ClientGetProfile(Profile) then
+  if ClientGetInterfaceId(Id) then begin
+    if ClientGetProfile(Profile) then begin
+      NewName := '';
       if InputQuery('Renamr profile', 'New profile name', NewName) then begin
-        Res := wclWiFiProfilesManager.RenameProfile(Id, Profile, NewName);
+        Res := WiFiProfilesManager.RenameProfile(Id, Profile, NewName);
         if ShowResult(Res) then
           ClientEnumProfiles;
       end;
+    end;
+  end;
 end;
 
 procedure TfmMain.btClientGetProfileXmlClick(Sender: TObject);
@@ -753,13 +780,13 @@ var
   List: TStringList;
   Res: Integer;
 begin
-  if ClientGetInterfaceId(Id) then
+  if ClientGetInterfaceId(Id) then begin
     if ClientGetProfile(Profile) then begin
       if cbPlainText.Checked then
         Flags := [pfGetPlaintextKey]
       else
         Flags := [];
-      Res := wclWiFiProfilesManager.GetProfile(Id, Profile, Flags, Xml);
+      Res := WiFiProfilesManager.GetProfile(Id, Profile, Flags, Xml);
       if ShowResult(Res) then begin
         SaveDialog.FileName := Profile + '.xml';
 
@@ -775,6 +802,7 @@ begin
         end;
       end;
     end;
+  end;
 end;
 
 procedure TfmMain.btClientSetProfileXmlClick(Sender: TObject);
@@ -792,7 +820,7 @@ begin
         List.LoadFromFile(OpenDialog.FileName);
 
         Flags := [];
-        ShowResult(wclWiFiProfilesManager.SetProfile(Id, Flags,
+        ShowResult(WiFiProfilesManager.SetProfile(Id, Flags,
           List.Text, True));
 
       finally
@@ -822,11 +850,9 @@ var
   Key: string;
   BoolRes: Boolean;
   Mac: string;
-  Utf8: UTF8String;
   Hex: AnsiString;
-  i: Integer;
 begin
-  if ClientGetInterfaceId(Id) then
+  if ClientGetInterfaceId(Id) then begin
     if lvClientNetworks.Selected = nil then
       ShowWarning('Select network')
 
@@ -842,11 +868,7 @@ begin
         Mac := '';
 
       Ssid := lvClientNetworks.Selected.SubItems[0];
-
-      Utf8 := UTF8Encode(Ssid);
-      Hex := '';
-      for i := 1 to Length(Utf8) do
-        Hex := Hex + AnsiString(IntToHex(Ord(Utf8[i]), 2));
+      Hex := WiFiProfilesManager.SsidToHex(Ssid);
 
       Xml := '<?xml version="1.0"?>' +
              '<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">' +
@@ -937,9 +959,10 @@ begin
 
       Xml := Format(Xml, [Ssid, Hex, Ssid, AuthAlg, CipherAlg, Key]);
 
-      ShowResult(wclWiFiClient.Connect(Id, cmTemporaryProfile, Xml, Ssid,
+      ShowResult(WiFiClient.Connect(Id, cmTemporaryProfile, Xml, Ssid,
         ClientGetNetworkBss, [], Mac));
     end;
+  end;
 end;
 
 procedure TfmMain.ClientConnectUsingNetworkProfile;
@@ -963,7 +986,7 @@ begin
     else
       Mac := '';
 
-    ShowResult(wclWiFiClient.Connect(Id, cmProfile,
+    ShowResult(WiFiClient.Connect(Id, cmProfile,
       lvClientNetworks.Selected.Caption, '', ClientGetNetworkBss, [], Mac));
   end;
 end;
@@ -974,7 +997,7 @@ var
   Id: TGUID;
   Mac: string;
 begin
-  if ClientGetInterfaceId(Id) then
+  if ClientGetInterfaceId(Id) then begin
     if lvClientNetworks.Selected = nil then
       ShowWarning('Select network')
 
@@ -995,9 +1018,10 @@ begin
       else
         Mac := '';
 
-      ShowResult(wclWiFiClient.Connect(Id, Mode, '',
+      ShowResult(WiFiClient.Connect(Id, Mode, '',
         lvClientNetworks.Selected.SubItems[0], ClientGetNetworkBss, [], Mac));
     end;
+  end;
 end;
 
 procedure TfmMain.ClientConnectUsingSelectedProfile;
@@ -1021,7 +1045,7 @@ begin
     else
       Mac := '';
 
-    ShowResult(wclWiFiClient.Connect(Id, cmProfile,
+    ShowResult(WiFiClient.Connect(Id, cmProfile,
       lvClientProfiles.Selected.Caption, '', ClientGetNetworkBss, [], Mac));
   end;
 end;
@@ -1084,7 +1108,7 @@ var
   Id: TGUID;
   Iface: TwclWiFiInterface;
   Res: Integer;
-  _Static: Boolean;
+  Static: Boolean;
   Dns1: string;
   Dns2: string;
   Address: string;
@@ -1095,9 +1119,9 @@ begin
   if ClientGetInterfaceId(Id) then begin
     Iface := TwclWiFiInterface.Create(Id);
     if ShowResult(Iface.Open) then begin
-      Res := Iface.GetCurrentIp(_Static, Address, Mask, Gateway, Dns1, Dns2);
+      Res := Iface.GetCurrentIp(Static, Address, Mask, Gateway, Dns1, Dns2);
       if ShowResult(Res) then begin
-        if _Static then
+        if Static then
           Msg := 'Static IP' + #13#10
         else
           Msg := 'DHCP' + #13#10;
@@ -1119,7 +1143,7 @@ var
   Id: TGUID;
   Iface: TwclWiFiInterface;
   Res: Integer;
-  _Static: Boolean;
+  Static: Boolean;
   Dns1: string;
   Dns2: string;
   Address: string;
@@ -1130,9 +1154,9 @@ begin
   if ClientGetInterfaceId(Id) then begin
     Iface := TwclWiFiInterface.Create(Id);
     if ShowResult(Iface.Open) then begin
-      Res := Iface.GetIpSettings(_Static, Address, Mask, Gateway, Dns1, Dns2);
+      Res := Iface.GetIpSettings(Static, Address, Mask, Gateway, Dns1, Dns2);
       if ShowResult(Res) then begin
-        if _Static then
+        if Static then
           Msg := 'Static IP' + #13#10
         else
           Msg := 'DHCP' + #13#10;
@@ -1187,7 +1211,7 @@ var
 begin
   if ClientGetInterfaceId(Id) then begin
     if ClientGetProfile(Profile) then
-      ShowResult(wclWiFiProfilesManager.ShowUIEdit(Id, Profile));
+      ShowResult(WiFiProfilesManager.ShowUIEdit(Id, Profile));
   end;
 end;
 
@@ -1206,7 +1230,7 @@ begin
         try
           List.LoadFromFile(OpenDialog.FileName);
 
-          ShowResult(wclWiFiProfilesManager.SetProfileEapXmlUserData(Id,
+          ShowResult(WiFiProfilesManager.SetProfileEapXmlUserData(Id,
             Profile, False, List.Text));
 
         finally
@@ -1215,6 +1239,101 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TfmMain.btGetDualStaStateClick(Sender: TObject);
+var
+  Id: TGUID;
+  Iface: TwclWiFiInterface;
+  State: Boolean;
+begin
+  if ClientGetInterfaceId(Id) then begin
+    Iface := TwclWiFiInterface.Create(Id);
+    try
+      if ShowResult(Iface.Open) then begin
+        try
+          if ShowResult(Iface.GetSecondarySta(State)) then
+            ShowInfo('Dual-STA state: ' + BoolToStr(State, True));
+        finally
+          Iface.Close;
+        end;
+      end;
+    finally
+      Iface.Free;
+    end;
+  end;
+end;
+
+procedure TfmMain.btEnableDualStaClick(Sender: TObject);
+begin
+  ClientSetDualState(True);
+end;
+
+procedure TfmMain.btDisableDualStaClick(Sender: TObject);
+begin
+  ClientSetDualState(False);
+end;
+
+procedure TfmMain.ClientSetDualState(const Enable: Boolean);
+var
+  Id: TGUID;
+  Iface: TwclWiFiInterface;
+begin
+  if ClientGetInterfaceId(Id) then begin
+    Iface := TwclWiFiInterface.Create(Id);
+    try
+      if ShowResult(Iface.Open) then begin
+        try
+          ShowResult(Iface.SetSecondarySta(Enable));
+        finally
+          Iface.Close;
+        end;
+      end;
+    finally
+      Iface.Free;
+    end;
+  end;
+end;
+
+procedure TfmMain.btEnumSecondaryInterfacesClick(Sender: TObject);
+var
+  Id: TGUID;
+  Iface: TwclWiFiInterface;
+  Ifaces: TwclWiFiInterfaces;
+  i: Integer;
+  Item: TListItem;
+begin
+  if ClientGetInterfaceId(Id) then begin
+    Iface := TwclWiFiInterface.Create(Id);
+    try
+      if ShowResult(Iface.Open) then begin
+        try
+          if ShowResult(Iface.EnumInterfaces(Ifaces)) then begin
+            ClientClearInterfaces;
+            for i := 0 to Length(Ifaces) - 1 do begin
+              Item := lvClientInterfaces.Items.Add;
+              Item.Caption := GUIDToString(Ifaces[i].Id);
+              Item.SubItems.Add(Ifaces[i].Description);
+              Item.SubItems.Add(BoolToStr(Ifaces[i].Primary, True));
+            end;
+          end;
+        finally
+          Iface.Close;
+        end;
+      end;
+    finally
+      Iface.Free;
+    end;
+  end;
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  WiFiClient := TwclWiFiClient.Create(nil);
+  WiFiProfilesManager := TwclWiFiProfilesManager.Create(nil);
+
+  WiFiClient.AfterOpen := WiFiClientAfterOpen;
+  WiFiClient.BeforeClose := WiFiClientBeforeClose;
 end;
 
 end.

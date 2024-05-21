@@ -11,7 +11,7 @@
         <MainUnitHasScaledStatement Value="False"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="WiFiClient_D7"/>
+      <Title Value="MobileHotspot"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
@@ -32,7 +32,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="WiFiClient_D7.dpr"/>
+        <Filename Value="MobileHotspot.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -48,13 +48,13 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <SearchPaths>
-      <IncludeFiles Value="..\..\..\..\..\WCL7\VCL\Source"/>
+      <IncludeFiles Value="..\..\..\..\..\WCL7\VCL\Source;$(ProjOutDir)"/>
       <OtherUnitFiles Value="..\..;..\..\..\..\..\WCL7\VCL\Source\Common;..\..\..\..\..\WCL7\VCL\Source\WiFi"/>
       <UnitOutputDirectory Value="build"/>
     </SearchPaths>
     <Parsing>
       <SyntaxOptions>
-        <SyntaxMode Value="delphi"/>
+        <SyntaxMode Value="Delphi"/>
       </SyntaxOptions>
     </Parsing>
     <Linking>
