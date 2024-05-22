@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -50,17 +50,16 @@ type
     procedure btMkDirClick(Sender: TObject);
 
   private
-    wclIrDAReceiver: TwclIrDAReceiver;
-    wclIrDAClient: TwclIrDAClient;
+    IrDAReceiver: TwclIrDAReceiver;
+    IrDAClient: TwclIrDAClient;
+    Ftp: TwclObexFtpClient;
 
-    FFtp: TwclObexFtpClient;
-
-    procedure wclIrDAClientConnect(Sender: TObject; const Error: Integer);
-    procedure wclIrDAClientDisconnect(Sender: TObject;
+    procedure IrDAClientConnect(Sender: TObject; const Error: Integer);
+    procedure IrDAClientDisconnect(Sender: TObject;
       const Reason: Integer);
-    procedure wclIrDAClientDestroyProcessor(Sender: TObject;
+    procedure IrDAClientDestroyProcessor(Sender: TObject;
       const Connection: TwclClientDataConnection);
-    procedure wclIrDAClientCreateProcessor(Sender: TObject;
+    procedure IrDAClientCreateProcessor(Sender: TObject;
       const Connection: TwclClientDataConnection);
 
     procedure FtpConnect(Sender: TObject; const Error: Integer;
@@ -95,18 +94,19 @@ uses
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclIrDAReceiver := TwclIrDAReceiver.Create(nil);
+  IrDAReceiver := TwclIrDAReceiver.Create(nil);
 
-  wclIrDAClient := TwclIrDAClient.Create(nil);
+  IrDAClient := TwclIrDAClient.Create(nil);
+  IrDAClient.OnConnect := IrDAClientConnect;
+  IrDAClient.OnDisconnect := IrDAClientDisconnect;
+  IrDAClient.OnDestroyProcessor := IrDAClientDestroyProcessor;
+  IrDAClient.OnCreateProcessor := IrDAClientCreateProcessor;
+
   // We use ObjectPush Profile so must set the profile's UUID.
-  wclIrDAClient.Service := 'OBEX';
-  wclIrDAClient.Mode := cmIrComm3Wire; // Required for OBEX connection!
-  wclIrDAClient.OnConnect := wclIrDAClientConnect;
-  wclIrDAClient.OnCreateProcessor := wclIrDAClientCreateProcessor;
-  wclIrDAClient.OnDestroyProcessor := wclIrDAClientDestroyProcessor;
-  wclIrDAClient.OnDisconnect := wclIrDAClientDisconnect;
+  IrDAClient.Service := 'OBEX';
+  IrDAClient.Mode := cmIrComm3Wire; // Required for OBEX connection!
 
-  FFtp := nil;
+  Ftp := nil;
 end;
 
 procedure TfmMain.btClearClick(Sender: TObject);
@@ -116,10 +116,10 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclIrDAClient.Disconnect;
-  wclIrDAClient.Free;
+  IrDAClient.Disconnect;
 
-  wclIrDAReceiver.Free;
+  IrDAReceiver.Free;
+  IrDAClient.Free;
 end;
 
 procedure TfmMain.btDiscoverClick(Sender: TObject);
@@ -131,7 +131,7 @@ var
 begin
   lvDevices.Clear;
 
-  Res := wclIrDAReceiver.Discover(Devices);
+  Res := IrDAReceiver.Discover(Devices);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Failed to start discovering: 0x' + IntToHex(Res, 8),
       mtError, [mbOK], 0)
@@ -148,65 +148,66 @@ procedure TfmMain.btDisconnectClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAClient.Disconnect;
+  Res := IrDAClient.Disconnect;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Disconnect failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
 
-procedure TfmMain.wclIrDAClientConnect(Sender: TObject;
+procedure TfmMain.IrDAClientConnect(Sender: TObject;
   const Error: Integer);
 begin
   lbLog.Items.Add('Connect. Operation result: 0x' + IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclIrDAClientDisconnect(Sender: TObject;
+procedure TfmMain.IrDAClientDisconnect(Sender: TObject;
   const Reason: Integer);
 begin
   lbLog.Items.Add('Disconnected with reason: 0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclIrDAClientDestroyProcessor(Sender: TObject;
+procedure TfmMain.IrDAClientDestroyProcessor(Sender: TObject;
   const Connection: TwclClientDataConnection);
 begin
   // Do we have any data processor created?
-  if FFtp <> nil then begin
+  if Ftp <> nil then begin
     // Make sure it is our connection is goind to destroy.
-    if Connection.Processor = FFtp then begin
+    if Connection.Processor = Ftp then begin
       // Ok, destroy the data processor here.
-      FFtp.Free;
-      FFtp := nil;
+      Ftp.Free;
+      Ftp := nil;
     end;
   end;
 end;
 
-procedure TfmMain.wclIrDAClientCreateProcessor(Sender: TObject;
+procedure TfmMain.IrDAClientCreateProcessor(Sender: TObject;
   const Connection: TwclClientDataConnection);
 begin
   // here we must create the data processor for the connection. In this demo
   // we use OPPClient.
-  FFtp := TwclObexFtpClient.Create(Connection);
-  FFtp.OnConnect := FtpConnect;
-  FFtp.OnDisconnect := FtpDisconnect;
-  FFtp.OnGetComplete := FtpGetComplete;
-  FFtp.OnPutComplete := FtpPutComplete;
-  FFtp.OnProgress := FtpProgress;
-  FFtp.OnDirComplete := FtpDirComplete;
-  FFtp.OnChangeDirComplete := FtpChangeDirComplete;
-  FFtp.OnDeleteComplete := FtpDeleteComplete;
-  FFtp.OnMakeDirComplete := FtpMkDirComplete;
+  Ftp := TwclObexFtpClient.Create(Connection);
+  Ftp.OnConnect := FtpConnect;
+  Ftp.OnDisconnect := FtpDisconnect;
+  Ftp.OnGetComplete := FtpGetComplete;
+  Ftp.OnPutComplete := FtpPutComplete;
+  Ftp.OnProgress := FtpProgress;
+  Ftp.OnDirComplete := FtpDirComplete;
+  Ftp.OnChangeDirComplete := FtpChangeDirComplete;
+  Ftp.OnDeleteComplete := FtpDeleteComplete;
+  Ftp.OnMakeDirComplete := FtpMkDirComplete;
 end;
 
 procedure TfmMain.btCloseSessionClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
-    Res := FFtp.Disconnect('');
-    if Res <> WCL_E_SUCCESS then
+    Res := Ftp.Disconnect('');
+    if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Close session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
+    end;
   end;
 end;
 
@@ -214,13 +215,14 @@ procedure TfmMain.btOpenSessionClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
-    Res := FFtp.Connect;
-    if Res <> WCL_E_SUCCESS then
+    Res := Ftp.Connect;
+    if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Open session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
+    end;
   end;
 end;
 
@@ -234,7 +236,7 @@ begin
   ProgressBar.Max := 0;
 
   lvFiles.Items.Clear;
-  FFtp.Dir;
+  Ftp.Dir;
 end;
 
 procedure TfmMain.FtpConnect(Sender: TObject; const Error: Integer;
@@ -254,7 +256,7 @@ begin
   ProgressBar.Max := 0;
 
   lvFiles.Items.Clear;
-  FFtp.Dir;
+  Ftp.Dir;
 end;
 
 procedure TfmMain.FtpDirComplete(Sender: TObject; const Error: Integer;
@@ -335,7 +337,7 @@ begin
   ProgressBar.Max := 0;
 
   lvFiles.Items.Clear;
-  FFtp.Dir;
+  Ftp.Dir;
 end;
 
 procedure TfmMain.FtpProgress(Sender: TObject; const Size,
@@ -363,7 +365,7 @@ var
   Addr: Int64;
   Res: Integer;
 begin
-  if wclIrDAClient.State <> csDisconnected then
+  if IrDAClient.State <> csDisconnected then
     MessageDlg('Client is connected', mtWarning, [mbOK], 0)
 
   else begin
@@ -372,8 +374,8 @@ begin
 
     else begin
       Addr := StrToInt('$' + lvDevices.Selected.Caption);
-      wclIrDAClient.Address := Addr;
-      Res := wclIrDAClient.Connect;
+      IrDAClient.Address := Addr;
+      Res := IrDAClient.Connect;
       if Res <> WCL_E_SUCCESS then
         MessageDlg('Failed to connect: 0x' + IntToHex(Res, 8),
           mtError, [mbOK], 0);
@@ -391,10 +393,10 @@ procedure TfmMain.btAbortClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
-    Res := FFtp.Abort('');
+    Res := Ftp.Abort('');
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Open session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -407,14 +409,14 @@ var
   Res: Integer;
   Stream: TStream;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
     if edFileName.Text = '' then
       MessageDlg('Select file', mtWarning, [mbOK], 0)
     else begin
       Stream := TFileStream.Create(edFileName.Text, fmOpenRead);
-      Res := FFtp.Put(ExtractFileName(edFileName.Text), '', Stream);
+      Res := Ftp.Put(ExtractFileName(edFileName.Text), '', Stream);
       if Res <> WCL_E_SUCCESS then begin
         MessageDlg('Send file failed: 0x' + IntToHex(Res, 8), mtError,
           [mbOK], 0);
@@ -428,10 +430,10 @@ procedure TfmMain.btDirClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
-    Res := FFtp.Dir;
+    Res := Ftp.Dir;
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Dir failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
     else
@@ -445,12 +447,12 @@ var
   Stream: TFileStream;
 begin
   if lvFiles.Selected <> nil then begin
-    if FFtp = nil then
+    if Ftp = nil then
       MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
     else begin
       if lvFiles.Selected.SubItems[0] = 'Folder' then begin
-        Res := FFtp.ChangeDir(lvFiles.Selected.Caption);
+        Res := Ftp.ChangeDir(lvFiles.Selected.Caption);
         if Res <> WCL_E_SUCCESS then begin
           MessageDlg('Change path failed 0x' + IntToHex(Res, 8),
             mtError, [mbOK], 0);
@@ -459,7 +461,7 @@ begin
       end else begin
         Stream := TFileStream.Create('.\' + lvFiles.Selected.Caption,
            fmCreate);
-        Res := FFtp.Get(lvFiles.Selected.Caption, Stream);
+        Res := Ftp.Get(lvFiles.Selected.Caption, Stream);
         if Res <> WCL_E_SUCCESS then begin
           MessageDlg('Get failed 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
           Stream.Free;
@@ -473,11 +475,11 @@ procedure TfmMain.btRootClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
   else begin
-    Res := FFtp.ChangeDir('');
+    Res := Ftp.ChangeDir('');
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Root failed 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
   end;
@@ -488,11 +490,11 @@ var
   Res: Integer;
 begin
   if lvFiles.Selected <> nil then begin
-    if FFtp = nil then
+    if Ftp = nil then
       MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
     else begin
-      Res := FFtp.Delete(lvFiles.Selected.Caption);
+      Res := Ftp.Delete(lvFiles.Selected.Caption);
       if Res <> WCL_E_SUCCESS then
         MessageDlg('Delete failed 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
     end;
@@ -503,10 +505,10 @@ procedure TfmMain.btMkDirClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
-    Res := FFtp.MkDir(edNewDirName.Text);
+    Res := Ftp.MkDir(edNewDirName.Text);
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Make sire failed 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
   end;

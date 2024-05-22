@@ -137,8 +137,6 @@ object fmMain: TfmMain
     Top = 240
     Width = 441
     Height = 17
-    Min = 0
-    Max = 100
     TabOrder = 12
   end
   object btGetvCard: TButton

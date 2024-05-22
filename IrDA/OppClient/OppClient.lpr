@@ -1,10 +1,9 @@
-program IrDAServer_D7;
+program OppClient;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 uses
-  Interfaces,
-  Forms,
+  Forms, Interfaces,
   main in 'main.pas' {fmMain};
 
 {$R *.res}

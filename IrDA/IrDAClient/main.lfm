@@ -1,68 +1,68 @@
 object fmMain: TfmMain
   Left = 440
-  Height = 412
   Top = 161
-  Width = 525
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'IrDA Client Demo'
   ClientHeight = 412
   ClientWidth = 525
   Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  Position = poScreenCenter
-  LCLVersion = '2.2.0.4'
+  PixelsPerInch = 96
   object laTimeout: TLabel
     Left = 176
-    Height = 13
     Top = 152
     Width = 38
+    Height = 13
     Caption = 'Timeout'
   end
   object laMilliseconds: TLabel
     Left = 304
-    Height = 13
     Top = 152
     Width = 62
+    Height = 13
     Caption = '(milliseconds)'
   end
   object laReadBuffer: TLabel
     Left = 8
-    Height = 13
     Top = 216
     Width = 56
+    Height = 13
     Caption = 'Read buffer'
   end
   object laWriteBuffer: TLabel
     Left = 160
-    Height = 13
     Top = 216
     Width = 55
+    Height = 13
     Caption = 'Write buffer'
   end
   object btDiscover: TButton
     Left = 8
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Discover'
-    OnClick = btDiscoverClick
     TabOrder = 0
+    OnClick = btDiscoverClick
   end
   object lvDevices: TListView
     Left = 8
-    Height = 97
     Top = 40
     Width = 505
-    Columns = <    
+    Height = 97
+    Columns = <
       item
         Caption = 'Address'
         Width = 200
-      end    
+      end
       item
         Caption = 'Name'
         Width = 200
@@ -77,87 +77,87 @@ object fmMain: TfmMain
   end
   object btConnect: TButton
     Left = 8
-    Height = 25
     Top = 144
     Width = 75
+    Height = 25
     Caption = 'Connect'
-    OnClick = btConnectClick
     TabOrder = 2
+    OnClick = btConnectClick
   end
   object btDisconnect: TButton
     Left = 88
-    Height = 25
     Top = 144
     Width = 75
+    Height = 25
     Caption = 'Disconnect'
-    OnClick = btDisconnectClick
     TabOrder = 3
+    OnClick = btDisconnectClick
   end
   object lbEvents: TListBox
     Left = 8
-    Height = 169
     Top = 240
     Width = 505
-    ItemHeight = 0
+    Height = 169
+    ItemHeight = 13
     TabOrder = 4
   end
   object btClear: TButton
     Left = 440
-    Height = 25
     Top = 208
     Width = 75
+    Height = 25
     Caption = 'Clear'
-    OnClick = btClearClick
     TabOrder = 5
+    OnClick = btClearClick
   end
   object btSend: TButton
     Left = 440
-    Height = 25
     Top = 176
     Width = 75
+    Height = 25
     Caption = 'Send'
-    OnClick = btSendClick
     TabOrder = 6
+    OnClick = btSendClick
   end
   object edText: TEdit
     Left = 8
-    Height = 21
     Top = 176
     Width = 425
+    Height = 21
     TabOrder = 7
     Text = 'Send this text to selected client'
   end
   object edTimeout: TEdit
     Left = 224
-    Height = 21
     Top = 144
     Width = 73
+    Height = 21
     TabOrder = 8
     Text = '10000'
   end
   object edReadBuffer: TEdit
     Left = 72
-    Height = 21
     Top = 208
     Width = 81
+    Height = 21
     TabOrder = 9
     Text = '0'
   end
   object edWriteBuffer: TEdit
     Left = 224
-    Height = 21
     Top = 208
     Width = 81
+    Height = 21
     TabOrder = 10
     Text = '0'
   end
   object btSetBuffers: TButton
     Left = 320
-    Height = 25
     Top = 208
     Width = 75
+    Height = 25
     Caption = 'Set buffers'
-    OnClick = btSetBuffersClick
     TabOrder = 11
+    OnClick = btSetBuffersClick
   end
 end

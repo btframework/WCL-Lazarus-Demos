@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -22,22 +22,21 @@ type
     procedure FormCreate(Sender: TObject);
 
   private
-    wclIrDAServer: TwclIrDAServer;
-
+    IrDAServer: TwclIrDAServer;
     FFileName: string;
 
-    procedure wclIrDAServerListen(Sender: TObject);
-    procedure wclIrDAServerClosed(Sender: TObject; const Reason: Integer);
-    procedure wclIrDAServerDisconnect(Sender: TObject;
-      const Client: TwclIrDAServerClientConnection; const Reason: Integer);
-    procedure wclIrDAServerDestroyProcessor(Sender: TObject;
-      const Connection: TwclServerClientDataConnection);
-    procedure wclIrDAServerConnect(Sender: TObject;
-      const Client: TwclIrDAServerClientConnection; const Error: Integer);
-    procedure wclIrDAServerCreateProcessor(Sender: TObject;
-      const Connection: TwclServerClientDataConnection);
-
     procedure Trace(const Msg: string);
+
+    procedure IrDAServerListen(Sender: TObject);
+    procedure IrDAServerClosed(Sender: TObject; const Reason: Integer);
+    procedure IrDAServerDisconnect(Sender: TObject;
+      const Client: TwclIrDAServerClientConnection; const Reason: Integer);
+    procedure IrDAServerDestroyProcessor(Sender: TObject;
+      const Connection: TwclServerClientDataConnection);
+    procedure IrDAServerConnect(Sender: TObject;
+      const Client: TwclIrDAServerClientConnection; const Error: Integer);
+    procedure IrDAServerCreateProcessor(Sender: TObject;
+      const Connection: TwclServerClientDataConnection);
 
     procedure OppClientConnect(Sender: TObject; const Description: string);
     procedure OppClientDisconnected(Sender: TObject; const Reason: Integer;
@@ -74,7 +73,7 @@ procedure TfmMain.btListenClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAServer.Listen;
+  Res := IrDAServer.Listen;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Error: 0x' + IntToHex(Res, 8));
 end;
@@ -83,7 +82,7 @@ procedure TfmMain.btCloseClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAServer.Close;
+  Res := IrDAServer.Close;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Error: 0x' + IntToHex(Res, 8));
 end;
@@ -91,42 +90,43 @@ end;
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
   // Simple try to close the server.
-  wclIrDAServer.Close;
-  wclIrDAServer.Free;
+  IrDAServer.Close;
+  IrDAServer.Free;
 end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclIrDAServer := TwclIrDAServer.Create(nil);
-  wclIrDAServer.Service := 'OBEX';
-  wclIrDAServer.Mode := cmIrComm3Wire; // Required for OBEX connection!
-  wclIrDAServer.OnClosed := wclIrDAServerClosed;
-  wclIrDAServer.OnConnect := wclIrDAServerConnect;
-  wclIrDAServer.OnCreateProcessor := wclIrDAServerCreateProcessor;
-  wclIrDAServer.OnDestroyProcessor := wclIrDAServerDestroyProcessor;
-  wclIrDAServer.OnDisconnect := wclIrDAServerDisconnect;
-  wclIrDAServer.OnListen := wclIrDAServerListen;
+  IrDAServer := TwclIrDAServer.Create(nil);
+  IrDAServer.OnListen := IrDAServerListen;
+  IrDAServer.OnClosed := IrDAServerClosed;
+  IrDAServer.OnDisconnect := IrDAServerDisconnect;
+  IrDAServer.OnDestroyProcessor := IrDAServerDestroyProcessor;
+  IrDAServer.OnConnect := IrDAServerConnect;
+  IrDAServer.OnCreateProcessor := IrDAServerCreateProcessor;
+  
+  IrDAServer.Service := 'OBEX';
+  IrDAServer.Mode := cmIrComm3Wire; // Required for OBEX connection!
 end;
 
-procedure TfmMain.wclIrDAServerListen(Sender: TObject);
+procedure TfmMain.IrDAServerListen(Sender: TObject);
 begin
   Trace('Server listening');
 end;
 
-procedure TfmMain.wclIrDAServerClosed(Sender: TObject;
+procedure TfmMain.IrDAServerClosed(Sender: TObject;
   const Reason: Integer);
 begin
   Trace('Server closed. Reason:: 0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclIrDAServerDisconnect(Sender: TObject;
+procedure TfmMain.IrDAServerDisconnect(Sender: TObject;
   const Client: TwclIrDAServerClientConnection; const Reason: Integer);
 begin
   Trace('Client ' + IntToHex(Client.Address, 8) + ' disconnected. Reason: 0x' +
     IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclIrDAServerDestroyProcessor(Sender: TObject;
+procedure TfmMain.IrDAServerDestroyProcessor(Sender: TObject;
   const Connection: TwclServerClientDataConnection);
 begin
   Trace('Data processor for client ' +
@@ -135,7 +135,7 @@ begin
   Connection.Processor.Free;
 end;
 
-procedure TfmMain.wclIrDAServerConnect(Sender: TObject;
+procedure TfmMain.IrDAServerConnect(Sender: TObject;
   const Client: TwclIrDAServerClientConnection; const Error: Integer);
 begin
   if Error = WCL_E_SUCCESS then
@@ -147,7 +147,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclIrDAServerCreateProcessor(Sender: TObject;
+procedure TfmMain.IrDAServerCreateProcessor(Sender: TObject;
   const Connection: TwclServerClientDataConnection);
 var
   Proc: TwclObexOppServer;

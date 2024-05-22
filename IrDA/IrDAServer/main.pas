@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -31,7 +31,7 @@ type
     procedure btClearClick(Sender: TObject);
     procedure btDisconnectClick(Sender: TObject);
     procedure btSendClick(Sender: TObject);
-    procedure wclIrDAServerListen(Sender: TObject);
+    procedure IrDAServerListen(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btGetBuffersClick(Sender: TObject);
     procedure btSetBuffersClick(Sender: TObject);
@@ -39,16 +39,16 @@ type
     procedure btAddIasRecordClick(Sender: TObject);
 
   private
-    wclIrDAServer: TwclIrDAServer;
+    IrDAServer: TwclIrDAServer;
 
-    procedure wclIrDAServerConnect(Sender: TObject;
+    procedure IrDAServerConnect(Sender: TObject;
       const Client: TwclIrDAServerClientConnection; const Error: Integer);
-    procedure wclIrDAServerDisconnect(Sender: TObject;
+    procedure IrDAServerDisconnect(Sender: TObject;
       const Client: TwclIrDAServerClientConnection; const Reason: Integer);
-    procedure wclIrDAServerData(Sender: TObject;
+    procedure IrDAServerData(Sender: TObject;
       const Client: TwclIrDAServerClientConnection; const Data: Pointer;
       const Size: Cardinal);
-    procedure wclIrDAServerClosed(Sender: TObject; const Reason: Integer);
+    procedure IrDAServerClosed(Sender: TObject; const Reason: Integer);
   end;
 
 var
@@ -65,7 +65,7 @@ procedure TfmMain.btListenClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAServer.Listen;
+  Res := IrDAServer.Listen;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -74,7 +74,7 @@ procedure TfmMain.btCloseClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAServer.Close;
+  Res := IrDAServer.Close;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -119,15 +119,15 @@ begin
   end;
 end;
 
-procedure TfmMain.wclIrDAServerListen(Sender: TObject);
+procedure TfmMain.IrDAServerListen(Sender: TObject);
 begin
   lbEvents.Items.Add('Server listening');
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclIrDAServer.Close;
-  wclIrDAServer.Free;
+  IrDAServer.Close;
+  IrDAServer.Free;
 end;
 
 procedure TfmMain.btGetBuffersClick(Sender: TObject);
@@ -188,13 +188,11 @@ end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclIrDAServer := TwclIrDAServer.Create(nil);
-  wclIrDAServer.Service := 'IrDA:IrCOMM';
-  wclIrDAServer.OnClosed := wclIrDAServerClosed;
-  wclIrDAServer.OnConnect := wclIrDAServerConnect;
-  wclIrDAServer.OnData := wclIrDAServerData;
-  wclIrDAServer.OnDisconnect := wclIrDAServerDisconnect;
-  wclIrDAServer.OnListen := wclIrDAServerListen;
+  IrDAServer := TwclIrDAServer.Create(nil);
+  IrDAServer.OnConnect := IrDAServerConnect;
+  IrDAServer.OnDisconnect := IrDAServerDisconnect;
+  IrDAServer.OnData := IrDAServerData;
+  IrDAServer.OnClosed := IrDAServerClosed;
 
   cbIasValueType.ItemIndex := 0;
 end;
@@ -205,21 +203,21 @@ var
 begin
   case cbIasValueType.ItemIndex of
     0: begin
-         Res := wclIrDAServer.AddIasRecord('IrDAFramework', 'Integer value',
+         Res := IrDAServer.AddIasRecord('IrDAFramework', 'Integer value',
            1234567);
          if Res <> WCL_E_SUCCESS then
            lbEvents.Items.Add('Add IAS record error: 0x' + IntToHex(Res, 8));
        end;
 
     1: begin
-         Res := wclIrDAServer.AddIasRecord('IrDAFramework', 'Octet Sequence',
+         Res := IrDAServer.AddIasRecord('IrDAFramework', 'Octet Sequence',
            [$01, $02, $03, $04, $05, $06, $07, $08]);
          if Res <> WCL_E_SUCCESS then
            lbEvents.Items.Add('Add IAS record error: 0x' + IntToHex(Res, 8));
        end;
 
     2: begin
-         Res := wclIrDAServer.AddIasRecord('IrDAFramework', 'User string',
+         Res := IrDAServer.AddIasRecord('IrDAFramework', 'User string',
            csAscii, [85, 115, 101, 114, 32, 115, 116, 114, 105, 110, 103]);
          if Res <> WCL_E_SUCCESS then
            lbEvents.Items.Add('Add IAS record error: 0x' + IntToHex(Res, 8));
@@ -227,7 +225,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclIrDAServerConnect(Sender: TObject;
+procedure TfmMain.IrDAServerConnect(Sender: TObject;
   const Client: TwclIrDAServerClientConnection; const Error: Integer);
 var
   Item: TListItem;
@@ -243,7 +241,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclIrDAServerDisconnect(Sender: TObject;
+procedure TfmMain.IrDAServerDisconnect(Sender: TObject;
   const Client: TwclIrDAServerClientConnection; const Reason: Integer);
 var
   i: Integer;
@@ -258,13 +256,14 @@ begin
     end;
 end;
 
-procedure TfmMain.wclIrDAServerData(Sender: TObject;
+procedure TfmMain.IrDAServerData(Sender: TObject;
   const Client: TwclIrDAServerClientConnection; const Data: Pointer;
   const Size: Cardinal);
 var
   Str: AnsiString;
 begin
   if Size > 0 then begin
+    Str := '';
     SetLength(Str, Size);
     CopyMemory(Pointer(Str), Data, Size);
 
@@ -273,7 +272,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclIrDAServerClosed(Sender: TObject;
+procedure TfmMain.IrDAServerClosed(Sender: TObject;
   const Reason: Integer);
 begin
   lbEvents.Items.Add('Server closed: 0x' + IntToHex(Reason, 8));

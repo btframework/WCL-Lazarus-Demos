@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -9,9 +9,6 @@ uses
   wclIrDAClients;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     btDiscover: TButton;
     lvDevices: TListView;
@@ -34,18 +31,18 @@ type
     procedure btDisconnectClick(Sender: TObject);
     procedure btConnectClick(Sender: TObject);
     procedure btSendClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btSetBuffersClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
-    wclIrDAClient: TwclIrDAClient;
-    wclIrDAReceiver: TwclIrDAReceiver;
+    IrDAClient: TwclIrDAClient;
+    IrDAReceiver: TwclIrDAReceiver;
 
-    procedure wclIrDAClientConnect(Sender: TObject; const Error: Integer);
-    procedure wclIrDAClientData(Sender: TObject; const Data: Pointer;
+    procedure IrDAClientConnect(Sender: TObject; const Error: Integer);
+    procedure IrDAClientData(Sender: TObject; const Data: Pointer;
       const Size: Cardinal);
-    procedure wclIrDAClientDisconnect(Sender: TObject;
+    procedure IrDAClientDisconnect(Sender: TObject;
       const Reason: Integer);
   end;
 
@@ -68,7 +65,7 @@ var
 begin
   lvDevices.Items.Clear;
 
-  Res := wclIrDAReceiver.Discover(Devices);
+  Res := IrDAReceiver.Discover(Devices);
   try
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
@@ -98,7 +95,7 @@ procedure TfmMain.btDisconnectClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAClient.Disconnect;
+  Res := IrDAClient.Disconnect;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -111,10 +108,10 @@ begin
     MessageDlg('Select device', mtWarning, [mbOK], 0)
 
   else begin
-    wclIrDAClient.Address := StrToInt('$' + lvDevices.Selected.Caption);
-    wclIrDAClient.Timeout := StrToInt(edTimeout.Text);
+    IrDAClient.Address := StrToInt('$' + lvDevices.Selected.Caption);
+    IrDAClient.Timeout := StrToInt(edTimeout.Text);
 
-    Res := wclIrDAClient.Connect;
+    Res := IrDAClient.Connect;
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
   end;
@@ -127,7 +124,7 @@ var
   Sent: Cardinal;
 begin
   Ansi := AnsiString(edText.Text);
-  Res := wclIrDAClient.Write(PByte(Ansi), Length(Ansi), Sent);
+  Res := IrDAClient.Write(PByte(Ansi), Length(Ansi), Sent);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
   else
@@ -135,18 +132,7 @@ begin
       mtInformation, [mbOK], 0);
 end;
 
-procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  wclIrDAClient := TwclIrDAClient.Create(nil);
-  wclIrDAClient.Service := 'IrDA:IrCOMM';
-  wclIrDAClient.OnConnect := wclIrDAClientConnect;
-  wclIrDAClient.OnData := wclIrDAClientData;
-  wclIrDAClient.OnDisconnect := wclIrDAClientDisconnect;
-
-  wclIrDAReceiver := TwclIrDAReceiver.Create(nil);
-end;
-
-procedure TfmMain.wclIrDAClientConnect(Sender: TObject;
+procedure TfmMain.IrDAClientConnect(Sender: TObject;
   const Error: Integer);
 var
   Res: Integer;
@@ -158,14 +144,14 @@ begin
     // Try to get read and write buffers size.
     Size := 0;
 
-    Res := wclIrDAClient.GetReadBufferSize(Size);
+    Res := IrDAClient.GetReadBufferSize(Size);
     if Res <> WCL_E_SUCCESS then
       lbEvents.Items.Add('Get read buffer error: 0x' + IntToHex(Res, 8))
     else
       edReadBuffer.Text := IntToStr(Size);
 
     Size := 0;
-    Res := wclIrDAClient.GetWriteBufferSize(Size);
+    Res := IrDAClient.GetWriteBufferSize(Size);
     if Res <> WCL_E_SUCCESS then
       lbEvents.Items.Add('Get write buffer error: 0x' + IntToHex(Res, 8))
     else
@@ -175,12 +161,13 @@ begin
     lbEvents.Items.Add('Connect error: 0x' + IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclIrDAClientData(Sender: TObject; const Data: Pointer;
+procedure TfmMain.IrDAClientData(Sender: TObject; const Data: Pointer;
   const Size: Cardinal);
 var
   Str: AnsiString;
 begin
   if Size > 0 then begin
+    Str := '';
     SetLength(Str, Size);
     CopyMemory(Pointer(Str), Data, Size);
 
@@ -188,7 +175,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclIrDAClientDisconnect(Sender: TObject;
+procedure TfmMain.IrDAClientDisconnect(Sender: TObject;
   const Reason: Integer);
 begin
   lbEvents.Items.Add('Disconnected: 0x' + IntToHex(Reason, 8));
@@ -199,10 +186,9 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclIrDAClient.Disconnect;
-  wclIrDAClient.Free;
-
-  wclIrDAReceiver.Free;
+  IrDAClient.Disconnect;
+  IrDAClient.Free;
+  IrDAReceiver.Free;
 end;
 
 procedure TfmMain.btSetBuffersClick(Sender: TObject);
@@ -212,7 +198,7 @@ var
 begin
   // Try to set read buffer size first.
   Size := StrToInt(edReadBuffer.Text);
-  Res := wclIrDAClient.SetReadBufferSize(Size);
+  Res := IrDAClient.SetReadBufferSize(Size);
   if Res = WCL_E_SUCCESS then
     lbEvents.Items.Add('Read buffer size changed.')
   else
@@ -220,11 +206,21 @@ begin
 
   // Now write buffer.
   Size := StrToInt(edWriteBuffer.Text);
-  Res := wclIrDAClient.SetWriteBufferSize(Size);
+  Res := IrDAClient.SetWriteBufferSize(Size);
   if Res = WCL_E_SUCCESS then
     lbEvents.Items.Add('Write buffer size changed.')
   else
     lbEvents.Items.Add('Set write buffer size error: 0x' + IntToHex(Res, 8));
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  IrDAReceiver := TwclIrDAReceiver.Create(nil);
+
+  IrDAClient := TwclIrDAClient.Create(nil);
+  IrDAClient.OnConnect := IrDAClientConnect;
+  IrDAClient.OnData := IrDAClientData;
+  IrDAClient.OnDisconnect := IrDAClientDisconnect;
 end;
 
 end.

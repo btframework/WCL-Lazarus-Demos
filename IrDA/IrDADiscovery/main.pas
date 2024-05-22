@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -34,11 +34,11 @@ type
     procedure FormDestroy(Sender: TObject);
 
   private
-    wclIrDAReceiver: TwclIrDAReceiver;
-    FPowerMonitor: TwclPowerEventsMonitor;
+    IrDAReceiver: TwclIrDAReceiver;
+    PowerMonitor: TwclPowerEventsMonitor;
 
-    procedure wclIrDAReceiverChange(Sender: TObject);
-    procedure wclIrDAReceiverDevicesFound(Sender: TObject;
+    procedure IrDAReceiverChange(Sender: TObject);
+    procedure IrDAReceiverDevicesFound(Sender: TObject;
       const Device: TwclIrDADevice);
 
     procedure PowerStateChanged(Sender: TObject; const State: TwclPowerState);
@@ -56,16 +56,16 @@ uses
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclIrDAReceiver := TwclIrDAReceiver.Create(nil);
-  wclIrDAReceiver.OnChange := wclIrDAReceiverChange;
-  wclIrDAReceiver.OnDevicesFound := wclIrDAReceiverDevicesFound;
+  IrDAReceiver := TwclIrDAReceiver.Create(nil);
+  IrDAReceiver.OnChange := IrDAReceiverChange;
+  IrDAReceiver.OnDevicesFound := IrDAReceiverDevicesFound;
 
   cbClassName.ItemIndex := 0;
   cbClassNameChange(cbClassName);
 
-  FPowerMonitor := TwclPowerEventsMonitor.Create;
-  FPowerMonitor.OnPowerStateChanged := PowerStateChanged;
-  FPowerMonitor.Open;
+  PowerMonitor := TwclPowerEventsMonitor.Create;
+  PowerMonitor.OnPowerStateChanged := PowerStateChanged;
+  PowerMonitor.Open;
 end;
 
 procedure TfmMain.btDiscoverClick(Sender: TObject);
@@ -80,7 +80,7 @@ var
 begin
   lvDevices.Items.Clear;
 
-  Res := wclIrDAReceiver.Discover(Devices);
+  Res := IrDAReceiver.Discover(Devices);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
 
@@ -140,7 +140,7 @@ procedure TfmMain.ntSubscribeClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAReceiver.Subscribe;
+  Res := IrDAReceiver.Subscribe;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -149,7 +149,7 @@ procedure TfmMain.btUnsubscribeClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAReceiver.Unsubscribe;
+  Res := IrDAReceiver.Unsubscribe;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -197,7 +197,7 @@ begin
     MessageDlg('Select device', mtWarning, [mbOK], 0)
 
   else begin
-    Res := wclIrDAReceiver.QueryAttribute(
+    Res := IrDAReceiver.QueryAttribute(
       StrToInt('$' + lvDevices.Selected.Caption),
       cbClassName.Items[cbClassName.ItemIndex],
       cbAttributeName.Items[cbAttributeName.ItemIndex], Attrib);
@@ -234,7 +234,7 @@ procedure TfmMain.btStartLazyDiscoveringClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAReceiver.StartLazyDiscovering;
+  Res := IrDAReceiver.StartLazyDiscovering;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -243,20 +243,20 @@ procedure TfmMain.btStopLazyDiscoveringClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAReceiver.StopLazyDiscovering;
+  Res := IrDAReceiver.StopLazyDiscovering;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
 
-procedure TfmMain.wclIrDAReceiverChange(Sender: TObject);
+procedure TfmMain.IrDAReceiverChange(Sender: TObject);
 begin
-  if wclIrDAReceiver.Available then
+  if IrDAReceiver.Available then
     lbEvents.Items.Add('Hardware changed. IrDA available.')
   else
     lbEvents.Items.Add('Hardware changed. IrDA NOT available.');
 end;
 
-procedure TfmMain.wclIrDAReceiverDevicesFound(Sender: TObject;
+procedure TfmMain.IrDAReceiverDevicesFound(Sender: TObject;
   const Device: TwclIrDADevice);
 begin
   lbEvents.Items.Add('Device found: ' +
@@ -265,13 +265,12 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclIrDAReceiver.StopLazyDiscovering;
-  wclIrDAReceiver.Unsubscribe;
+  PowerMonitor.Close;
+  PowerMonitor.Free;
 
-  FPowerMonitor.Close;
-  FPowerMonitor.Free;
-
-  wclIrDAReceiver.Free;
+  IrDAReceiver.StopLazyDiscovering;
+  IrDAReceiver.Unsubscribe;
+  IrDAReceiver.Free;
 end;
 
 procedure TfmMain.PowerStateChanged(Sender: TObject;
@@ -286,8 +285,8 @@ begin
 
     psSuspend:
       begin
-        wclIrDAReceiver.StopLazyDiscovering;
-        wclIrDAReceiver.Unsubscribe;
+        IrDAReceiver.StopLazyDiscovering;
+        IrDAReceiver.Unsubscribe;
 
         lbEvents.Items.Add('Power state: psSuspend');
       end;

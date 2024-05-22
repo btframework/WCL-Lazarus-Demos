@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -41,17 +41,16 @@ type
     procedure btGetCapsClick(Sender: TObject);
 
   private
-    wclIrDAReceiver: TwclIrDAReceiver;
-    wclIrDAClient: TwclIrDAClient;
+    IrDAReceiver: TwclIrDAReceiver;
+    IrDAClient: TwclIrDAClient;
+    Opp: TwclObexOppClient;
 
-    FOpp: TwclObexOppClient;
-
-    procedure wclIrDAClientDisconnect(Sender: TObject;
+    procedure IrDAClientDisconnect(Sender: TObject;
       const Reason: Integer);
-    procedure wclIrDAClientConnect(Sender: TObject; const Error: Integer);
-    procedure wclIrDAClientDestroyProcessor(Sender: TObject;
+    procedure IrDAClientConnect(Sender: TObject; const Error: Integer);
+    procedure IrDAClientDestroyProcessor(Sender: TObject;
       const Connection: TwclClientDataConnection);
-    procedure wclIrDAClientCreateProcessor(Sender: TObject;
+    procedure IrDAClientCreateProcessor(Sender: TObject;
       const Connection: TwclClientDataConnection);
 
     procedure OppConnect(Sender: TObject; const Error: Integer;
@@ -74,23 +73,23 @@ implementation
 {$R *.lfm}
 
 uses
-  wclErrors, SysUtils, Windows;
+  wclErrors, SysUtils;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclIrDAReceiver := TwclIrDAReceiver.Create(nil);
+  IrDAReceiver := TwclIrDAReceiver.Create(nil);
+  IrDAClient := TwclIrDAClient.Create(nil);
 
-  wclIrDAClient := TwclIrDAClient.Create(nil);
+  IrDAClient.OnDisconnect := IrDAClientDisconnect;
+  IrDAClient.OnConnect := IrDAClientConnect;
+  IrDAClient.OnDestroyProcessor := IrDAClientDestroyProcessor;
+  IrDAClient.OnCreateProcessor := IrDAClientCreateProcessor;
+
   // We use ObjectPush Profile so must set the profile's UUID.
-  wclIrDAClient.Service := 'OBEX';
-  wclIrDAClient.Mode := cmIrComm3Wire; // Required for OBEX connection!
-  wclIrDAClient.Service := 'IrDA:IrCOMM';
-  wclIrDAClient.OnConnect := wclIrDAClientConnect;
-  wclIrDAClient.OnCreateProcessor := wclIrDAClientCreateProcessor;
-  wclIrDAClient.OnDestroyProcessor := wclIrDAClientDestroyProcessor;
-  wclIrDAClient.OnDisconnect := wclIrDAClientDisconnect;
+  IrDAClient.Service := 'OBEX';
+  IrDAClient.Mode := cmIrComm3Wire; // Required for OBEX connection!
 
-  FOpp := nil;
+  Opp := nil;
 end;
 
 procedure TfmMain.btClearClick(Sender: TObject);
@@ -100,10 +99,10 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclIrDAReceiver.Free;
+  IrDAClient.Disconnect;
 
-  wclIrDAClient.Disconnect;
-  wclIrDAClient.Free;
+  IrDAReceiver.Free;
+  IrDAClient.Free;
 end;
 
 procedure TfmMain.btDiscoverClick(Sender: TObject);
@@ -115,7 +114,7 @@ var
 begin
   lvDevices.Clear;
 
-  Res := wclIrDAReceiver.Discover(Devices);
+  Res := IrDAReceiver.Discover(Devices);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Failed to start discovering: 0x' + IntToHex(Res, 8),
       mtError, [mbOK], 0)
@@ -132,7 +131,7 @@ procedure TfmMain.btDisconnectClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclIrDAClient.Disconnect;
+  Res := IrDAClient.Disconnect;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Disconnect failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -141,10 +140,10 @@ procedure TfmMain.btCloseSessionClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
-    Res := FOpp.Disconnect('');
+    Res := Opp.Disconnect('');
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Close session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -155,10 +154,10 @@ procedure TfmMain.btOpenSessionClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
-    Res := FOpp.Connect;
+    Res := Opp.Connect;
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Open session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -184,7 +183,7 @@ var
   Addr: Int64;
   Res: Integer;
 begin
-  if wclIrDAClient.State <> csDisconnected then
+  if IrDAClient.State <> csDisconnected then
     MessageDlg('Client is connected', mtWarning, [mbOK], 0)
 
   else begin
@@ -193,8 +192,8 @@ begin
 
     else begin
       Addr := StrToInt('$' + lvDevices.Selected.Caption);
-      wclIrDAClient.Address := Addr;
-      Res := wclIrDAClient.Connect;
+      IrDAClient.Address := Addr;
+      Res := IrDAClient.Connect;
       if Res <> WCL_E_SUCCESS then
         MessageDlg('Failed to connect: 0x' + IntToHex(Res, 8),
           mtError, [mbOK], 0);
@@ -232,10 +231,10 @@ procedure TfmMain.btAbortClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
-    Res := FOpp.Abort('');
+    Res := Opp.Abort('');
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Open session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -247,14 +246,14 @@ var
   Res: Integer;
   Stream: TStream;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else
     if edFileName.Text = '' then
       MessageDlg('Select file', mtWarning, [mbOK], 0)
     else begin
       Stream := TFileStream.Create(edFileName.Text, fmOpenRead);
-      Res := FOpp.Put(ExtractFileName(edFileName.Text), '', Stream);
+      Res := Opp.Put(ExtractFileName(edFileName.Text), '', Stream);
       if Res <> WCL_E_SUCCESS then begin
         MessageDlg('Send file failed: 0x' + IntToHex(Res, 8), mtError,
           [mbOK], 0);
@@ -268,12 +267,12 @@ var
   Res: Integer;
   Stream: TStream;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
     Stream := TFileStream.Create('vcard.vcf', fmCreate);
     // Request default vCard object.
-    Res := FOpp.Get('text/x-vCard', Stream);
+    Res := Opp.Get('text/x-vCard', Stream);
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('GetvCard failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
       Stream.Free;
@@ -286,12 +285,12 @@ var
   Res: Integer;
   Stream: TStream;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
   else begin
     Stream := TFileStream.Create('caps.xml', fmCreate);
     // Request Device Capability object.
-    Res := FOpp.Get('x-obex/capability', Stream);
+    Res := Opp.Get('x-obex/capability', Stream);
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('GetCaps failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
       Stream.Free;
@@ -312,42 +311,42 @@ begin
   Stream.Free;
 end;
 
-procedure TfmMain.wclIrDAClientDisconnect(Sender: TObject;
+procedure TfmMain.IrDAClientDisconnect(Sender: TObject;
   const Reason: Integer);
 begin
   lbLog.Items.Add('Disconnected with reason: 0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclIrDAClientConnect(Sender: TObject;
+procedure TfmMain.IrDAClientConnect(Sender: TObject;
   const Error: Integer);
 begin
   lbLog.Items.Add('Connect. Operation result: 0x' + IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclIrDAClientDestroyProcessor(Sender: TObject;
+procedure TfmMain.IrDAClientDestroyProcessor(Sender: TObject;
   const Connection: TwclClientDataConnection);
 begin
   // Do we have any data processor created?
-  if FOpp <> nil then
+  if Opp <> nil then
     // Make sure it is our connection is goind to destroy.
-    if Connection.Processor = FOpp then begin
+    if Connection.Processor = Opp then begin
       // Ok, destroy the data processor here.
-      FOpp.Free;
-      FOpp := nil;
+      Opp.Free;
+      Opp := nil;
     end;
 end;
 
-procedure TfmMain.wclIrDAClientCreateProcessor(Sender: TObject;
+procedure TfmMain.IrDAClientCreateProcessor(Sender: TObject;
   const Connection: TwclClientDataConnection);
 begin
   // here we must create the data processor for the connection. In this demo
   // we use OPPClient.
-  FOpp := TwclObexOppClient.Create(Connection);
-  FOpp.OnConnect := OppConnect;
-  FOpp.OnDisconnect := OppDisconnect;
-  FOpp.OnGetComplete := OppGetComplete;
-  FOpp.OnPutComplete := OppPutComplete;
-  FOpp.OnProgress := OppProgress;
+  Opp := TwclObexOppClient.Create(Connection);
+  Opp.OnConnect := OppConnect;
+  Opp.OnDisconnect := OppDisconnect;
+  Opp.OnGetComplete := OppGetComplete;
+  Opp.OnPutComplete := OppPutComplete;
+  Opp.OnProgress := OppProgress;
 end;
 
 end.
