@@ -1,10 +1,9 @@
-program SerialClient_D7;
+program SerialClient;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 uses
-  Interfaces,
-  Forms,
+  Forms, Interfaces,
   main in 'main.pas' {fmMain};
 
 {$R *.res}

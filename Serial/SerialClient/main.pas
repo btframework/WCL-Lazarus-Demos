@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -8,12 +8,7 @@ uses
   Forms, StdCtrls, Classes, Controls, wclSerialDevices, wclSerialClients;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
-    cbLineFeed: TComboBox;
-    laLineFeed: TLabel;
     lbEvents: TListBox;
     btClear: TButton;
     btEnum: TButton;
@@ -95,6 +90,8 @@ type
     laWriteTimeout: TLabel;
     edWriteTimeout: TEdit;
     btSetWriteTimeout: TButton;
+    laLineFeed: TLabel;
+    cbLineFeed: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btClearClick(Sender: TObject);
@@ -117,23 +114,9 @@ type
     procedure btSetWriteTimeoutClick(Sender: TObject);
 
   private
-    wclSerialMonitor: TwclSerialMonitor;
-    wclSerialClient: TwclSerialClient;
-
-    procedure wclSerialClientConnect(Sender: TObject;
-      const Error: Integer);
-    procedure wclSerialClientData(Sender: TObject; const Data: Pointer;
-      const Size: Cardinal);
-    procedure wclSerialClientDisconnect(Sender: TObject;
-      const Reason: Integer);
-    procedure wclSerialClientError(Sender: TObject;
-      const Errors: TwclSerialErrors;
-      const States: TwclSerialCommunicationStates);
-    procedure wclSerialClientReadError(Sender: TObject;
-      const Error: Integer);
-    procedure wclSerialClientEvents(Sender: TObject;
-      const Events: TwclSerialEvents);
-
+    SerialMonitor: TwclSerialMonitor;
+    SerialClient: TwclSerialClient;
+    
     procedure EnumComPorts;
 
     procedure ReadConfiguration;
@@ -143,6 +126,20 @@ type
     procedure ClearConfig;
     procedure ClearTiemouts;
     procedure ClearBuffers;
+
+    procedure SerialClientConnect(Sender: TObject;
+      const Error: Integer);
+    procedure SerialClientData(Sender: TObject; const Data: Pointer;
+      const Size: Cardinal);
+    procedure SerialClientDisconnect(Sender: TObject;
+      const Reason: Integer);
+    procedure SerialClientError(Sender: TObject;
+      const Errors: TwclSerialErrors;
+      const States: TwclSerialCommunicationStates);
+    procedure SerialClientReadError(Sender: TObject;
+      const Error: Integer);
+    procedure SerialClientEvents(Sender: TObject;
+      const Events: TwclSerialEvents);
   end;
 
 var
@@ -157,16 +154,15 @@ uses
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclSerialMonitor := TwclSerialMonitor.Create(nil);
-  wclSerialClient := TwclSerialClient.Create(nil);
-  wclSerialClient.DeviceName := 'COM1';
-  wclSerialClient.WriteTimeout := 5000;
-  wclSerialClient.OnConnect := wclSerialClientConnect;
-  wclSerialClient.OnData := wclSerialClientData;
-  wclSerialClient.OnDisconnect := wclSerialClientDisconnect;
-  wclSerialClient.OnError := wclSerialClientError;
-  wclSerialClient.OnEvents := wclSerialClientEvents;
-  wclSerialClient.OnReadError := wclSerialClientReadError;
+  SerialMonitor := TwclSerialMonitor.Create(nil);
+
+  SerialClient := TwclSerialClient.Create(nil);
+  SerialClient.OnConnect := SerialClientConnect;
+  SerialClient.OnData := SerialClientData;
+  SerialClient.OnDisconnect := SerialClientDisconnect;
+  SerialClient.OnError := SerialClientError;
+  SerialClient.OnReadError := SerialClientReadError;
+  SerialClient.OnEvents := SerialClientEvents;
 
   EnumComPorts;
 
@@ -174,15 +170,15 @@ begin
   ClearTiemouts;
   ClearBuffers;
 
-  edWriteTimeout.Text := IntToStr(wclSerialClient.WriteTimeout);
+  edWriteTimeout.Text := IntToStr(SerialClient.WriteTimeout);
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclSerialMonitor.Free;
+  SerialClient.Disconnect;
 
-  wclSerialClient.Disconnect;
-  wclSerialClient.Free;
+  SerialClient.Free;
+  SerialMonitor.Free;
 end;
 
 procedure TfmMain.btClearClick(Sender: TObject);
@@ -195,7 +191,7 @@ var
   Config: TwclSerialConfig;
   Res: Integer;
 begin
-  Res := wclSerialClient.GetConfig(Config);
+  Res := SerialClient.GetConfig(Config);
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Read configuration error: 0x' + IntToHex(Res, 8))
 
@@ -233,7 +229,7 @@ var
   Times: TwclSerialTimeouts;
   Res: Integer;
 begin
-  Res := wclSerialClient.GetTimeouts(Times);
+  Res := SerialClient.GetTimeouts(Times);
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Get timeouts error: 0x' + IntToHex(Res, 8))
 
@@ -259,7 +255,7 @@ var
 begin
   cbPorts.Clear;
 
-  Res := wclSerialMonitor.EnumDevices(Ports);
+  Res := SerialMonitor.EnumDevices(Ports);
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Error enumerating COM ports: 0x' + IntToHex(Res, 8))
 
@@ -282,9 +278,9 @@ begin
     MessageDlg('Select COM port', mtWarning, [mbOK], 0)
 
   else begin
-    wclSerialClient.DeviceName := cbPorts.Items[cbPorts.ItemIndex];
+    SerialClient.DeviceName := cbPorts.Items[cbPorts.ItemIndex];
 
-    Res := wclSerialClient.Connect;
+    Res := SerialClient.Connect;
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
   end;
@@ -294,7 +290,7 @@ procedure TfmMain.btDisconnectClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclSerialClient.Disconnect;
+  Res := SerialClient.Disconnect;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -336,19 +332,11 @@ begin
   Config.BaudRate := StrToInt64(edBaudRate.Text);
   Config.XonLim := StrToInt(edXonLim.Text);
   Config.XoffLim := StrToInt(edXoffLim.Text);
-  {$IFDEF D2009}
-    Config.XonChar := AnsiChar(StrToInt(edXonChar.Text));
-    Config.XoffChar := AnsiChar(StrToInt(edXoffChar.Text));
-    Config.ErrorChar := AnsiChar(StrToInt(edErrorChar.Text));
-    Config.EofChar := AnsiChar(StrToInt(edEofChar.Text));
-    Config.EvtChar := AnsiChar(StrToInt(edEvtChar.Text));
-  {$ELSE}
-    Config.XonChar := Char(StrToInt(edXonChar.Text));
-    Config.XoffChar := Char(StrToInt(edXoffChar.Text));
-    Config.ErrorChar := Char(StrToInt(edErrorChar.Text));
-    Config.EofChar := Char(StrToInt(edEofChar.Text));
-    Config.EvtChar := Char(StrToInt(edEvtChar.Text));
-  {$ENDIF}
+  Config.XonChar := Char(StrToInt(edXonChar.Text));
+  Config.XoffChar := Char(StrToInt(edXoffChar.Text));
+  Config.ErrorChar := Char(StrToInt(edErrorChar.Text));
+  Config.EofChar := Char(StrToInt(edEofChar.Text));
+  Config.EvtChar := Char(StrToInt(edEvtChar.Text));
 
   Config.ParityCheck := cbParityCheck.Checked;
   Config.OutxCtsFlow := cbOutxCtsFlow.Checked;
@@ -367,7 +355,7 @@ begin
   Config.Parity := TwclSerialParity(cbParity.ItemIndex);
   Config.StopBits := TwclSerialStopBits(cbStopBits.ItemIndex);
 
-  Res := wclSerialClient.SetConfig(Config);
+  Res := SerialClient.SetConfig(Config);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -397,13 +385,13 @@ var
   Res: Integer;
   Size: Cardinal;
 begin
-  Res := wclSerialClient.GetReadBufferSize(Size);
+  Res := SerialClient.GetReadBufferSize(Size);
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Get read buffer size error: 0x' + IntToHex(Res, 8))
   else
     edReadBufferSize.Text := IntToStr(Size);
 
-  Res := wclSerialClient.GetWriteBufferSize(Size);
+  Res := SerialClient.GetWriteBufferSize(Size);
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Get write buffer size error: 0x' + IntToHex(Res, 8))
   else
@@ -419,11 +407,11 @@ procedure TfmMain.btSetBuffersClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclSerialClient.SetReadBufferSize(StrToInt64(edReadBufferSize.Text));
+  Res := SerialClient.SetReadBufferSize(StrToInt64(edReadBufferSize.Text));
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Set read buffer size error: 0x' + IntToHex(Res, 8));
 
-  Res := wclSerialClient.SetWriteBufferSize(StrToInt64(edWriteBufferSize.Text));
+  Res := SerialClient.SetWriteBufferSize(StrToInt64(edWriteBufferSize.Text));
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Set write buffer size error: 0x' + IntToHex(Res, 8));
 end;
@@ -443,7 +431,7 @@ begin
   Times.ReadConstant := StrToInt64(edReadConstant.Text);
   Times.WriteMultiplier := StrToInt64(edWriteMultiplier.Text);
   Times.WriteConstant := StrToInt64(edWriteConstant.Text);
-  Res := wclSerialClient.SetTimeouts(Times);
+  Res := SerialClient.SetTimeouts(Times);
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Set timeouts error: 0x' + IntToHex(Res, 8));
 end;
@@ -452,7 +440,7 @@ procedure TfmMain.btClearCommBreakClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclSerialClient.ClearCommBreak;
+  Res := SerialClient.ClearCommBreak;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -461,7 +449,7 @@ procedure TfmMain.btSetCommBreakClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclSerialClient.SetCommBreak;
+  Res := SerialClient.SetCommBreak;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -470,7 +458,7 @@ procedure TfmMain.btFlushBuffersClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclSerialClient.FlushBuffers;
+  Res := SerialClient.FlushBuffers;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -479,7 +467,7 @@ procedure TfmMain.btFuncClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclSerialClient.EscapeCommFunction(
+  Res := SerialClient.EscapeCommFunction(
     TwclSerialEscapeFunction(cbFunc.ItemIndex));
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
@@ -500,7 +488,7 @@ begin
   if cbpurgeTxClear.Checked then
     Flags := Flags + [purgeTxClear];
 
-  Res := wclSerialClient.PurgeComm(Flags);
+  Res := SerialClient.PurgeComm(Flags);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -509,11 +497,7 @@ procedure TfmMain.btTransmitClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  {$IFDEF D2009}
-    Res := wclSerialClient.TransmitCommChar(AnsiChar(StrToInt(edChar.Text)));
-  {$ELSE}
-    Res := wclSerialClient.TransmitCommChar(Char(StrToInt(edChar.Text)));
-  {$ENDIF}
+  Res := SerialClient.TransmitCommChar(Char(StrToInt(edChar.Text)));
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -530,19 +514,19 @@ begin
     2: Str := Str + #10;
     3: Str := Str + #13#10;
   end;
-  Res := wclSerialClient.Write(Pointer(Str), Length(Str), Written);
+  Res := SerialClient.Write(Pointer(Str), Length(Str), Written);
   lbEvents.Items.Add('Sent: ' + IntToStr(Written) + ' bytes from ' +
     IntToStr(Length(Str)));
   if Res <> WCL_E_SUCCESS then
     lbEvents.Items.Add('Write error: 0x' + IntToHex(Res, 8));
 end;
 
-procedure TfmMain.wclSerialClientConnect(Sender: TObject;
+procedure TfmMain.SerialClientConnect(Sender: TObject;
   const Error: Integer);
 begin
   if Error = WCL_E_SUCCESS then begin
     lbEvents.Items.Add('Connected to Serial Device: ' +
-      wclSerialClient.DeviceName);
+      SerialClient.DeviceName);
 
     ReadConfiguration;
     ReadTiemouts;
@@ -552,25 +536,22 @@ begin
     lbEvents.Items.Add('Connect error: 0x' + IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclSerialClientData(Sender: TObject; const Data: Pointer;
+procedure TfmMain.SerialClientData(Sender: TObject; const Data: Pointer;
   const Size: Cardinal);
 var
   Str: AnsiString;
 begin
   if Size > 0 then begin
+    Str := '';
     SetLength(Str, Size);
     CopyMemory(Pointer(Str), Data, Size);
-    {$IFDEF D2009}
-      lbEvents.Items.Add('Received: ' + string(Str));
-    {$ELSE}
-      lbEvents.Items.Add('Received: ' + Str);
-    {$ENDIF}
+    lbEvents.Items.Add('Received: ' + Str);
 
   end else
     lbEvents.Items.Add('Empty data received');
 end;
 
-procedure TfmMain.wclSerialClientDisconnect(Sender: TObject;
+procedure TfmMain.SerialClientDisconnect(Sender: TObject;
   const Reason: Integer);
 begin
   lbEvents.Items.Add('Disconnected: 0x' + IntToHex(Reason, 8));
@@ -580,7 +561,7 @@ begin
   ClearBuffers;
 end;
 
-procedure TfmMain.wclSerialClientError(Sender: TObject;
+procedure TfmMain.SerialClientError(Sender: TObject;
   const Errors: TwclSerialErrors;
   const States: TwclSerialCommunicationStates);
 var
@@ -617,13 +598,13 @@ begin
   lbEvents.Items.Add('States: ' + Str);
 end;
 
-procedure TfmMain.wclSerialClientReadError(Sender: TObject;
+procedure TfmMain.SerialClientReadError(Sender: TObject;
   const Error: Integer);
 begin
   lbEvents.Items.Add('Read error: 0x' + IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclSerialClientEvents(Sender: TObject;
+procedure TfmMain.SerialClientEvents(Sender: TObject;
   const Events: TwclSerialEvents);
 var
   Str: string;
@@ -646,7 +627,7 @@ begin
   lbEvents.Items.Add('Event: ' + Str);
 
   if Events <> [] then begin
-    Res := wclSerialClient.GetModemStatus(Status);
+    Res := SerialClient.GetModemStatus(Status);
     if Res <> WCL_E_SUCCESS then
       lbEvents.Items.Add('GetModemStatus error: 0x' + IntToHex(Res, 8))
 
@@ -670,7 +651,7 @@ end;
 
 procedure TfmMain.btSetWriteTimeoutClick(Sender: TObject);
 begin
-  wclSerialClient.WriteTimeout := StrToInt(edWriteTimeout.Text);
+  SerialClient.WriteTimeout := StrToInt(edWriteTimeout.Text);
 end;
 
 end.

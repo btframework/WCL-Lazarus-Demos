@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -24,16 +24,15 @@ type
     procedure FormCreate(Sender: TObject);
 
   private
-    wclSerialMonitor: TwclSerialMonitor;
-
-    FPowerMonitor: TwclPowerEventsMonitor;
-
-    procedure wclSerialMonitorInserted(Sender: TObject;
-      const Device: TwclSerialDevice);
-    procedure wclSerialMonitorRemoved(Sender: TObject;
-      const Device: TwclSerialDevice);
+    PowerMonitor: TwclPowerEventsMonitor;
+    SerialMonitor: TwclSerialMonitor;
 
     procedure PowerStateChanged(Sender: TObject; const State: TwclPowerState);
+
+    procedure SerialMonitorInserted(Sender: TObject;
+      const Device: TwclSerialDevice);
+    procedure SerialMonitorRemoved(Sender: TObject;
+      const Device: TwclSerialDevice);
   end;
 
 var
@@ -53,11 +52,11 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclSerialMonitor.Stop;
-  wclSerialMonitor.Free;
+  SerialMonitor.Stop;
+  SerialMonitor.Free;
 
-  FPowerMonitor.Close;
-  FPowerMonitor.Free;
+  PowerMonitor.Close;
+  PowerMonitor.Free;
 end;
 
 procedure TfmMain.btEnumClick(Sender: TObject);
@@ -69,7 +68,7 @@ var
 begin
   lvDevices.Items.Clear;
 
-  Res := wclSerialMonitor.EnumDevices(Devices);
+  Res := SerialMonitor.EnumDevices(Devices);
   lbEvents.Items.Add('Enumerate serial devices: 0x' + IntToHex(Res, 8));
 
   if Res = WCL_E_SUCCESS then
@@ -85,7 +84,7 @@ procedure TfmMain.btStartClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclSerialMonitor.Start;
+  Res := SerialMonitor.Start;
   lbEvents.Items.Add('Monitoring started: 0x' + IntToHex(Res, 8));
 end;
 
@@ -93,11 +92,11 @@ procedure TfmMain.btStopClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclSerialMonitor.Stop;
+  Res := SerialMonitor.Stop;
   lbEvents.Items.Add('Monitoring stopped: 0x' + IntToHex(Res, 8));
 end;
 
-procedure TfmMain.wclSerialMonitorInserted(Sender: TObject;
+procedure TfmMain.SerialMonitorInserted(Sender: TObject;
   const Device: TwclSerialDevice);
 begin
   lbEvents.Items.Add('Device inserted:');
@@ -106,7 +105,7 @@ begin
   lbEvents.Items.Add('  DeviceName: ' + Device.DeviceName);
 end;
 
-procedure TfmMain.wclSerialMonitorRemoved(Sender: TObject;
+procedure TfmMain.SerialMonitorRemoved(Sender: TObject;
   const Device: TwclSerialDevice);
 begin
   lbEvents.Items.Add('Device removed:');
@@ -117,13 +116,13 @@ end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclSerialMonitor := TwclSerialMonitor.Create(nil);
-  wclSerialMonitor.OnInserted := wclSerialMonitorInserted;
-  wclSerialMonitor.OnRemoved := wclSerialMonitorRemoved;
+  SerialMonitor := TwclSerialMonitor.Create(nil);
+  SerialMonitor.OnInserted := SerialMonitorInserted;
+  SerialMonitor.OnRemoved := SerialMonitorRemoved;
 
-  FPowerMonitor := TwclPowerEventsMonitor.Create;
-  FPowerMonitor.OnPowerStateChanged := PowerStateChanged;
-  FPowerMonitor.Open;
+  PowerMonitor := TwclPowerEventsMonitor.Create;
+  PowerMonitor.OnPowerStateChanged := PowerStateChanged;
+  PowerMonitor.Open;
 end;
 
 procedure TfmMain.PowerStateChanged(Sender: TObject;
@@ -138,7 +137,7 @@ begin
       begin
         if Running then begin
           Running := False;
-          wclSerialMonitor.Start;
+          SerialMonitor.Start;
         end;
         lbEvents.Items.Add('Power changed: psResumeAutomatic');
       end;
@@ -148,9 +147,9 @@ begin
 
     psSuspend:
       begin
-        if wclSerialMonitor.Monitoring then begin
+        if SerialMonitor.Monitoring then begin
           Running := True;
-          wclSerialMonitor.Stop;
+          SerialMonitor.Stop;
         end;
         lbEvents.Items.Add('Power changed: psSuspend');
       end;

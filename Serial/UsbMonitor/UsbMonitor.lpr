@@ -1,10 +1,9 @@
-program SerialMonitor_D7;
+program UsbMonitor;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 uses
-  Interfaces,
-  Forms,
+  Forms, Interfaces,
   main in 'main.pas' {fmMain};
 
 {$R *.res}

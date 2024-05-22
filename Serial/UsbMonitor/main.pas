@@ -1,16 +1,13 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
 uses
   Forms, Controls, ComCtrls, StdCtrls, Classes, wclSerialDevices;
 
-
-  { TfmMain }
-
-  type
+type
   TfmMain = class(TForm)
     btEnum: TButton;
     lvDevices: TListView;
@@ -30,11 +27,11 @@ uses
     procedure FormDestroy(Sender: TObject);
 
   private
-    wclUsbMonitor: TwclUsbMonitor;
+    UsbMonitor: TwclUsbMonitor;
 
-    procedure wclUsbMonitorInserted(Sender: TObject;
+    procedure UsbMonitorInserted(Sender: TObject;
       const Device: TwclUsbDevice);
-    procedure wclUsbMonitorRemoved(Sender: TObject;
+    procedure UsbMonitorRemoved(Sender: TObject;
       const Device: TwclUsbDevice);
   end;
 
@@ -57,7 +54,7 @@ var
 begin
   lvDevices.Items.Clear;
 
-  Res := wclUsbMonitor.EnumDevices(Devices);
+  Res := UsbMonitor.EnumDevices(Devices);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Enumeration USB devices failed. Error: 0x' + IntToHex(Res, 8),
       mtError, [mbOK], 0)
@@ -68,6 +65,9 @@ begin
       
       Item.Caption := Devices[i].FriendlyName;
       Item.SubItems.Add(Devices[i].HardwareId);
+      Item.SubItems.Add(IntToHex(Devices[i].VendorId, 4));
+      Item.SubItems.Add(IntToHex(Devices[i].ProductId, 4));
+      Item.SubItems.Add(IntToHex(Devices[i].Revision, 4));
       Item.SubItems.Add(Devices[i].Manufacturer);
       Item.SubItems.Add(Devices[i].Instance);
       Item.SubItems.Add(GUIDToString(Devices[i].ClassGuid));
@@ -84,7 +84,7 @@ procedure TfmMain.btStartClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclUsbMonitor.Start;
+  Res := UsbMonitor.Start;
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Start monitoring failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
@@ -96,7 +96,7 @@ procedure TfmMain.btStopClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclUsbMonitor.Stop;
+  Res := UsbMonitor.Stop;
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Stop monitoring failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
@@ -104,13 +104,13 @@ begin
     lbEvents.Items.Add('Monitoring stopped');
 end;
 
-procedure TfmMain.wclUsbMonitorInserted(Sender: TObject;
+procedure TfmMain.UsbMonitorInserted(Sender: TObject;
   const Device: TwclUsbDevice);
 begin
   lbEvents.Items.Add('Device inserted: ' + Device.Instance);
 end;
 
-procedure TfmMain.wclUsbMonitorRemoved(Sender: TObject;
+procedure TfmMain.UsbMonitorRemoved(Sender: TObject;
   const Device: TwclUsbDevice);
 begin
   lbEvents.Items.Add('Device removed: ' + Device.Instance);
@@ -118,9 +118,9 @@ end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclUsbMonitor := TwclUsbMonitor.Create(nil);
-  wclUsbMonitor.OnInserted := wclUsbMonitorInserted;
-  wclUsbMonitor.OnRemoved := wclUsbMonitorRemoved;
+  UsbMonitor := TwclUsbMonitor.Create(nil);
+  UsbMonitor.OnInserted := UsbMonitorInserted;
+  UsbMonitor.OnRemoved := UsbMonitorRemoved;
 end;
 
 procedure TfmMain.btEnableClick(Sender: TObject);
@@ -131,7 +131,7 @@ begin
     ShowMessage('Select device')
 
   else begin
-    Res := wclUsbMonitor.Enable(lvDevices.Selected.SubItems[2]);
+    Res := UsbMonitor.Enable(lvDevices.Selected.SubItems[2]);
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Failed to enable device: 0x' + IntToHex(Res, 8));
   end;
@@ -145,7 +145,7 @@ begin
     ShowMessage('Select device')
 
   else begin
-    Res := wclUsbMonitor.Disable(lvDevices.Selected.SubItems[2]);
+    Res := UsbMonitor.Disable(lvDevices.Selected.SubItems[2]);
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Failed to disable device: 0x' + IntToHex(Res, 8));
   end;
@@ -153,8 +153,7 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclUsbMonitor.Stop;
-  wclUsbMonitor.Free;
+ UsbMonitor.Stop;
 end;
 
 end.

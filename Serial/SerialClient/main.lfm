@@ -2,11 +2,11 @@ object fmMain: TfmMain
   Left = 466
   Height = 561
   Top = 172
-  Width = 865
+  Width = 867
   BorderStyle = bsDialog
   Caption = 'Serial Client Demo'
   ClientHeight = 561
-  ClientWidth = 865
+  ClientWidth = 867
   Color = clBtnFace
   Font.Color = clWindowText
   Font.Height = -11
@@ -199,18 +199,26 @@ object fmMain: TfmMain
     Caption = 'Write timeout'
     ParentColor = False
   end
+  object laLineFeed: TLabel
+    Left = 560
+    Height = 13
+    Top = 360
+    Width = 44
+    Caption = 'Line feed'
+    ParentColor = False
+  end
   object lbEvents: TListBox
     Left = 8
-    Height = 161
-    Top = 392
-    Width = 848
+    Height = 169
+    Top = 384
+    Width = 849
     ItemHeight = 0
     TabOrder = 0
   end
   object btClear: TButton
     Left = 784
     Height = 25
-    Top = 356
+    Top = 352
     Width = 75
     Caption = 'Clear'
     OnClick = btClearClick
@@ -684,7 +692,7 @@ object fmMain: TfmMain
   object btSend: TButton
     Left = 480
     Height = 25
-    Top = 356
+    Top = 352
     Width = 75
     Caption = 'Send'
     OnClick = btSendClick
@@ -693,7 +701,7 @@ object fmMain: TfmMain
   object edText: TEdit
     Left = 8
     Height = 21
-    Top = 360
+    Top = 352
     Width = 465
     TabOrder = 55
     Text = 'Something to send to serial'
@@ -715,18 +723,10 @@ object fmMain: TfmMain
     OnClick = btSetWriteTimeoutClick
     TabOrder = 57
   end
-  object laLineFeed: TLabel
-    Left = 560
-    Height = 13
-    Top = 364
-    Width = 44
-    Caption = 'Line feed'
-    ParentColor = False
-  end
   object cbLineFeed: TComboBox
     Left = 616
     Height = 22
-    Top = 356
+    Top = 352
     Width = 97
     ItemHeight = 16
     ItemIndex = 0
