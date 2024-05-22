@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -26,29 +26,10 @@ type
     procedure btDisconnectClick(Sender: TObject);
 
   private
-    wclBluetoothManager: TwclBluetoothManager;
-    wclRfCommServer: TwclRfCommServer;
+    BluetoothManager: TwclBluetoothManager;
+    RfCommServer: TwclRfCommServer;
 
     FFileName: string;
-
-    procedure wclRfCommServerListen(Sender: TObject);
-    procedure wclRfCommServerClosed(Sender: TObject;
-      const Reason: Integer);
-    procedure wclRfCommServerDisconnect(Sender: TObject;
-      const Client: TwclRfCommServerClientConnection;
-      const Reason: Integer);
-    procedure wclRfCommServerDestroyProcessor(Sender: TObject;
-      const Connection: TwclServerClientDataConnection);
-    procedure wclRfCommServerConnect(Sender: TObject;
-      const Client: TwclRfCommServerClientConnection;
-      const Error: Integer);
-    procedure wclRfCommServerCreateProcessor(Sender: TObject;
-      const Connection: TwclServerClientDataConnection);
-
-    procedure wclRfCommServerGetSdpAttributes(Sender: TObject;
-      out Protocols: TwclBluetoothSdpProtocols;
-      out Profiles: TwclBluetoothSdpProfiles;
-      out Formats: TwclBluetoothSdpFormats; out Cod: Cardinal);
 
     procedure Trace(const Msg: string);
 
@@ -68,6 +49,24 @@ type
       const Stream: TStream);
     procedure OppClientProgress(Sender: TObject; const Length: Cardinal;
       const Position: Cardinal);
+
+    procedure RfCommServerListen(Sender: TObject);
+    procedure RfCommServerClosed(Sender: TObject;
+      const Reason: Integer);
+    procedure RfCommServerDisconnect(Sender: TObject;
+      const Client: TwclRfCommServerClientConnection;
+      const Reason: Integer);
+    procedure RfCommServerDestroyProcessor(Sender: TObject;
+      const Connection: TwclServerClientDataConnection);
+    procedure RfCommServerConnect(Sender: TObject;
+      const Client: TwclRfCommServerClientConnection;
+      const Error: Integer);
+    procedure RfCommServerCreateProcessor(Sender: TObject;
+      const Connection: TwclServerClientDataConnection);
+    procedure RfCommServerGetSdpAttributes(Sender: TObject;
+      out Protocols: TwclBluetoothSdpProtocols;
+      out Profiles: TwclBluetoothSdpProfiles;
+      out Formats: TwclBluetoothSdpFormats; out Cod: Cardinal);
   end;
 
 var
@@ -76,34 +75,35 @@ var
 implementation
 
 uses
-  wclUUIDs, wclErrors, SysUtils, Windows, wclCods;
+  wclUUIDs, wclErrors, SysUtils, wclCods;
 
 {$R *.lfm}
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclBluetoothManager := TwclBluetoothManager.Create(nil);
+  BluetoothManager := TwclBluetoothManager.Create(nil);
 
-  wclRfCommServer := TwclRfCommServer.Create(nil);
-  wclRfCommServer.Authentication := False;
-  wclRfCommServer.Service := OBEXObjectPushServiceClass_UUID;
-  wclRfCommServer.ServiceName := 'WCL OPP Server';
-  wclRfCommServer.GetSdpAttributes := wclRfCommServerGetSdpAttributes;
-  wclRfCommServer.OnClosed := wclRfCommServerClosed;
-  wclRfCommServer.OnConnect := wclRfCommServerConnect;
-  wclRfCommServer.OnCreateProcessor := wclRfCommServerCreateProcessor;
-  wclRfCommServer.OnDestroyProcessor := wclRfCommServerDestroyProcessor;
-  wclRfCommServer.OnDisconnect := wclRfCommServerDisconnect;
-  wclRfCommServer.OnListen := wclRfCommServerListen;
+  RfCommServer := TwclRfCommServer.Create(nil);
+  RfCommServer.OnListen := RfCommServerListen;
+  RfCommServer.OnClosed := RfCommServerClosed;
+  RfCommServer.OnDisconnect := RfCommServerDisconnect;
+  RfCommServer.OnDestroyProcessor := RfCommServerDestroyProcessor;
+  RfCommServer.OnConnect := RfCommServerConnect;
+  RfCommServer.OnCreateProcessor := RfCommServerCreateProcessor;
+  RfCommServer.GetSdpAttributes := RfCommServerGetSdpAttributes;
+  
+  RfCommServer.Authentication := False;
+  RfCommServer.Service := OBEXObjectPushServiceClass_UUID;
+  RfCommServer.ServiceName := 'WCL OPP Server';
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclRfCommServer.Close;
-  wclRfCommServer.Free;
+  RfCommServer.Close;
+  RfCommServer.Free;
 
-  wclBluetoothManager.Close;
-  wclBluetoothManager.Free;
+  BluetoothManager.Close;
+  BluetoothManager.Free;
 end;
 
 procedure TfmMain.btClearClick(Sender: TObject);
@@ -116,17 +116,17 @@ var
   Res: Integer;
   Radio: TwclBluetoothRadio;
 begin
-  Res := wclBluetoothManager.Open;
+  Res := BluetoothManager.Open;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Bluetooth manager open failed: 0x' + IntToHex(Res, 8))
 
   else begin
-    Res := wclBluetoothManager.GetClassicRadio(Radio);
-    if Res <> WCL_E_SUCCESS then begin
+    Res := BluetoothManager.GetClassicRadio(Radio);
+    if Res <> WCL_E_SUCCESS then
       MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
-        [mbOK], 0);
+        [mbOK], 0)
 
-    end else begin
+    else begin
       // Switch radio in discoverable and connectable mode.
       // Ignore any errors. In real application you need to check the result.
       Radio.SetDiscoverable(True);
@@ -134,14 +134,14 @@ begin
 
       // As wrote above it is better to start listening in AfterOpen event
       // handler. But again, for demo app its OK to do it here.
-      Res := wclRfCommServer.Listen(Radio);
+      Res := RfCommServer.Listen(Radio);
       if Res <> WCL_E_SUCCESS then
         ShowMessage('Failed to start listening: 0x' + IntToHex(Res, 8));
     end;
 
     if Res <> WCL_E_SUCCESS then
       // We must close Bluetooth Manager here!
-      wclBluetoothManager.Close;
+      BluetoothManager.Close;
   end;
 end;
 
@@ -149,14 +149,14 @@ procedure TfmMain.btCloseClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclRfCommServer.Close;
+  Res := RfCommServer.Close;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Close failed; 0x' + IntToHex(Res, 8))
   else
-    wclBluetoothManager.Close;
+    BluetoothManager.Close;
 end;
 
-procedure TfmMain.wclRfCommServerListen(Sender: TObject);
+procedure TfmMain.RfCommServerListen(Sender: TObject);
 begin
   Trace('Server listening');
 end;
@@ -166,20 +166,20 @@ begin
   lbLog.Items.Add(Msg);
 end;
 
-procedure TfmMain.wclRfCommServerClosed(Sender: TObject;
+procedure TfmMain.RfCommServerClosed(Sender: TObject;
   const Reason: Integer);
 begin
   Trace('Server closed. Reason:: 0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclRfCommServerDisconnect(Sender: TObject;
+procedure TfmMain.RfCommServerDisconnect(Sender: TObject;
   const Client: TwclRfCommServerClientConnection; const Reason: Integer);
 begin
   Trace('Client ' + IntToHex(Client.Address, 12) + ' disconnected. Reason: 0x' +
     IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclRfCommServerDestroyProcessor(Sender: TObject;
+procedure TfmMain.RfCommServerDestroyProcessor(Sender: TObject;
   const Connection: TwclServerClientDataConnection);
 begin
   Trace('Data processor for client ' +
@@ -188,7 +188,7 @@ begin
   Connection.Processor.Free;
 end;
 
-procedure TfmMain.wclRfCommServerConnect(Sender: TObject;
+procedure TfmMain.RfCommServerConnect(Sender: TObject;
   const Client: TwclRfCommServerClientConnection; const Error: Integer);
 begin
   if Error = WCL_E_SUCCESS then
@@ -200,7 +200,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclRfCommServerCreateProcessor(Sender: TObject;
+procedure TfmMain.RfCommServerCreateProcessor(Sender: TObject;
   const Connection: TwclServerClientDataConnection);
 var
   Proc: TwclObexOppServer;
@@ -289,17 +289,20 @@ begin
   end;
 end;
 
-procedure TfmMain.wclRfCommServerGetSdpAttributes(Sender: TObject;
+procedure TfmMain.RfCommServerGetSdpAttributes(Sender: TObject;
   out Protocols: TwclBluetoothSdpProtocols;
   out Profiles: TwclBluetoothSdpProfiles;
   out Formats: TwclBluetoothSdpFormats; out Cod: Cardinal);
 begin
   // We have to provide additional information for SDP record.
+  Protocols := nil;
   SetLength(Protocols, 1);
   Protocols[0] := OBEX_PROTOCOL_UUID16;
+  Profiles := nil;
   SetLength(Profiles, 1);
   Profiles[0].Uuid := OBEXObjectPushServiceClass_UUID16;
   Profiles[0].Version := $0100;
+  Formats := nil;
   SetLength(Formats, 1);
   Formats[0] := $FF; // All formats.
   Cod := COD_SERVICE_OBJECT_XFER;

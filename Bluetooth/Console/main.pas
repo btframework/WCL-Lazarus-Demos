@@ -1,11 +1,11 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
 uses
-  SysUtils, Windows, wclWinAPI, wclMessaging, wclErrors, wclBluetooth;
+  SysUtils, Windows, wclMessaging, wclErrors, wclBluetooth;
 
 type
   TwclConsole = class
@@ -145,8 +145,8 @@ begin
         WaitForOperationCompletion;
     end;
 
-    // Do noFileClose(FEvent); { *Converted from CloseHandle* }.
-    CloseHandle(FEvent);
+    // Do not forget about event.
+    FileClose(FEvent);
   end;
 
   // Do not forget to destroy Bluetooth Manager.

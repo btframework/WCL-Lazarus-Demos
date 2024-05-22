@@ -1,39 +1,39 @@
 object fmMain: TfmMain
   Left = 477
-  Height = 532
   Top = 166
-  Width = 457
   BorderStyle = bsSingle
   Caption = 'OBEX ObjectPush Client Demo Application'
   ClientHeight = 532
   ClientWidth = 457
   Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  Position = poScreenCenter
-  LCLVersion = '2.2.4.0'
+  PixelsPerInch = 96
   object btDiscover: TButton
     Left = 8
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Discover'
-    OnClick = btDiscoverClick
     TabOrder = 0
+    OnClick = btDiscoverClick
   end
   object lvDevices: TListView
     Left = 8
-    Height = 121
     Top = 40
     Width = 441
-    Columns = <    
+    Height = 121
+    Columns = <
       item
         Caption = 'Address'
         Width = 150
-      end    
+      end
       item
         Caption = 'Name'
         Width = 150
@@ -47,118 +47,118 @@ object fmMain: TfmMain
   end
   object lbLog: TListBox
     Left = 8
-    Height = 225
     Top = 296
     Width = 441
-    ItemHeight = 0
+    Height = 225
+    ItemHeight = 13
     TabOrder = 2
   end
   object btClear: TButton
     Left = 376
-    Height = 25
     Top = 264
     Width = 75
+    Height = 25
     Caption = 'Clear'
-    OnClick = btClearClick
     TabOrder = 3
+    OnClick = btClearClick
   end
   object btConnect: TButton
     Left = 280
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Connect'
-    OnClick = btConnectClick
     TabOrder = 4
+    OnClick = btConnectClick
   end
   object btDisconnect: TButton
     Left = 368
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Disconnect'
-    OnClick = btDisconnectClick
     TabOrder = 5
+    OnClick = btDisconnectClick
   end
   object btOpenSession: TButton
     Left = 8
-    Height = 25
     Top = 168
     Width = 75
+    Height = 25
     Caption = 'Open Session'
-    OnClick = btOpenSessionClick
     TabOrder = 6
+    OnClick = btOpenSessionClick
   end
   object btCloseSession: TButton
     Left = 88
-    Height = 25
     Top = 168
     Width = 75
+    Height = 25
     Caption = 'Close Session'
-    OnClick = btCloseSessionClick
     TabOrder = 7
+    OnClick = btCloseSessionClick
   end
   object btSelectFile: TButton
     Left = 8
-    Height = 25
     Top = 200
     Width = 75
+    Height = 25
     Caption = 'Select file'
-    OnClick = btSelectFileClick
     TabOrder = 8
+    OnClick = btSelectFileClick
   end
   object edFileName: TEdit
     Left = 88
-    Height = 21
     Top = 200
     Width = 361
+    Height = 21
     TabOrder = 9
   end
   object btSendFile: TButton
     Left = 288
-    Height = 25
     Top = 168
     Width = 75
+    Height = 25
     Caption = 'Send File'
-    OnClick = btSendFileClick
     TabOrder = 10
+    OnClick = btSendFileClick
   end
   object btAbort: TButton
     Left = 368
-    Height = 25
     Top = 168
     Width = 75
+    Height = 25
     Caption = 'Abort'
-    OnClick = btAbortClick
     TabOrder = 11
+    OnClick = btAbortClick
   end
   object ProgressBar: TProgressBar
     Left = 8
-    Height = 17
     Top = 240
     Width = 441
+    Height = 17
     TabOrder = 12
   end
   object btGetvCard: TButton
     Left = 8
-    Height = 25
     Top = 264
     Width = 75
+    Height = 25
     Caption = 'Get vCard'
-    OnClick = btGetvCardClick
     TabOrder = 13
+    OnClick = btGetvCardClick
   end
   object btGetCaps: TButton
     Left = 96
-    Height = 25
     Top = 264
     Width = 75
+    Height = 25
     Caption = 'Get caps.'
-    OnClick = btGetCapsClick
     TabOrder = 14
+    OnClick = btGetCapsClick
   end
   object OpenDialog: TOpenDialog
-    Left = 320
-    Top = 104
+    Left = 264
+    Top = 80
   end
 end

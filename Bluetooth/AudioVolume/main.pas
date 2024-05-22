@@ -22,29 +22,11 @@ type
     procedure btClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure AudioSwitcherClosed(Sender: TObject);
-    procedure AudioSwitcherOpened(Sender: TObject);
-    procedure AudioSwitcherDeviceRemoved(Sender: TObject;
-      const Id: String);
-    procedure AudioSwitcherDeviceAdded(Sender: TObject; const Id: String);
-    procedure AudioMeterOpened(Sender: TObject);
-    procedure AudioMeterClosed(Sender: TObject);
-    procedure AudioMeterDisconnected(Sender: TObject);
     procedure btCloseClick(Sender: TObject);
     procedure btOpenClick(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
-    procedure AudioSwitcherStateChanged(Sender: TObject; const Id: String;
-      const State: TwclAudioDeviceState);
-    procedure AudioSwitcherDefaultDeviceChanged(Sender: TObject;
-      const Id: String; const Flow: TwclAudioDeviceDataFlow;
-      const Role: TwclAudioDeviceRole);
-    procedure AudioVolumeOpened(Sender: TObject);
-    procedure AudioVolumeClosed(Sender: TObject);
-    procedure AudioVolumeDisconnected(Sender: TObject);
     procedure tbMasterChange(Sender: TObject);
     procedure cbMuteClick(Sender: TObject);
-    procedure AudioVolumeChanged(Sender: TObject; const Muted: Boolean;
-      const Volume: Single; const Volumes: TwclAudioPeakValues);
 
   private
     AudioSwitcher: TwclAudioSwitcher;
@@ -60,6 +42,27 @@ type
     procedure DeleteDevice(const Id: string);
     procedure SelectActiveDevice;
     procedure UpdateChannelsValue;
+
+    procedure AudioSwitcherClosed(Sender: TObject);
+    procedure AudioSwitcherOpened(Sender: TObject);
+    procedure AudioSwitcherDeviceRemoved(Sender: TObject;
+      const Id: String);
+    procedure AudioSwitcherDeviceAdded(Sender: TObject; const Id: String);
+    procedure AudioSwitcherStateChanged(Sender: TObject; const Id: String;
+      const State: TwclAudioDeviceState);
+    procedure AudioSwitcherDefaultDeviceChanged(Sender: TObject;
+      const Id: String; const Flow: TwclAudioDeviceDataFlow;
+      const Role: TwclAudioDeviceRole);
+
+    procedure AudioMeterOpened(Sender: TObject);
+    procedure AudioMeterClosed(Sender: TObject);
+    procedure AudioMeterDisconnected(Sender: TObject);
+
+    procedure AudioVolumeOpened(Sender: TObject);
+    procedure AudioVolumeClosed(Sender: TObject);
+    procedure AudioVolumeDisconnected(Sender: TObject);
+    procedure AudioVolumeChanged(Sender: TObject; const Muted: Boolean;
+      const Volume: Single; const Volumes: TwclAudioPeakValues);
   end;
 
 var
@@ -99,19 +102,19 @@ begin
   AudioSwitcher := TwclAudioSwitcher.Create(nil);
   AudioSwitcher.OnClosed := AudioSwitcherClosed;
   AudioSwitcher.OnOpened := AudioSwitcherOpened;
-  AudioSwitcher.OnDefaultDeviceChanged := AudioSwitcherDefaultDeviceChanged;
-  AudioSwitcher.OnDeviceAdded := AudioSwitcherDeviceAdded;
   AudioSwitcher.OnDeviceRemoved := AudioSwitcherDeviceRemoved;
+  AudioSwitcher.OnDeviceAdded := AudioSwitcherDeviceAdded;
+  AudioSwitcher.OnDefaultDeviceChanged := AudioSwitcherDefaultDeviceChanged;
   AudioSwitcher.OnStateChanged := AudioSwitcherStateChanged;
-
+  
   AudioMeter := TwclAudioMeter.Create(nil);
-  AudioMeter.OnClosed := AudioMeterClosed;
   AudioMeter.OnOpened := AudioMeterOpened;
+  AudioMeter.OnClosed := AudioMeterClosed;
   AudioMeter.OnDisconnected := AudioMeterDisconnected;
 
   AudioVolume := TwclAudioVolume.Create(nil);
-  AudioVolume.OnClosed := AudioVolumeClosed;
   AudioVolume.OnOpened := AudioVolumeOpened;
+  AudioVolume.OnClosed := AudioVolumeClosed;
   AudioVolume.OnDisconnected := AudioVolumeDisconnected;
   AudioVolume.OnChanged := AudioVolumeChanged;
 

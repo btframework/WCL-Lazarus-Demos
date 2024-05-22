@@ -1,61 +1,61 @@
 object fmMain: TfmMain
   Left = 516
-  Height = 422
   Top = 276
-  Width = 644
   BorderStyle = bsSingle
   Caption = 'Object Push Profile Server Demo'
   ClientHeight = 422
   ClientWidth = 644
   Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  Position = poScreenCenter
-  LCLVersion = '2.2.4.0'
+  PixelsPerInch = 96
   object btListen: TButton
     Left = 8
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Listen'
-    OnClick = btListenClick
     TabOrder = 0
+    OnClick = btListenClick
   end
   object btClose: TButton
     Left = 88
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Close'
-    OnClick = btCloseClick
     TabOrder = 1
+    OnClick = btCloseClick
   end
   object lbLog: TListBox
     Left = 8
-    Height = 209
     Top = 208
     Width = 625
-    ItemHeight = 0
+    Height = 209
+    ItemHeight = 13
     TabOrder = 2
   end
   object btClear: TButton
     Left = 560
-    Height = 25
     Top = 176
     Width = 75
+    Height = 25
     Caption = 'Clear'
-    OnClick = btClearClick
     TabOrder = 3
+    OnClick = btClearClick
   end
   object lvClients: TListView
     Left = 8
-    Height = 137
     Top = 40
     Width = 537
-    Columns = <    
+    Height = 137
+    Columns = <
       item
         Caption = 'Address'
         Width = 200
@@ -67,19 +67,19 @@ object fmMain: TfmMain
   end
   object btDisconnect: TButton
     Left = 560
-    Height = 25
     Top = 40
     Width = 75
+    Height = 25
     Caption = 'Disconnect'
-    OnClick = btDisconnectClick
     TabOrder = 5
+    OnClick = btDisconnectClick
   end
   object SaveDialog: TSaveDialog
-    Left = 408
-    Top = 16
+    Left = 368
+    Top = 88
   end
   object OpenDialog: TOpenDialog
-    Left = 320
-    Top = 104
+    Left = 184
+    Top = 88
   end
 end

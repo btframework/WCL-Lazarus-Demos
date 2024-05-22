@@ -1,4 +1,4 @@
-program AudioVolume_D7;
+program GattClient;
 
 {$MODE Delphi}
 

@@ -8,14 +8,7 @@ uses
   Forms, Controls, StdCtrls, Classes, wclAudio, ComCtrls;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
-    btGetDefault: TButton;
-    cbFlow: TComboBox;
-    cbUseMac: TCheckBox;
-    laFlow: TLabel;
     lvDevices: TListView;
     btEnum: TButton;
     cbActive: TCheckBox;
@@ -30,34 +23,38 @@ type
     btRefresh: TButton;
     btConnect: TButton;
     btDisconnect: TButton;
-    procedure btGetDefaultClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    cbUseMac: TCheckBox;
+    btGetDefault: TButton;
+    laFlow: TLabel;
+    cbFlow: TComboBox;
     procedure FormDestroy(Sender: TObject);
     procedure btEnumClick(Sender: TObject);
     procedure btDefaultClick(Sender: TObject);
-    procedure wclAudioSwitcherOpened(Sender: TObject);
-    procedure wclAudioSwitcherClosed(Sender: TObject);
     procedure btClearClick(Sender: TObject);
     procedure btRefreshClick(Sender: TObject);
     procedure btConnectClick(Sender: TObject);
     procedure btDisconnectClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btGetDefaultClick(Sender: TObject);
 
   private
-    wclAudioSwitcher: TwclAudioSwitcher;
-
-    procedure wclAudioSwitcherDefaultDeviceChanged(Sender: TObject;
-      const Id: String; const Flow: TwclAudioDeviceDataFlow;
-      const Role: TwclAudioDeviceRole);
-    procedure wclAudioSwitcherDeviceAdded(Sender: TObject;
-      const Id: String);
-    procedure wclAudioSwitcherDeviceRemoved(Sender: TObject;
-      const Id: String);
-    procedure wclAudioSwitcherStateChanged(Sender: TObject;
-      const Id: String; const State: TwclAudioDeviceState);
+    AudioSwitcher: TwclAudioSwitcher;
 
     procedure EnumDevices;
     procedure UpdateDevice(const Item: TListItem;
       const Device: TwclAudioDevice);
+
+    procedure AudioSwitcherOpened(Sender: TObject);
+    procedure AudioSwitcherClosed(Sender: TObject);
+    procedure AudioSwitcherDefaultDeviceChanged(Sender: TObject;
+      const Id: String; const Flow: TwclAudioDeviceDataFlow;
+      const Role: TwclAudioDeviceRole);
+    procedure AudioSwitcherDeviceAdded(Sender: TObject;
+      const Id: String);
+    procedure AudioSwitcherDeviceRemoved(Sender: TObject;
+      const Id: String);
+    procedure AudioSwitcherStateChanged(Sender: TObject;
+      const Id: String; const State: TwclAudioDeviceState);
   end;
 
 var
@@ -70,52 +67,10 @@ uses
 
 {$R *.lfm}
 
-procedure TfmMain.FormCreate(Sender: TObject);
-var
-  Res: Integer;
-begin
-  wclAudioSwitcher := TwclAudioSwitcher.Create(nil);
-  wclAudioSwitcher.OnClosed := wclAudioSwitcherClosed;
-  wclAudioSwitcher.OnDefaultDeviceChanged := wclAudioSwitcherDefaultDeviceChanged;
-  wclAudioSwitcher.OnDeviceAdded := wclAudioSwitcherDeviceAdded;
-  wclAudioSwitcher.OnOpened := wclAudioSwitcherOpened;
-  wclAudioSwitcher.OnDeviceRemoved := wclAudioSwitcherDeviceRemoved;
-  wclAudioSwitcher.OnStateChanged := wclAudioSwitcherStateChanged;
-
-  Res := wclAudioSwitcher.Open;
-  if Res <> WCL_E_SUCCESS then
-    lbLog.Items.Add('Open failed: 0x' + IntToHex(Res, 8));
-end;
-
-procedure TfmMain.btGetDefaultClick(Sender: TObject);
-var
-  Role: TwclAudioDeviceRole;
-  Flow: TwclAudioDeviceDataFlow;
-  Id: string;
-  Res: Integer;
-begin
-  case cbRole.ItemIndex of
-    0: Role := drConsole;
-    1: Role := drMultimedia;
-    else Role := drCommunications;
-  end;
-
-  if cbFlow.ItemIndex = 0 then
-    Flow := dfCapture
-  else
-    Flow := dfRender;
-
-  Res := wclAudioSwitcher.GetDefault(Role, Flow, Id);
-  if Res <> WCL_E_SUCCESS then
-    ShowMessage('Unable to get default device: 0x' + IntToHex(Res, 8))
-  else
-    ShowMessage('Default device ID: ' + Id);
-end;
-
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclAudioSwitcher.Close;
-  wclAudioSwitcher.Free;
+  AudioSwitcher.Close;
+  AudioSwitcher.Free;
 end;
 
 procedure TfmMain.btEnumClick(Sender: TObject);
@@ -138,13 +93,13 @@ begin
       else Role := drCommunications;
     end;
 
-    Res := wclAudioSwitcher.SetDefault(Role, lvDevices.Selected.Caption);
+    Res := AudioSwitcher.SetDefault(Role, lvDevices.Selected.Caption);
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Unable to set default device: 0x' + IntToHex(Res, 8));
   end;
 end;
 
-procedure TfmMain.wclAudioSwitcherOpened(Sender: TObject);
+procedure TfmMain.AudioSwitcherOpened(Sender: TObject);
 begin
   lbLog.Items.Add('Audio switcher opened');
   EnumDevices;
@@ -173,7 +128,7 @@ begin
   else begin
     lvDevices.Clear;
 
-    Res := wclAudioSwitcher.Enum(States, Devices);
+    Res := AudioSwitcher.Enum(States, Devices);
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Enum failed: 0x' + IntToHex(Res, 8))
 
@@ -196,7 +151,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclAudioSwitcherClosed(Sender: TObject);
+procedure TfmMain.AudioSwitcherClosed(Sender: TObject);
 begin
   lvDevices.Clear;
   lbLog.Items.Add('Audio switcher closed');
@@ -207,7 +162,7 @@ begin
   lbLog.Clear;
 end;
 
-procedure TfmMain.wclAudioSwitcherDefaultDeviceChanged(Sender: TObject;
+procedure TfmMain.AudioSwitcherDefaultDeviceChanged(Sender: TObject;
   const Id: String; const Flow: TwclAudioDeviceDataFlow;
   const Role: TwclAudioDeviceRole);
 var
@@ -230,19 +185,19 @@ begin
   lbLog.Items.Add(Str);
 end;
 
-procedure TfmMain.wclAudioSwitcherDeviceAdded(Sender: TObject;
+procedure TfmMain.AudioSwitcherDeviceAdded(Sender: TObject;
   const Id: String);
 begin
   lbLog.Items.Add('Device added: ' + Id);
 end;
 
-procedure TfmMain.wclAudioSwitcherDeviceRemoved(Sender: TObject;
+procedure TfmMain.AudioSwitcherDeviceRemoved(Sender: TObject;
   const Id: String);
 begin
   lbLog.Items.Add('Device removed: ' + Id);
 end;
 
-procedure TfmMain.wclAudioSwitcherStateChanged(Sender: TObject;
+procedure TfmMain.AudioSwitcherStateChanged(Sender: TObject;
   const Id: String; const State: TwclAudioDeviceState);
 var
   Str: string;
@@ -269,7 +224,7 @@ begin
     ShowMessage('Select device')
 
   else begin
-    Res := wclAudioSwitcher.GetDeviceDetails(lvDevices.Selected.Caption,
+    Res := AudioSwitcher.GetDeviceDetails(lvDevices.Selected.Caption,
       Device);
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Refresh device error: 0x' + IntToHex(Res, 8))
@@ -343,11 +298,11 @@ begin
         Exit;
       end;
 
-      Res := wclAudioSwitcher.Connect(
+      Res := AudioSwitcher.Connect(
         StrToInt64('$' + lvDevices.Selected.SubItems[5]));
 
     end else
-      Res := wclAudioSwitcher.Connect(lvDevices.Selected.Caption);
+      Res := AudioSwitcher.Connect(lvDevices.Selected.Caption);
 
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Connect error: 0x' + IntToHex(Res, 8));
@@ -368,15 +323,57 @@ begin
         Exit;
       end;
 
-      Res := wclAudioSwitcher.Disconnect(
+      Res := AudioSwitcher.Disconnect(
         StrToInt64('$' + lvDevices.Selected.SubItems[5]));
 
     end else
-      Res := wclAudioSwitcher.Disconnect(lvDevices.Selected.Caption);
+      Res := AudioSwitcher.Disconnect(lvDevices.Selected.Caption);
 
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Connect error: 0x' + IntToHex(Res, 8));
   end;
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+var
+  Res: Integer;
+begin
+  AudioSwitcher := TwclAudioSwitcher.Create(nil);
+  AudioSwitcher.OnOpened := AudioSwitcherOpened;
+  AudioSwitcher.OnClosed := AudioSwitcherClosed;
+  AudioSwitcher.OnDefaultDeviceChanged := AudioSwitcherDefaultDeviceChanged;
+  AudioSwitcher.OnDeviceAdded := AudioSwitcherDeviceAdded;
+  AudioSwitcher.OnDeviceRemoved := AudioSwitcherDeviceRemoved;
+  AudioSwitcher.OnStateChanged := AudioSwitcherStateChanged;
+
+  Res := AudioSwitcher.Open;
+  if Res <> WCL_E_SUCCESS then
+    lbLog.Items.Add('Open failed: 0x' + IntToHex(Res, 8));
+end;
+
+procedure TfmMain.btGetDefaultClick(Sender: TObject);
+var
+  Role: TwclAudioDeviceRole;
+  Flow: TwclAudioDeviceDataFlow;
+  Id: string;
+  Res: Integer;
+begin
+  case cbRole.ItemIndex of
+    0: Role := drConsole;
+    1: Role := drMultimedia;
+    else Role := drCommunications;
+  end;
+
+  if cbFlow.ItemIndex = 0 then
+    Flow := dfCapture
+  else
+    Flow := dfRender;
+
+  Res := AudioSwitcher.GetDefault(Role, Flow, Id);
+  if Res <> WCL_E_SUCCESS then
+    ShowMessage('Unable to get default device: 0x' + IntToHex(Res, 8))
+  else
+    ShowMessage('Default device ID: ' + Id);
 end;
 
 end.

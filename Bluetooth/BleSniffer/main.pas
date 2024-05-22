@@ -1,15 +1,13 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
 uses
-  Forms, Controls, StdCtrls, wclBluetooth, Classes;
+  Forms, StdCtrls, Controls, wclBluetooth, Classes;
 
 type
-  { TfmMain }
-
   TfmMain = class(TForm)
     btStart: TButton;
     btStop: TButton;
@@ -20,44 +18,44 @@ type
     procedure btClearClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
     procedure btStopClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
-    wclBleSniffer: TwclBleSniffer;
-
-    procedure wclBleSnifferStarted(Sender: TObject);
-    procedure wclBleSnifferStopped(Sender: TObject);
-    procedure wclBleSnifferRawPacketReceived(Sender: TObject;
-      const Header: TwclBluetoothLePacketHeader; const Payload: Pointer;
-      const Size: Word);
-    procedure wclBleSnifferAdvIndReceived(Sender: TObject;
-      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-      const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
-    procedure wclBleSnifferAdvDirectIndReceived(Sender: TObject;
-      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-      const AdvA: Int64; const TargetA: Int64);
-    procedure wclBleSnifferAdvNonConnIndReceived(Sender: TObject;
-      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-      const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
-    procedure wclBleSnifferAdvScanIndReceived(Sender: TObject;
-      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-      const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
-    procedure wclBleSnifferScanReqReceived(Sender: TObject;
-      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-      const ScanA: Int64; const AdvA: Int64);
-    procedure wclBleSnifferScanRspReceived(Sender: TObject;
-      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-      const AdvA: Int64; const ScanRspData: Pointer;
-      const ScanRspDataLen: Byte);
-    procedure wclBleSnifferConnectIndReceived(Sender: TObject;
-      const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const InitA: Int64;
-      const AdvA: Int64; const LlData: TwclBleSnifferLlData);
+    BleSniffer: TwclBleSniffer;
 
     procedure DumpHeader(const Header: TwclBluetoothLePacketHeader);
     procedure DumpPduHeader(
       const PduHeader: TwclBluetoothLeAdvertisingPduHeader);
     procedure DumpPayload(const Payload: Pointer; const Size: Word);
+
+    procedure BleSnifferStarted(Sender: TObject);
+    procedure BleSnifferStopped(Sender: TObject);
+    procedure BleSnifferAdvDirectIndReceived(Sender: TObject;
+      const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const AdvA: Int64;
+      const TargetA: Int64);
+    procedure BleSnifferAdvIndReceived(Sender: TObject;
+      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
+      const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
+    procedure BleSnifferAdvScanIndReceived(Sender: TObject;
+      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
+      const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
+    procedure BleSnifferRawPacketReceived(Sender: TObject;
+      const Header: TwclBluetoothLePacketHeader; const Payload: Pointer;
+      const Size: Word);
+    procedure BleSnifferScanReqReceived(Sender: TObject;
+      const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const ScanA: Int64;
+      const AdvA: Int64);
+    procedure BleSnifferScanRspReceived(Sender: TObject;
+      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
+      const AdvA: Int64; const ScanRspData: Pointer;
+      const ScanRspDataLen: Byte);
+    procedure BleSnifferAdvNonConnIndReceived(Sender: TObject;
+      const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
+      const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
+    procedure BleSnifferConnectIndReceived(Sender: TObject;
+      const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const InitA: Int64;
+      const AdvA: Int64; const LlData: TwclBleSnifferLlData);
   end;
 
 var
@@ -79,7 +77,7 @@ procedure TfmMain.btStartClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclBleSniffer.Start(cbChannel.ItemIndex + 37);
+  Res := BleSniffer.Start(cbChannel.ItemIndex + 37);
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Start failed: 0x' + IntToHex(Res, 8));
 end;
@@ -88,59 +86,25 @@ procedure TfmMain.btStopClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclBleSniffer.Stop;
+  Res := BleSniffer.Stop;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Stop failed: 0x' + IntToHex(Res, 8));
 end;
 
-procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  wclBleSniffer := TwclBleSniffer.Create(nil);
-  wclBleSniffer.OnStarted := wclBleSnifferStarted;
-  wclBleSniffer.OnStopped := wclBleSnifferStopped;
-  wclBleSniffer.OnRawPacketReceived := wclBleSnifferRawPacketReceived;
-  wclBleSniffer.OnAdvIndReceived := wclBleSnifferAdvIndReceived;
-  wclBleSniffer.OnAdvDirectIndReceived := wclBleSnifferAdvDirectIndReceived;
-  wclBleSniffer.OnAdvNonConnIndReceived := wclBleSnifferAdvNonConnIndReceived;
-  wclBleSniffer.OnAdvScanIndReceived := wclBleSnifferAdvScanIndReceived;
-  wclBleSniffer.OnScanReqReceived := wclBleSnifferScanReqReceived;
-  wclBleSniffer.OnScanRspReceived := wclBleSnifferScanRspReceived;
-  wclBleSniffer.OnConnectIndReceived := wclBleSnifferConnectIndReceived;
-end;
-
-procedure TfmMain.wclBleSnifferStarted(Sender: TObject);
+procedure TfmMain.BleSnifferStarted(Sender: TObject);
 begin
   lbPackets.Items.Add('Started');
 end;
 
-procedure TfmMain.wclBleSnifferStopped(Sender: TObject);
+procedure TfmMain.BleSnifferStopped(Sender: TObject);
 begin
   lbPackets.Items.Add('Stopped');
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclBleSniffer.Stop;
-  wclBleSniffer.Free;
-end;
-
-procedure TfmMain.wclBleSnifferRawPacketReceived(Sender: TObject;
-  const Header: TwclBluetoothLePacketHeader; const Payload: Pointer;
-  const Size: Word);
-begin
-  lbPackets.Items.Add('RAW PACKET RECEIVED');
-  DumpHeader(Header);
-  DumpPayload(Payload, Size);
-end;
-
-procedure TfmMain.wclBleSnifferAdvIndReceived(Sender: TObject;
-  const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-  const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
-begin
-  lbPackets.Items.Add('ADV_IND RECEIVED');
-  lbPackets.Items.Add('  AdvA: ' + IntToHex(AdvA, 12));
-  DumpPduHeader(PduHeader);
-  DumpPayload(AdvData, AdvDataLen);
+  BleSniffer.Stop;
+  BleSniffer.Free;
 end;
 
 procedure TfmMain.DumpHeader(const Header: TwclBluetoothLePacketHeader);
@@ -174,13 +138,13 @@ begin
       Str := Str + IntToHex(Byte(PAnsiChar(Payload)[i]), 2) + ' ';
       Inc(Ndx);
       if Ndx = 16 then begin
-        lbPackets.Items.Add('  ' + Str);
+        lbPackets.Items.Add('    ' + Str);
         Str := '';
         Ndx := 1;
       end;
     end;
     if Str <> '' then
-      lbPackets.Items.Add('  ' + Str);
+      lbPackets.Items.Add('    ' + Str);
   end;
   lbPackets.Items.Add('');
 end;
@@ -189,6 +153,7 @@ procedure TfmMain.DumpPduHeader(
   const PduHeader: TwclBluetoothLeAdvertisingPduHeader);
 begin
   DumpHeader(PduHeader.Header);
+  
   lbPackets.Items.Add('   PDU HEADER');
   lbPackets.Items.Add('  ============');
   lbPackets.Items.Add('    ChSel: ' + BoolToStr(PduHeader.ChSel, True));
@@ -196,29 +161,29 @@ begin
   lbPackets.Items.Add('    RxAdd: ' + BoolToStr(PduHeader.RxAdd, True));
 end;
 
-procedure TfmMain.wclBleSnifferAdvDirectIndReceived(Sender: TObject;
+procedure TfmMain.BleSnifferAdvDirectIndReceived(Sender: TObject;
   const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const AdvA: Int64;
   const TargetA: Int64);
 begin
   lbPackets.Items.Add('ADV_DIRECT_IND RECEIVED');
   lbPackets.Items.Add('  AdvA: ' + IntToHex(AdvA, 12));
-  lbPackets.Items.Add('  TargetA: ' + IntToHex(TargetA, 12));
+  lbPackets.Items.Add('  TargeA: ' + IntToHex(TargetA, 12));
   DumpPduHeader(PduHeader);
 end;
 
-procedure TfmMain.wclBleSnifferAdvNonConnIndReceived(Sender: TObject;
-  const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-  const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
+procedure TfmMain.BleSnifferAdvIndReceived(Sender: TObject;
+  const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const AdvA: Int64;
+  const AdvData: Pointer; const AdvDataLen: Byte);
 begin
-  lbPackets.Items.Add('ADV_NONCONN_IND RECEIVED');
+  lbPackets.Items.Add('ADV_IND RECEIVED');
   lbPackets.Items.Add('  AdvA: ' + IntToHex(AdvA, 12));
   DumpPduHeader(PduHeader);
   DumpPayload(AdvData, AdvDataLen);
 end;
 
-procedure TfmMain.wclBleSnifferAdvScanIndReceived(Sender: TObject;
-  const PduHeader: TwclBluetoothLeAdvertisingPduHeader;
-  const AdvA: Int64; const AdvData: Pointer; const AdvDataLen: Byte);
+procedure TfmMain.BleSnifferAdvScanIndReceived(Sender: TObject;
+  const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const AdvA: Int64;
+  const AdvData: Pointer; const AdvDataLen: Byte);
 begin
   lbPackets.Items.Add('ADV_SCAN_IND RECEIVED');
   lbPackets.Items.Add('  AdvA: ' + IntToHex(AdvA, 12));
@@ -226,7 +191,16 @@ begin
   DumpPayload(AdvData, AdvDataLen);
 end;
 
-procedure TfmMain.wclBleSnifferScanReqReceived(Sender: TObject;
+procedure TfmMain.BleSnifferRawPacketReceived(Sender: TObject;
+  const Header: TwclBluetoothLePacketHeader; const Payload: Pointer;
+  const Size: Word);
+begin
+  lbPackets.Items.Add('RAW PACKET RECEIVED');
+  DumpHeader(Header);
+  DumpPayload(Payload, Size);
+end;
+
+procedure TfmMain.BleSnifferScanReqReceived(Sender: TObject;
   const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const ScanA: Int64;
   const AdvA: Int64);
 begin
@@ -236,7 +210,7 @@ begin
   DumpPduHeader(PduHeader);
 end;
 
-procedure TfmMain.wclBleSnifferScanRspReceived(Sender: TObject;
+procedure TfmMain.BleSnifferScanRspReceived(Sender: TObject;
   const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const AdvA: Int64;
   const ScanRspData: Pointer; const ScanRspDataLen: Byte);
 begin
@@ -246,7 +220,17 @@ begin
   DumpPayload(ScanRspData, ScanRspDataLen);
 end;
 
-procedure TfmMain.wclBleSnifferConnectIndReceived(Sender: TObject;
+procedure TfmMain.BleSnifferAdvNonConnIndReceived(Sender: TObject;
+  const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const AdvA: Int64;
+  const AdvData: Pointer; const AdvDataLen: Byte);
+begin
+  lbPackets.Items.Add('ADV_NONCONN_IND RECEIVED');
+  lbPackets.Items.Add('  AdvA: ' + IntToHex(AdvA, 12));
+  DumpPduHeader(PduHeader);
+  DumpPayload(AdvData, AdvDataLen);
+end;
+
+procedure TfmMain.BleSnifferConnectIndReceived(Sender: TObject;
   const PduHeader: TwclBluetoothLeAdvertisingPduHeader; const InitA: Int64;
   const AdvA: Int64; const LlData: TwclBleSnifferLlData);
 begin
@@ -265,6 +249,21 @@ begin
   lbPackets.Items.Add('    Hop: ' + IntToStr(LlData.Hop));
   lbPackets.Items.Add('    Sca: ' + IntToStr(LlData.Sca));
   DumpPduHeader(PduHeader);
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  BleSniffer := TwclBleSniffer.Create(nil);
+  BleSniffer.OnStarted := BleSnifferStarted;
+  BleSniffer.OnStopped := BleSnifferStopped;
+  BleSniffer.OnAdvDirectIndReceived := BleSnifferAdvDirectIndReceived;
+  BleSniffer.OnAdvIndReceived := BleSnifferAdvIndReceived;
+  BleSniffer.OnAdvScanIndReceived := BleSnifferAdvScanIndReceived;
+  BleSniffer.OnRawPacketReceived := BleSnifferRawPacketReceived;
+  BleSniffer.OnScanReqReceived := BleSnifferScanReqReceived;
+  BleSniffer.OnScanRspReceived := BleSnifferScanRspReceived;
+  BleSniffer.OnAdvNonConnIndReceived := BleSnifferAdvNonConnIndReceived;
+  BleSniffer.OnConnectIndReceived := BleSnifferConnectIndReceived;
 end;
 
 end.

@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -8,23 +8,8 @@ uses
   Forms, wclBluetooth, Classes, StdCtrls, Controls, ComCtrls;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     btDiscover: TButton;
-    btGetMaxPduSize: TButton;
-    btGetPhy: TButton;
-    btEnumPaired: TButton;
-    btUnpair: TButton;
-    cbIoCap: TComboBox;
-    cbMitmProtection: TComboBox;
-    cbWriteKind: TComboBox;
-    cbSubscribeKind: TComboBox;
-    laIoCap: TLabel;
-    laMitmProtection: TLabel;
-    laSubscribeKind: TLabel;
-    laWriteKind: TLabel;
     lvDevices: TListView;
     lvEvents: TListView;
     btClearEvents: TButton;
@@ -59,10 +44,18 @@ type
     btGetParams: TButton;
     btSetParams: TButton;
     cbParams: TComboBox;
-    procedure btEnumPairedClick(Sender: TObject);
-    procedure btGetMaxPduSizeClick(Sender: TObject);
-    procedure btGetPhyClick(Sender: TObject);
-    procedure btUnpairClick(Sender: TObject);
+    btGetMaxPduSize: TButton;
+    btPhy: TButton;
+    laWriteKind: TLabel;
+    cbWriteKind: TComboBox;
+    laSubscribeKind: TLabel;
+    cbSubscribeKind: TComboBox;
+    laIoCap: TLabel;
+    cbIoCap: TComboBox;
+    cbMitmProtection: TComboBox;
+    laMitmProtection: TLabel;
+    btEnumPaired: TButton;
+    btUnpair: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btDiscoverClick(Sender: TObject);
@@ -85,56 +78,18 @@ type
     procedure cbFastSubscribeClick(Sender: TObject);
     procedure btGetParamsClick(Sender: TObject);
     procedure btSetParamsClick(Sender: TObject);
+    procedure btGetMaxPduSizeClick(Sender: TObject);
+    procedure btPhyClick(Sender: TObject);
+    procedure btUnpairClick(Sender: TObject);
+    procedure btEnumPairedClick(Sender: TObject);
 
   private
-    wclBluetoothManager: TwclBluetoothManager;
-    wclGattClient: TwclGattClient;
+    BluetoothManager: TwclBluetoothManager;
+    GattClient: TwclGattClient;
 
     FCharacteristics: TwclGattCharacteristics;
     FDescriptors: TwclGattDescriptors;
     FServices: TwclGattServices;
-
-    procedure wclBluetoothManagerNumericComparison(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Number: Cardinal; out Confirm: Boolean);
-    procedure wclBluetoothManagerPasskeyNotification(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Passkey: Cardinal);
-    procedure wclBluetoothManagerPasskeyRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Passkey: Cardinal);
-    procedure wclBluetoothManagerPinRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Pin: String);
-    procedure wclBluetoothManagerDeviceFound(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64);
-    procedure wclBluetoothManagerDiscoveringCompleted(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Error: Integer);
-    procedure wclBluetoothManagerDiscoveringStarted(Sender: TObject;
-      const Radio: TwclBluetoothRadio);
-    procedure wclBluetoothManagerConfirm(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Confirm: Boolean);
-    procedure wclBluetoothManagerAuthenticationCompleted(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Error: Integer);
-    procedure wclBluetoothManagerProtectionLevelRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Protection: TwclBluetoothLeProtectionLevel);
-    procedure wclBluetoothManagerIoCapabilityRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Mitm: TwclBluetoothMitmProtection;
-      out IoCapability: TwclBluetoothIoCapability;
-      out OobPresent: Boolean);
-
-    procedure wclGattClientCharacteristicChanged(Sender: TObject;
-      const Handle: Word; const Value: TwclGattCharacteristicValue);
-    procedure wclGattClientConnect(Sender: TObject; const Error: Integer);
-    procedure wclGattClientDisconnect(Sender: TObject;
-      const Reason: Integer);
-    procedure wclGattClientConnectionParamsChanged(Sender: TObject);
-    procedure wclGattClientMaxPduSizeChanged(Sender: TObject);
-    procedure wclGattClientConnectionPhyChanged(Sender: TObject);
 
     function GetRadio: TwclBluetoothRadio;
     function OpFlag: TwclGattOperationFlag;
@@ -151,6 +106,48 @@ type
     procedure GetMaxPduSize;
     procedure GetConnectionParams;
     procedure GetConnectionPhy;
+
+    procedure BluetoothManagerNumericComparison(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Number: Cardinal; out Confirm: Boolean);
+    procedure BluetoothManagerPasskeyNotification(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Passkey: Cardinal);
+    procedure BluetoothManagerPasskeyRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Passkey: Cardinal);
+    procedure BluetoothManagerPinRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Pin: String);
+    procedure BluetoothManagerDeviceFound(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64);
+    procedure BluetoothManagerDiscoveringCompleted(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Error: Integer);
+    procedure BluetoothManagerDiscoveringStarted(Sender: TObject;
+      const Radio: TwclBluetoothRadio);
+    procedure BluetoothManagerConfirm(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Confirm: Boolean);
+    procedure BluetoothManagerAuthenticationCompleted(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Error: Integer);
+    procedure BluetoothManagerProtectionLevelRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Protection: TwclBluetoothLeProtectionLevel);
+    procedure BluetoothManagerIoCapabilityRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Mitm: TwclBluetoothMitmProtection;
+      out IoCapability: TwclBluetoothIoCapability;
+      out OobPresent: Boolean);
+
+    procedure GattClientCharacteristicChanged(Sender: TObject;
+      const Handle: Word; const Value: TwclGattCharacteristicValue);
+    procedure GattClientConnect(Sender: TObject; const Error: Integer);
+    procedure GattClientDisconnect(Sender: TObject;
+      const Reason: Integer);
+    procedure GattClientConnectionParamsChanged(Sender: TObject);
+    procedure GattClientMaxPduSizeChanged(Sender: TObject);
+    procedure GattClientConnectionPhyChanged(Sender: TObject);
   end;
 
 var
@@ -159,46 +156,44 @@ var
 implementation
 
 uses
-  Dialogs, SysUtils, wclErrors, wclConnections, wclBluetoothMicrosoft,
-  wclHelpers, Windows;
+  Dialogs, SysUtils, wclErrors, wclHelpers;
 
 {$R *.lfm}
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclBluetoothManager := TwclBluetoothManager.Create(nil);
-  wclBluetoothManager.OnIoCapabilityRequest := wclBluetoothManagerIoCapabilityRequest;
-  wclBluetoothManager.OnAuthenticationCompleted := wclBluetoothManagerAuthenticationCompleted;
-  wclBluetoothManager.OnConfirm := wclBluetoothManagerConfirm;
-  wclBluetoothManager.OnDeviceFound := wclBluetoothManagerDeviceFound;
-  wclBluetoothManager.OnDiscoveringCompleted := wclBluetoothManagerDiscoveringCompleted;
-  wclBluetoothManager.OnDiscoveringStarted := wclBluetoothManagerDiscoveringStarted;
-  wclBluetoothManager.OnNumericComparison := wclBluetoothManagerNumericComparison;
-  wclBluetoothManager.OnPasskeyNotification := wclBluetoothManagerPasskeyNotification;
-  wclBluetoothManager.OnPasskeyRequest := wclBluetoothManagerPasskeyRequest;
-  wclBluetoothManager.OnPinRequest := wclBluetoothManagerPinRequest;
-  wclBluetoothManager.OnProtectionLevelRequest := wclBluetoothManagerProtectionLevelRequest;
+  BluetoothManager := TwclBluetoothManager.Create(nil);
+  BluetoothManager.OnNumericComparison := BluetoothManagerNumericComparison;
+  BluetoothManager.OnPasskeyNotification := BluetoothManagerPasskeyNotification;
+  BluetoothManager.OnPasskeyRequest := BluetoothManagerPasskeyRequest;
+  BluetoothManager.OnPinRequest := BluetoothManagerPinRequest;
+  BluetoothManager.OnDeviceFound := BluetoothManagerDeviceFound;
+  BluetoothManager.OnDiscoveringCompleted := BluetoothManagerDiscoveringCompleted;
+  BluetoothManager.OnDiscoveringStarted := BluetoothManagerDiscoveringStarted;
+  BluetoothManager.OnConfirm := BluetoothManagerConfirm;
+  BluetoothManager.OnAuthenticationCompleted := BluetoothManagerAuthenticationCompleted;
+  BluetoothManager.OnProtectionLevelRequest := BluetoothManagerProtectionLevelRequest;
+  BluetoothManager.OnIoCapabilityRequest := BluetoothManagerIoCapabilityRequest;
 
-  wclGattClient := TwclGattClient.Create(nil);
-  wclGattClient.OnCharacteristicChanged := wclGattClientCharacteristicChanged;
-  wclGattClient.OnConnect := wclGattClientConnect;
-  wclGattClient.OnConnectionParamsChanged := wclGattClientConnectionParamsChanged;
-  wclGattClient.OnConnectionPhyChanged := wclGattClientConnectionPhyChanged;
-  wclGattClient.OnDisconnect := wclGattClientDisconnect;
-  wclGattClient.OnMaxPduSizeChanged := wclGattClientMaxPduSizeChanged;
+  GattClient := TwclGattClient.Create(nil);
+  GattClient.OnCharacteristicChanged := GattClientCharacteristicChanged;
+  GattClient.OnConnect := GattClientConnect;
+  GattClient.OnDisconnect := GattClientDisconnect;
+  GattClient.OnConnectionParamsChanged := GattClientConnectionParamsChanged;
+  GattClient.OnMaxPduSizeChanged := GattClientMaxPduSizeChanged;
+  GattClient.OnConnectionPhyChanged := GattClientConnectionPhyChanged;
 
-  wclBluetoothManager.Open;
-
+  BluetoothManager.Open;
   Cleanup;
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclGattClient.Disconnect;
-  wclGattClient.Free;
+  GattClient.Disconnect;
+  GattClient.Free;
 
-  wclBluetoothManager.Close;
-  wclBluetoothManager.Free;
+  BluetoothManager.Close;
+  BluetoothManager.Free;
 
   Cleanup;
 end;
@@ -208,7 +203,7 @@ var
   Res: Integer;
   Radio: TwclBluetoothRadio;
 begin
-  Res := wclBluetoothManager.GetLeRadio(Radio);
+  Res := BluetoothManager.GetLeRadio(Radio);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
@@ -263,10 +258,11 @@ begin
   else begin
     Item := lvDevices.Selected;
     try
-      wclGattClient.Address := StrToInt64('$' + Item.Caption);
-      wclGattClient.ConnectOnRead := cbConnectOnRead.Checked;
-      wclGattClient.ForceNotifications := cbForceIndications.Checked;
-      Res := wclGattClient.Connect(TwclBluetoothRadio(Item.Data));
+      GattClient.Address := StrToInt64('$' + Item.Caption);
+      GattClient.ConnectOnRead := cbConnectOnRead.Checked;
+      GattClient.ForceNotifications := cbForceIndications.Checked;
+
+      Res := GattClient.Connect(TwclBluetoothRadio(Item.Data));
       if Res <> WCL_E_SUCCESS then
         MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
     except
@@ -280,7 +276,7 @@ procedure TfmMain.btDisconnectClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclGattClient.Disconnect;
+  Res := GattClient.Disconnect;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -295,7 +291,7 @@ begin
   lvServices.Items.Clear;
   FServices := nil;
 
-  Res := wclGattClient.ReadServices(OpFlag, FServices);
+  Res := GattClient.ReadServices(OpFlag, FServices);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
     Exit;
@@ -334,7 +330,7 @@ begin
   lvServices.Items.Clear;
   FServices := nil;
 
-  Res := wclGattClient.ReadIncludedServices(Service, OpFlag, FServices);
+  Res := GattClient.ReadIncludedServices(Service, OpFlag, FServices);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
     Exit;
@@ -373,7 +369,7 @@ begin
   end;
 
   Service := FServices[lvServices.Selected.Index];
-  Res := wclGattClient.ReadCharacteristics(Service, OpFlag, FCharacteristics);
+  Res := GattClient.ReadCharacteristics(Service, OpFlag, FCharacteristics);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
     Exit;
@@ -419,7 +415,7 @@ begin
   end;
 
   Characteristic := FCharacteristics[lvCharacteristics.Selected.Index];
-  Res := wclGattClient.ReadCharacteristicValue(Characteristic, OpFlag, Value,
+  Res := GattClient.ReadCharacteristicValue(Characteristic, OpFlag, Value,
     Protection);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
@@ -434,8 +430,10 @@ begin
 
   else begin
     Str := '';
+
     for i := Low(Value) to High(Value) do
       Str := Str + IntToHex(Value[i], 2);
+
     MessageDlg('Value: ' + Str, mtInformation, [mbOK], 0);
   end;
 end;
@@ -457,7 +455,7 @@ begin
   end;
 
   Characteristic := FCharacteristics[lvCharacteristics.Selected.Index];
-  Res := wclGattClient.ReadDescriptors(Characteristic, OpFlag, FDescriptors);
+  Res := GattClient.ReadDescriptors(Characteristic, OpFlag, FDescriptors);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
     Exit;
@@ -525,7 +523,7 @@ begin
   end;
 
   Descriptor := FDescriptors[lvDescriptors.Selected.Index];
-  Res := wclGattClient.ReadDescriptorValue(Descriptor, OpFlag, Value,
+  Res := GattClient.ReadDescriptorValue(Descriptor, OpFlag, Value,
     Protection);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
@@ -564,7 +562,8 @@ begin
         begin
           ListProp('Type', 'dtServerCharacteristicConfiguration');
           ListProp('IsBroadcast', BoolToStr(
-            Value.ServerCharacteristicConfiguration.IsBroadcast, True));
+            Value.ServerCharacteristicConfiguration.IsBroadcast,
+            True));
         end;
 
       dtCharacteristicFormat:
@@ -634,6 +633,7 @@ begin
   Str := edCharVal.Text;
   if Length(Str) mod 2 <> 0 then
     Str := '0' + Str;
+  Val := nil;
   SetLength(Val, Length(Str) div 2);
   i := 1;
   j := 0;
@@ -649,7 +649,7 @@ begin
     else WriteKind := wkAuto;
   end;
 
-  Res := wclGattClient.WriteCharacteristicValue(Characteristic, Val, Protection,
+  Res := GattClient.WriteCharacteristicValue(Characteristic, Val, Protection,
     WriteKind);
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
@@ -688,16 +688,16 @@ begin
 
   if cbFastSubscribe.Checked then begin
     if SubscribeKind = skManual then
-      Res := wclGattClient.SubscribeForNotifications(Characteristic)
+      Res := GattClient.SubscribeForNotifications(Characteristic)
     else begin
-      Res := wclGattClient.SubscribeForNotifications(Characteristic, OpFlag,
+      Res := GattClient.SubscribeForNotifications(Characteristic, OpFlag,
         Protection, SubscribeKind);
     end;
   end else begin
     if SubscribeKind = skManual then
-      Res := wclGattClient.Subscribe(Characteristic)
+      Res := GattClient.Subscribe(Characteristic)
     else
-      Res := wclGattClient.Subscribe(Characteristic, SubscribeKind);
+      Res := GattClient.Subscribe(Characteristic, SubscribeKind);
   end;
 
   if Res <> WCL_E_SUCCESS then
@@ -722,7 +722,7 @@ begin
     1: SubscribeKind := skIndication;
     else SubscribeKind := skManual;
   end;
-
+  
   if SubscribeKind = skManual then begin
     // In case if characteristic has both Indication and Notification properties
     // set to True we have to select one of them. Here we use Notifications but
@@ -738,16 +738,16 @@ begin
 
   if cbFastSubscribe.Checked then begin
     if SubscribeKind = skManual then
-      Res := wclGattClient.UnsubscribeFromNotifications(Characteristic)
+      Res := GattClient.UnsubscribeFromNotifications(Characteristic)
     else begin
-      Res := wclGattClient.UnsubscribeFromNotifications(Characteristic, OpFlag,
+      Res := GattClient.UnsubscribeFromNotifications(Characteristic, OpFlag,
         Protection, SubscribeKind);
     end;
   end else begin
     if SubscribeKind = skManual then
-      Res := wclGattClient.Unsubscribe(Characteristic)
+      Res := GattClient.Unsubscribe(Characteristic)
     else
-      Res := wclGattClient.Unsubscribe(Characteristic, SubscribeKind);
+      Res := GattClient.Unsubscribe(Characteristic, SubscribeKind);
   end;
 
   if Res <> WCL_E_SUCCESS then
@@ -781,7 +781,7 @@ begin
     1: SubscribeKind := skIndication;
     else SubscribeKind := skManual;
   end;
-
+  
   if SubscribeKind = skManual then begin
     // In case if characteristic has both Indication and Notification properties
     // set to True we have to select one of them. Here we use Notifications but
@@ -792,11 +792,11 @@ begin
       // if you want to receive Indications instead of notifications.
       Characteristic.IsIndicatable := False;
     end;
-    Res := wclGattClient.WriteClientConfiguration(Characteristic, True, OpFlag,
+    Res := GattClient.WriteClientConfiguration(Characteristic, True, OpFlag,
       Protection);
 
   end else begin
-    Res := wclGattClient.WriteClientConfiguration(Characteristic, True, OpFlag,
+    Res := GattClient.WriteClientConfiguration(Characteristic, True, OpFlag,
       Protection, SubscribeKind);
   end;
 
@@ -822,7 +822,7 @@ begin
     1: SubscribeKind := skIndication;
     else SubscribeKind := skManual;
   end;
-
+  
   if SubscribeKind = skManual then begin
     // In case if characteristic has both Indication and Notification properties
     // set to True we have to select one of them. Here we use Notifications but
@@ -834,10 +834,10 @@ begin
       // if you want to receive Indications instead of notifications.
       Characteristic.IsIndicatable := False;
     end;
-    Res := wclGattClient.WriteClientConfiguration(Characteristic, False, OpFlag,
+    Res := GattClient.WriteClientConfiguration(Characteristic, False, OpFlag,
       Protection);
   end else begin
-    Res := wclGattClient.WriteClientConfiguration(Characteristic, False, OpFlag,
+    Res := GattClient.WriteClientConfiguration(Characteristic, False, OpFlag,
       Protection, SubscribeKind);
   end;
 
@@ -845,7 +845,7 @@ begin
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
 
-procedure TfmMain.wclBluetoothManagerNumericComparison(Sender: TObject;
+procedure TfmMain.BluetoothManagerNumericComparison(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   const Number: Cardinal; out Confirm: Boolean);
 begin
@@ -854,14 +854,14 @@ begin
   TraceEvent(Address, 'Numeric comparison', 'Number', IntToStr(Number));
 end;
 
-procedure TfmMain.wclBluetoothManagerPasskeyNotification(Sender: TObject;
+procedure TfmMain.BluetoothManagerPasskeyNotification(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   const Passkey: Cardinal);
 begin
   TraceEvent(Address, 'Passkey notification', 'Passkey', IntToStr(Passkey));
 end;
 
-procedure TfmMain.wclBluetoothManagerPasskeyRequest(Sender: TObject;
+procedure TfmMain.BluetoothManagerPasskeyRequest(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   out Passkey: Cardinal);
 begin
@@ -870,7 +870,7 @@ begin
   TraceEvent(Address, 'Passkey request', 'Passkey', IntToStr(Passkey));
 end;
 
-procedure TfmMain.wclBluetoothManagerPinRequest(Sender: TObject;
+procedure TfmMain.BluetoothManagerPinRequest(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64; out Pin: String);
 begin
   // Use '0000' as PIN.
@@ -878,13 +878,13 @@ begin
   TraceEvent(Address, 'Pin request', 'PIN', Pin);
 end;
 
-procedure TfmMain.wclBluetoothManagerDeviceFound(Sender: TObject;
+procedure TfmMain.BluetoothManagerDeviceFound(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64);
 var
   Item: TListItem;
   DevType: TwclBluetoothDeviceType;
-  Res: Integer;
   Paired: Boolean;
+  Res: Integer;
 begin
   Item := lvDevices.Items.Add;
   Item.Caption := IntToHex(Address, 12);
@@ -897,14 +897,10 @@ begin
 
   else begin
     case DevType of
-      dtClassic:
-        Item.SubItems.Add('Classic');
-      dtBle:
-        Item.SubItems.Add('BLE');
-      dtMixed:
-        Item.SubItems.Add('Mixed');
-    else
-      Item.SubItems.Add('Unknown');
+      dtClassic: Item.SubItems.Add('Classic');
+      dtBle: Item.SubItems.Add('BLE');
+      dtMixed: Item.SubItems.Add('Mixed');
+      else Item.SubItems.Add('Unknown');
     end;
   end;
 
@@ -921,7 +917,7 @@ begin
   TraceEvent(Address, 'Device found', '', '');
 end;
 
-procedure TfmMain.wclBluetoothManagerDiscoveringCompleted(Sender: TObject;
+procedure TfmMain.BluetoothManagerDiscoveringCompleted(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Error: Integer);
 var
   i: Integer;
@@ -950,14 +946,14 @@ begin
   TraceEvent(0, 'Discovering completed', '', '');
 end;
 
-procedure TfmMain.wclBluetoothManagerDiscoveringStarted(Sender: TObject;
+procedure TfmMain.BluetoothManagerDiscoveringStarted(Sender: TObject;
   const Radio: TwclBluetoothRadio);
 begin
   lvDevices.Items.Clear;
   TraceEvent(0, 'Discovering started', '', '');
 end;
 
-procedure TfmMain.wclGattClientCharacteristicChanged(Sender: TObject;
+procedure TfmMain.GattClientCharacteristicChanged(Sender: TObject;
   const Handle: Word; const Value: TwclGattCharacteristicValue);
 var
   Str: string;
@@ -981,7 +977,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclGattClientConnect(Sender: TObject;
+procedure TfmMain.GattClientConnect(Sender: TObject;
   const Error: Integer);
 begin
   // Connection property is valid here.
@@ -989,18 +985,18 @@ begin
     '0x' + IntToHex(Error, 8));
 
   if Error = WCL_E_SUCCESS then begin
-    TraceEvent(wclGattClient.Address, 'Max PDU', '', '');
+    TraceEvent(GattClient.Address, 'Max PDU', '', '');
     GetMaxPduSize;
 
-    TraceEvent(wclGattClient.Address, 'Connection params', '', '');
+    TraceEvent(GattClient.Address, 'Connection params', '', '');
     GetConnectionParams;
 
-    TraceEvent(wclGattClient.Address, 'Connection PHY', '', '');
+    TraceEvent(GattClient.Address, 'Connection PHY', '', '');
     GetConnectionPhy;
   end;
 end;
 
-procedure TfmMain.wclGattClientDisconnect(Sender: TObject;
+procedure TfmMain.GattClientDisconnect(Sender: TObject;
   const Reason: Integer);
 begin
   // Connection property is valid here.
@@ -1037,7 +1033,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclBluetoothManagerConfirm(Sender: TObject;
+procedure TfmMain.BluetoothManagerConfirm(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   out Confirm: Boolean);
 begin
@@ -1046,7 +1042,7 @@ begin
   TraceEvent(Address, 'Just works pairing', 'Accept', 'True');
 end;
 
-procedure TfmMain.wclBluetoothManagerAuthenticationCompleted(
+procedure TfmMain.BluetoothManagerAuthenticationCompleted(
   Sender: TObject; const Radio: TwclBluetoothRadio; const Address: Int64;
   const Error: Integer);
 begin
@@ -1078,13 +1074,13 @@ end;
 
 procedure TfmMain.btGetParamsClick(Sender: TObject);
 begin
-  TraceEvent(wclGattClient.Address, 'Connection params', '', '');
+  TraceEvent(GattClient.Address, 'Connection params', '', '');
   GetConnectionParams;
 end;
 
-procedure TfmMain.wclGattClientConnectionParamsChanged(Sender: TObject);
+procedure TfmMain.GattClientConnectionParamsChanged(Sender: TObject);
 begin
-  TraceEvent(wclGattClient.Address, 'Connection params changed', '', '');
+  TraceEvent(GattClient.Address, 'Connection params changed', '', '');
   GetConnectionParams;
 end;
 
@@ -1099,7 +1095,7 @@ begin
     ParamsValue.MaxInterval := 84;
     ParamsValue.Latency := 0;
     ParamsValue.LinkTimeout := 800;
-    Res := wclGattClient.SetConnectionParams(ParamsValue);
+    Res := GattClient.SetConnectionParams(ParamsValue);
 
   end else begin
     case cbParams.ItemIndex of
@@ -1108,23 +1104,141 @@ begin
       2: Params := ppThroughputOptimized;
       else raise wclEInvalidArgument.Create('Invalid connection parameters.');
     end;
-    Res := wclGattClient.SetConnectionParams(Params);
+    Res := GattClient.SetConnectionParams(Params);
   end;
 
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
 end;
 
-procedure TfmMain.wclGattClientMaxPduSizeChanged(Sender: TObject);
+procedure TfmMain.GattClientMaxPduSizeChanged(Sender: TObject);
 begin
-  TraceEvent(wclGattClient.Address, 'Max PDU size changed', '', '');
+  TraceEvent(GattClient.Address, 'Max PDU size changed', '', '');
   GetMaxPduSize;
 end;
 
 procedure TfmMain.btGetMaxPduSizeClick(Sender: TObject);
 begin
-  TraceEvent(wclGattClient.Address, 'Max PDU', '', '');
+  TraceEvent(GattClient.Address, 'Max PDU', '', '');
   GetMaxPduSize;
+end;
+
+procedure TfmMain.GetMaxPduSize;
+var
+  Res: Integer;
+  Size: Word;
+begin
+  Res := GattClient.GetMaxPduSize(Size);
+  if Res <> WCL_E_SUCCESS then
+    TraceEvent(GattClient.Address, '', 'Error', IntToHex(Res, 8))
+  else
+    TraceEvent(GattClient.Address, '', 'Size', IntToStr(Size));
+end;
+
+procedure TfmMain.GetConnectionParams;
+var
+  Params: TwclBluetoothLeConnectionParameters;
+  Res: Integer;
+begin
+  Res := GattClient.GetConnectionParams(Params);
+  if Res <> WCL_E_SUCCESS then
+    TraceEvent(0, '', 'Error', IntToHex(Res, 8))
+
+  else begin
+    TraceEvent(0, '', 'Connection interval', IntToStr(Params.Interval));
+    TraceEvent(0, '', 'Connection latency', IntToStr(Params.Latency));
+    TraceEvent(0, '', 'Link timeout', IntToStr(Params.LinkTimeout));
+  end;
+end;
+
+procedure TfmMain.BluetoothManagerProtectionLevelRequest(
+  Sender: TObject; const Radio: TwclBluetoothRadio; const Address: Int64;
+  out Protection: TwclBluetoothLeProtectionLevel);
+begin
+  case cbProtection.ItemIndex of
+    0: Protection := pplNone;
+    1: Protection := pplDefault;
+    2: Protection := pplEncryption;
+    3: Protection := pplEncryptionAndAuthentication
+  end;
+end;
+
+procedure TfmMain.btPhyClick(Sender: TObject);
+begin
+  TraceEvent(GattClient.Address, 'Connection PHY', '', '');
+  GetConnectionPhy;
+end;
+
+procedure TfmMain.GattClientConnectionPhyChanged(Sender: TObject);
+begin
+  TraceEvent(GattClient.Address, 'Connection PHY changed', '', '');
+  GetConnectionPhy;
+end;
+
+procedure TfmMain.GetConnectionPhy;
+var
+  Res: Integer;
+  Phy: TwclBluetoothLeConnectionPhy;
+begin
+  Res := GattClient.GetConnectionPhyInfo(Phy);
+  if Res <> WCL_E_SUCCESS then
+    TraceEvent(0, '', 'Error', IntToHex(Res, 8))
+
+  else begin
+    TraceEvent(0, 'Transmit PHY', '', '');
+    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Transmit.IsCoded, True));
+    TraceEvent(0, '', '1M', BoolToStr(Phy.Transmit.IsUncoded1MPhy, True));
+    TraceEvent(0, '', '2M', BoolToStr(Phy.Transmit.IsUncoded2MPhy, True));
+
+    TraceEvent(0, 'Receive PHY', '', '');
+    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Receive.IsCoded, True));
+    TraceEvent(0, '', '1M', BoolToStr(Phy.Receive.IsUncoded1MPhy, True));
+    TraceEvent(0, '', '2M', BoolToStr(Phy.Receive.IsUncoded2MPhy, True));
+  end;
+end;
+
+procedure TfmMain.BluetoothManagerIoCapabilityRequest(Sender: TObject;
+  const Radio: TwclBluetoothRadio; const Address: Int64;
+  out Mitm: TwclBluetoothMitmProtection;
+  out IoCapability: TwclBluetoothIoCapability; out OobPresent: Boolean);
+begin
+  case cbMitmProtection.ItemIndex of
+    0: Mitm := mitmProtectionNotRequired;
+    1: Mitm := mitmProtectionRequired;
+    2: Mitm := mitmProtectionNotRequiredBonding;
+    3: Mitm := mitmProtectionRequiredBonding;
+    4: Mitm := mitmProtectionNotRequiredGeneralBonding;
+    5: Mitm := mitmProtectionRequiredGeneralBonding;
+    else Mitm := mitmProtectionNotDefined;
+  end;
+
+  case cbIoCap.ItemIndex of
+    0: IoCapability := iocapDisplayOnly;
+    1: IoCapability := iocapDisplayYesNo;
+    2: IoCapability := iocapKeyboardOnly;
+    3: IoCapability := iocapNoInputNoOutput;
+    4: IoCapability := iocapDisplayKeyboard;
+    else IoCapability := iocapNotDefined;
+  end;
+
+  OobPresent := False;
+end;
+
+procedure TfmMain.btUnpairClick(Sender: TObject);
+var
+  Res: Integer;
+  Item: TListItem;
+begin
+  if lvDevices.Selected = nil then
+    MessageDlg('Select device', mtWarning, [mbOK], 0)
+
+  else begin
+    Item := lvDevices.Selected;
+    Res := TwclBluetoothRadio(Item.Data).RemoteUnpair(StrToInt64('$' +
+      Item.Caption), pmLe);
+    if Res <> WCL_E_SUCCESS then
+      MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
+  end;
 end;
 
 procedure TfmMain.btEnumPairedClick(Sender: TObject);
@@ -1185,126 +1299,6 @@ begin
       end;
     end;
   end;
-end;
-
-procedure TfmMain.GetMaxPduSize;
-var
-  Res: Integer;
-  Size: Word;
-begin
-  Res := wclGattClient.GetMaxPduSize(Size);
-  if Res <> WCL_E_SUCCESS then begin
-    TraceEvent(wclGattClient.Address, '', 'Error', IntToHex(Res, 8));
-  end else
-    TraceEvent(wclGattClient.Address, '', 'Size', IntToStr(Size));
-end;
-
-procedure TfmMain.GetConnectionParams;
-var
-  Params: TwclBluetoothLeConnectionParameters;
-  Res: Integer;
-begin
-  Res := wclGattClient.GetConnectionParams(Params);
-  if Res <> WCL_E_SUCCESS then
-    TraceEvent(0, '', 'Error', IntToHex(Res, 8))
-
-  else begin
-    TraceEvent(0, '', 'Connection interval', IntToStr(Params.Interval));
-    TraceEvent(0, '', 'Connection latency', IntToStr(Params.Latency));
-    TraceEvent(0, '', 'Link timeout', IntToStr(Params.LinkTimeout));
-  end;
-end;
-
-procedure TfmMain.wclBluetoothManagerProtectionLevelRequest(Sender: TObject;
-  const Radio: TwclBluetoothRadio; const Address: Int64;
-  out Protection: TwclBluetoothLeProtectionLevel);
-begin
-  case cbProtection.ItemIndex of
-    0: Protection := pplNone;
-    1: Protection := pplDefault;
-    2: Protection := pplEncryption;
-    3: Protection := pplEncryptionAndAuthentication
-  end;
-end;
-
-procedure TfmMain.btGetPhyClick(Sender: TObject);
-begin
-  TraceEvent(wclGattClient.Address, 'Connection PHY', '', '');
-  GetConnectionPhy;
-end;
-
-procedure TfmMain.btUnpairClick(Sender: TObject);
-var
-  Res: Integer;
-  Item: TListItem;
-begin
-  if lvDevices.Selected = nil then
-    MessageDlg('Select device', mtWarning, [mbOK], 0)
-
-  else begin
-    Item := lvDevices.Selected;
-    Res := TwclBluetoothRadio(Item.Data).RemoteUnpair(StrToInt64('$' +
-      Item.Caption), pmLe);
-    if Res <> WCL_E_SUCCESS then
-      MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
-  end;
-end;
-
-procedure TfmMain.wclGattClientConnectionPhyChanged(Sender: TObject);
-begin
-  TraceEvent(wclGattClient.Address, 'Connection PHY changed', '', '');
-  GetConnectionPhy;
-end;
-
-procedure TfmMain.GetConnectionPhy;
-var
-  Res: Integer;
-  Phy: TwclBluetoothLeConnectionPhy;
-begin
-  Res := wclGattClient.GetConnectionPhyInfo(Phy);
-  if Res <> WCL_E_SUCCESS then
-    TraceEvent(0, '', 'Error', IntToHex(Res, 8))
-
-  else begin
-    TraceEvent(0, 'Transmit PHY', '', '');
-    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Transmit.IsCoded, True));
-    TraceEvent(0, '', '1M', BoolToStr(Phy.Transmit.IsUncoded1MPhy, True));
-    TraceEvent(0, '', '2M', BoolToStr(Phy.Transmit.IsUncoded2MPhy, True));
-
-    TraceEvent(0, 'Receive PHY', '', '');
-    TraceEvent(0, '', 'Coded', BoolToStr(Phy.Receive.IsCoded, True));
-    TraceEvent(0, '', '1M', BoolToStr(Phy.Receive.IsUncoded1MPhy, True));
-    TraceEvent(0, '', '2M', BoolToStr(Phy.Receive.IsUncoded2MPhy, True));
-  end;
-end;
-
-procedure TfmMain.wclBluetoothManagerIoCapabilityRequest(Sender: TObject;
-  const Radio: TwclBluetoothRadio; const Address: Int64;
-  out Mitm: TwclBluetoothMitmProtection;
-  out IoCapability: TwclBluetoothIoCapability; out OobPresent: Boolean);
-begin
-  case cbMitmProtection.ItemIndex of
-    0: Mitm := mitmProtectionNotRequired;
-    1: Mitm := mitmProtectionRequired;
-    2: Mitm := mitmProtectionNotRequiredBonding;
-    3: Mitm := mitmProtectionRequiredBonding;
-    4: Mitm := mitmProtectionNotRequiredGeneralBonding;
-    5: Mitm := mitmProtectionRequiredGeneralBonding;
-    6: Mitm := mitmProtectionNotDefined;
-    else Mitm := mitmProtectionNotDefined;
-  end;
-
-  case cbIoCap.ItemIndex of
-    1: IoCapability := iocapDisplayOnly;
-    2: IoCapability := iocapDisplayYesNo;
-    3: IoCapability := iocapKeyboardOnly;
-    4: IoCapability := iocapNoInputNoOutput;
-    5: IoCapability := iocapDisplayKeyboard;
-    6: IoCapability := iocapNotDefined;
-    else IoCapability := iocapNotDefined;
-  end;
-
-  OobPresent := False;
 end;
 
 end.

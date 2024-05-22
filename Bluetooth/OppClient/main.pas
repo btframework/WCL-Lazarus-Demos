@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -41,41 +41,9 @@ type
     procedure btGetCapsClick(Sender: TObject);
 
   private
-    wclBluetoothManager: TwclBluetoothManager;
-    wclRfCommClient: TwclRfCommClient;
-    FOpp: TwclObexOppClient;
-
-    procedure wclBluetoothManagerAfterOpen(Sender: TObject);
-    procedure wclBluetoothManagerAuthenticationCompleted(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Error: Integer);
-    procedure wclBluetoothManagerDiscoveringCompleted(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Error: Integer);
-    procedure wclBluetoothManagerDiscoveringStarted(Sender: TObject;
-      const Radio: TwclBluetoothRadio);
-    procedure wclBluetoothManagerNumericComparison(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Number: Cardinal; out Confirm: Boolean);
-    procedure wclBluetoothManagerPasskeyNotification(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Passkey: Cardinal);
-    procedure wclBluetoothManagerPasskeyRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Passkey: Cardinal);
-    procedure wclBluetoothManagerPinRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Pin: String);
-    procedure wclBluetoothManagerDeviceFound(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64);
-
-    procedure wclRfCommClientDisconnect(Sender: TObject;
-      const Reason: Integer);
-    procedure wclRfCommClientConnect(Sender: TObject;
-      const Error: Integer);
-    procedure wclRfCommClientDestroyProcessor(Sender: TObject;
-      const Connection: TwclClientDataConnection);
-    procedure wclRfCommClientCreateProcessor(Sender: TObject;
-      const Connection: TwclClientDataConnection);
+    BluetoothManager: TwclBluetoothManager;
+    RfCommClient: TwclRfCommClient;
+    Opp: TwclObexOppClient;
 
     function GetRadio: TwclBluetoothRadio;
 
@@ -89,6 +57,38 @@ type
       const Position: Cardinal);
     procedure OppGetComplete(Sender: TObject; const Error: Integer;
       const Description: string; const Stream: TStream);
+
+    procedure BluetoothManagerAfterOpen(Sender: TObject);
+    procedure BluetoothManagerAuthenticationCompleted(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Error: Integer);
+    procedure BluetoothManagerDiscoveringCompleted(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Error: Integer);
+    procedure BluetoothManagerDiscoveringStarted(Sender: TObject;
+      const Radio: TwclBluetoothRadio);
+    procedure BluetoothManagerNumericComparison(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Number: Cardinal; out Confirm: Boolean);
+    procedure BluetoothManagerPasskeyNotification(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Passkey: Cardinal);
+    procedure BluetoothManagerPasskeyRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Passkey: Cardinal);
+    procedure BluetoothManagerPinRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Pin: String);
+    procedure BluetoothManagerDeviceFound(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64);
+
+    procedure RfCommClientDisconnect(Sender: TObject;
+      const Reason: Integer);
+    procedure RfCommClientConnect(Sender: TObject;
+      const Error: Integer);
+    procedure RfCommClientDestroyProcessor(Sender: TObject;
+      const Connection: TwclClientDataConnection);
+    procedure RfCommClientCreateProcessor(Sender: TObject;
+      const Connection: TwclClientDataConnection);
   end;
 
 var
@@ -99,35 +99,36 @@ implementation
 {$R *.lfm}
 
 uses
-  wclUUIDs, wclErrors, SysUtils, Windows;
+  wclUUIDs, wclErrors, SysUtils;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 var
   Res: Integer;
 begin
-  wclBluetoothManager := TwclBluetoothManager.Create(nil);
-  wclBluetoothManager.AfterOpen := wclBluetoothManagerAfterOpen;
-  wclBluetoothManager.OnAuthenticationCompleted := wclBluetoothManagerAuthenticationCompleted;
-  wclBluetoothManager.OnDeviceFound := wclBluetoothManagerDeviceFound;
-  wclBluetoothManager.OnDiscoveringCompleted := wclBluetoothManagerDiscoveringCompleted;
-  wclBluetoothManager.OnDiscoveringStarted := wclBluetoothManagerDiscoveringStarted;
-  wclBluetoothManager.OnNumericComparison := wclBluetoothManagerNumericComparison;
-  wclBluetoothManager.OnPasskeyNotification := wclBluetoothManagerPasskeyNotification;
-  wclBluetoothManager.OnPasskeyRequest := wclBluetoothManagerPasskeyRequest;
-  wclBluetoothManager.OnPinRequest := wclBluetoothManagerPinRequest;
+  BluetoothManager := TwclBluetoothManager.Create(nil);
+  BluetoothManager.AfterOpen := BluetoothManagerAfterOpen;
+  BluetoothManager.OnAuthenticationCompleted := BluetoothManagerAuthenticationCompleted;
+  BluetoothManager.OnDiscoveringCompleted := BluetoothManagerDiscoveringCompleted;
+  BluetoothManager.OnDiscoveringStarted := BluetoothManagerDiscoveringStarted;
+  BluetoothManager.OnNumericComparison := BluetoothManagerNumericComparison;
+  BluetoothManager.OnPasskeyNotification := BluetoothManagerPasskeyNotification;
+  BluetoothManager.OnPasskeyRequest := BluetoothManagerPasskeyRequest;
+  BluetoothManager.OnPinRequest := BluetoothManagerPinRequest;
+  BluetoothManager.OnDeviceFound := BluetoothManagerDeviceFound;
 
-  wclRfCommClient := TwclRfCommClient.Create(nil);
-  wclRfCommClient.OnConnect := wclRfCommClientConnect;
-  wclRfCommClient.OnCreateProcessor := wclRfCommClientCreateProcessor;
-  wclRfCommClient.OnDestroyProcessor := wclRfCommClientDestroyProcessor;
-  wclRfCommClient.OnDisconnect := wclRfCommClientDisconnect;
+  RfCommClient := TwclRfCommClient.Create(nil);
+  RfCommClient.OnDisconnect := RfCommClientDisconnect;
+  RfCommClient.OnConnect := RfCommClientConnect;
+  RfCommClient.OnDestroyProcessor := RfCommClientDestroyProcessor;
+  RfCommClient.OnCreateProcessor := RfCommClientCreateProcessor;
+
   // We use ObjectPush Profile so must set the profile's UUID.
-  wclRfCommClient.Service := OBEXObjectPushServiceClass_UUID;
+  RfCommClient.Service := OBEXObjectPushServiceClass_UUID;
 
-  FOpp := nil;
+  Opp := nil;
 
   // Try to open Bluetooth Manager.
-  Res := wclBluetoothManager.Open;
+  Res := BluetoothManager.Open;
   if Res <> WCL_E_SUCCESS then
     lbLog.Items.Add('Bluetooth Manager Open failed: 0x' + IntToHex(Res, 8));
 end;
@@ -139,19 +140,19 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclRfCommClient.Disconnect;
-  wclRfCommClient.Free;
+  RfCommClient.Disconnect;
+  RfCommClient.Free;
 
-  wclBluetoothManager.Close;
-  wclBluetoothManager.Free;
+  BluetoothManager.Close;
+  BluetoothManager.Free;
 end;
 
-procedure TfmMain.wclBluetoothManagerAfterOpen(Sender: TObject);
+procedure TfmMain.BluetoothManagerAfterOpen(Sender: TObject);
 begin
   lbLog.Items.Add('Bluetooth Manager has been opened');
 end;
 
-procedure TfmMain.wclBluetoothManagerAuthenticationCompleted(
+procedure TfmMain.BluetoothManagerAuthenticationCompleted(
   Sender: TObject; const Radio: TwclBluetoothRadio; const Address: Int64;
   const Error: Integer);
 begin
@@ -159,7 +160,7 @@ begin
     IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclBluetoothManagerDiscoveringCompleted(Sender: TObject;
+procedure TfmMain.BluetoothManagerDiscoveringCompleted(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Error: Integer);
 var
   i: Integer;
@@ -181,7 +182,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclBluetoothManagerDiscoveringStarted(Sender: TObject;
+procedure TfmMain.BluetoothManagerDiscoveringStarted(Sender: TObject;
   const Radio: TwclBluetoothRadio);
 begin
   lbLog.Items.Add('Discovering started');
@@ -189,7 +190,7 @@ begin
   lvDevices.Items.Clear;
 end;
 
-procedure TfmMain.wclBluetoothManagerNumericComparison(Sender: TObject;
+procedure TfmMain.BluetoothManagerNumericComparison(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   const Number: Cardinal; out Confirm: Boolean);
 begin
@@ -197,14 +198,14 @@ begin
   Confirm := True;
 end;
 
-procedure TfmMain.wclBluetoothManagerPasskeyNotification(Sender: TObject;
+procedure TfmMain.BluetoothManagerPasskeyNotification(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   const Passkey: Cardinal);
 begin
   lbLog.Items.Add('Passkey notification. Passkey: ' + IntToStr(Passkey));
 end;
 
-procedure TfmMain.wclBluetoothManagerPasskeyRequest(Sender: TObject;
+procedure TfmMain.BluetoothManagerPasskeyRequest(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   out Passkey: Cardinal);
 begin
@@ -212,14 +213,14 @@ begin
   Passkey := 12345678;
 end;
 
-procedure TfmMain.wclBluetoothManagerPinRequest(Sender: TObject;
+procedure TfmMain.BluetoothManagerPinRequest(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64; out Pin: String);
 begin
   lbLog.Items.Add('PIN code request. PIN: 0000');
   Pin := '0000';
 end;
 
-procedure TfmMain.wclBluetoothManagerDeviceFound(Sender: TObject;
+procedure TfmMain.BluetoothManagerDeviceFound(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64);
 var
   Item: TListItem;
@@ -234,7 +235,7 @@ var
   Res: Integer;
   Radio: TwclBluetoothRadio;
 begin
-  Res := wclBluetoothManager.GetClassicRadio(Radio);
+  Res := BluetoothManager.GetClassicRadio(Radio);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
@@ -263,59 +264,58 @@ procedure TfmMain.btDisconnectClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclRfCommClient.Disconnect;
+  Res := RfCommClient.Disconnect;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Disconnect failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
 
-procedure TfmMain.wclRfCommClientDisconnect(Sender: TObject;
+procedure TfmMain.RfCommClientDisconnect(Sender: TObject;
   const Reason: Integer);
 begin
   lbLog.Items.Add('Disconnected with reason: 0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclRfCommClientConnect(Sender: TObject;
+procedure TfmMain.RfCommClientConnect(Sender: TObject;
   const Error: Integer);
 begin
   lbLog.Items.Add('Connect. Operation result: 0x' + IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclRfCommClientDestroyProcessor(Sender: TObject;
+procedure TfmMain.RfCommClientDestroyProcessor(Sender: TObject;
   const Connection: TwclClientDataConnection);
 begin
   // Do we have any data processor created?
-  if FOpp <> nil then begin
+  if Opp <> nil then begin
     // Make sure it is our connection is goind to destroy.
-    if Connection.Processor = FOpp then begin
+    if Connection.Processor = Opp then begin
       // Ok, destroy the data processor here.
-      FOpp.Free;
-      FOpp := nil;
+      Opp.Free;
+      Opp := nil;
     end;
   end;
 end;
 
-procedure TfmMain.wclRfCommClientCreateProcessor(Sender: TObject;
+procedure TfmMain.RfCommClientCreateProcessor(Sender: TObject;
   const Connection: TwclClientDataConnection);
 begin
   // here we must create the data processor for the connection. In this demo
   // we use OPPClient.
-  FOpp := TwclObexOppClient.Create(Connection);
-  FOpp.OnConnect := OppConnect;
-  FOpp.OnDisconnect := OppDisconnect;
-  FOpp.OnGetComplete := OppGetComplete;
-  FOpp.OnPutComplete := OppPutComplete;
-  FOpp.OnProgress := OppProgress;
+  Opp := TwclObexOppClient.Create(Connection);
+  Opp.OnConnect := OppConnect;
+  Opp.OnDisconnect := OppDisconnect;
+  Opp.OnGetComplete := OppGetComplete;
+  Opp.OnPutComplete := OppPutComplete;
+  Opp.OnProgress := OppProgress;
 end;
 
 procedure TfmMain.btCloseSessionClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
-
   else begin
-    Res := FOpp.Disconnect('');
+    Res := Opp.Disconnect('');
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Close session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -327,11 +327,10 @@ procedure TfmMain.btOpenSessionClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
-
   else begin
-    Res := FOpp.Connect;
+    Res := Opp.Connect;
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Open session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -359,9 +358,8 @@ var
   Addr: Int64;
   Res: Integer;
 begin
-  if wclRfCommClient.State <> csDisconnected then
+  if RfCommClient.State <> csDisconnected then
     MessageDlg('Client is connected', mtWarning, [mbOK], 0)
-
   else begin
     if lvDevices.Selected = nil then
       MessageDlg('Select device', mtWarning, [mbOK], 0)
@@ -370,8 +368,8 @@ begin
       Radio := GetRadio;
       if Radio <> nil then begin
         Addr := StrToInt64('$' + lvDevices.Selected.Caption);
-        wclRfCommClient.Address := Addr;
-        Res := wclRfCommClient.Connect(Radio);
+        RfCommClient.Address := Addr;
+        Res := RfCommClient.Connect(Radio);
         if Res <> WCL_E_SUCCESS then begin
           MessageDlg('Failed to connect: 0x' + IntToHex(Res, 8),
             mtError, [mbOK], 0);
@@ -411,11 +409,10 @@ procedure TfmMain.btAbortClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
-
   else begin
-    Res := FOpp.Abort('');
+    Res := Opp.Abort('');
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Abort failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -428,16 +425,14 @@ var
   Res: Integer;
   Stream: TStream;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
-
   else begin
     if edFileName.Text = '' then
       MessageDlg('Select file', mtWarning, [mbOK], 0)
-
     else begin
       Stream := TFileStream.Create(edFileName.Text, fmOpenRead);
-      Res := FOpp.Put(ExtractFileName(edFileName.Text), '', Stream);
+      Res := Opp.Put(ExtractFileName(edFileName.Text), '', Stream);
       if Res <> WCL_E_SUCCESS then begin
         MessageDlg('Send file failed: 0x' + IntToHex(Res, 8), mtError,
           [mbOK], 0);
@@ -452,13 +447,12 @@ var
   Res: Integer;
   Stream: TStream;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
-
   else begin
     Stream := TFileStream.Create('vcard.vcf', fmCreate);
     // Request default vCard object.
-    Res := FOpp.Get('text/x-vCard', Stream);
+    Res := Opp.Get('text/x-vCard', Stream);
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('GetvCard failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
       Stream.Free;
@@ -471,13 +465,12 @@ var
   Res: Integer;
   Stream: TStream;
 begin
-  if FOpp = nil then
+  if Opp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
-
   else begin
     Stream := TFileStream.Create('caps.xml', fmCreate);
     // Request Device Capability object.
-    Res := FOpp.Get('x-obex/capability', Stream);
+    Res := Opp.Get('x-obex/capability', Stream);
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('GetCaps failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
       Stream.Free;

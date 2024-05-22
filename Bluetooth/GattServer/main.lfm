@@ -1,53 +1,53 @@
 object fmMain: TfmMain
   Left = 548
-  Height = 427
   Top = 195
-  Width = 589
   BorderStyle = bsDialog
   Caption = 'GATT Server Demo'
   ClientHeight = 427
   ClientWidth = 589
   Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  Position = poScreenCenter
-  LCLVersion = '2.2.6.0'
+  PixelsPerInch = 96
   object btStart: TButton
     Left = 8
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Start'
-    OnClick = btStartClick
     TabOrder = 0
+    OnClick = btStartClick
   end
   object btStop: TButton
     Left = 96
-    Height = 25
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Stop'
-    OnClick = btStopClick
     TabOrder = 1
+    OnClick = btStopClick
   end
   object lbLog: TListBox
     Left = 8
-    Height = 377
     Top = 40
     Width = 569
-    ItemHeight = 0
+    Height = 377
+    ItemHeight = 13
     TabOrder = 2
   end
   object btClear: TButton
-    Left = 502
-    Height = 25
+    Left = 504
     Top = 8
     Width = 75
+    Height = 25
     Caption = 'Clear'
-    OnClick = btClearClick
     TabOrder = 3
+    OnClick = btClearClick
   end
 end

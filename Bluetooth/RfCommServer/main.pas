@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -38,37 +38,37 @@ type
     procedure btSetBuffersClick(Sender: TObject);
 
   private
-    wclBluetoothManager: TwclBluetoothManager;
-    wclRfCommServer: TwclRfCommServer;
-
-    procedure wclBluetoothManagerNumericComparison(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Number: Cardinal; out Confirm: Boolean);
-    procedure wclBluetoothManagerPasskeyNotification(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Passkey: Cardinal);
-    procedure wclBluetoothManagerPasskeyRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Passkey: Cardinal);
-    procedure wclBluetoothManagerPinRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Pin: String);
-
-    procedure wclRfCommServerClosed(Sender: TObject;
-      const Reason: Integer);
-    procedure wclRfCommServerConnect(Sender: TObject;
-      const Client: TwclRfCommServerClientConnection;
-      const Error: Integer);
-    procedure wclRfCommServerData(Sender: TObject;
-      const Client: TwclRfCommServerClientConnection; const Data: Pointer;
-      const Size: Cardinal);
-    procedure wclRfCommServerDisconnect(Sender: TObject;
-      const Client: TwclRfCommServerClientConnection;
-      const Reason: Integer);
-    procedure wclRfCommServerListen(Sender: TObject);
+    BluetoothManager: TwclBluetoothManager;
+    RfCommServer: TwclRfCommServer;
 
     function GetRadio: TwclBluetoothRadio;
     function GetDeviceName(const Address: Int64): string;
+
+    procedure BluetoothManagerNumericComparison(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Number: Cardinal; out Confirm: Boolean);
+    procedure BluetoothManagerPasskeyNotification(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Passkey: Cardinal);
+    procedure BluetoothManagerPasskeyRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Passkey: Cardinal);
+    procedure BluetoothManagerPinRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Pin: String);
+
+    procedure RfCommServerClosed(Sender: TObject;
+      const Reason: Integer);
+    procedure RfCommServerConnect(Sender: TObject;
+      const Client: TwclRfCommServerClientConnection;
+      const Error: Integer);
+    procedure RfCommServerData(Sender: TObject;
+      const Client: TwclRfCommServerClientConnection; const Data: Pointer;
+      const Size: Cardinal);
+    procedure RfCommServerDisconnect(Sender: TObject;
+      const Client: TwclRfCommServerClientConnection;
+      const Reason: Integer);
+    procedure RfCommServerListen(Sender: TObject);
   end;
 
 var
@@ -77,8 +77,7 @@ var
 implementation
 
 uses
-  wclUUIDs, wclErrors, Dialogs, SysUtils, wclConnectionErrors,
-  wclBluetoothErrors, Windows;
+  wclUUIDs, wclErrors, Dialogs, SysUtils, Windows;
 
 {$R *.lfm}
 
@@ -89,35 +88,34 @@ end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclBluetoothManager := TwclBluetoothManager.Create(nil);
-  wclBluetoothManager.OnNumericComparison := wclBluetoothManagerNumericComparison;
-  wclBluetoothManager.OnPasskeyNotification := wclBluetoothManagerPasskeyNotification;
-  wclBluetoothManager.OnPasskeyRequest := wclBluetoothManagerPasskeyRequest;
-  wclBluetoothManager.OnPinRequest := wclBluetoothManagerPinRequest;
+  BluetoothManager := TwclBluetoothManager.Create(nil);
+  BluetoothManager.OnNumericComparison := BluetoothManagerNumericComparison;
+  BluetoothManager.OnPasskeyNotification := BluetoothManagerPasskeyNotification;
+  BluetoothManager.OnPasskeyRequest := BluetoothManagerPasskeyRequest;
+  BluetoothManager.OnPinRequest := BluetoothManagerPinRequest;
 
-  wclRfCommServer := TwclRfCommServer.Create(nil);
-  wclRfCommServer.ServiceName := 'WCL SPP Server';
-  wclRfCommServer.OnClosed := wclRfCommServerClosed;
-  wclRfCommServer.OnConnect := wclRfCommServerConnect;
-  wclRfCommServer.OnData := wclRfCommServerData;
-  wclRfCommServer.OnDisconnect := wclRfCommServerDisconnect;
-  wclRfCommServer.OnListen := wclRfCommServerListen;
+  RfCommServer := TwclRfCommServer.Create(nil);
+  RfCommServer.OnClosed := RfCommServerClosed;
+  RfCommServer.OnConnect := RfCommServerConnect;
+  RfCommServer.OnData := RfCommServerData;
+  RfCommServer.OnDisconnect := RfCommServerDisconnect;
+  RfCommServer.OnListen := RfCommServerListen;
 
   // In real application you should always analize the result code.
   // In this demo we assume that all is always OK.
-  wclBluetoothManager.Open;
+  BluetoothManager.Open;
 
-  cbAuthentication.Checked := wclRfCommServer.Authentication;
-  cbEcnryption.Checked := wclRfCommServer.Encryption;
+  cbAuthentication.Checked := RfCommServer.Authentication;
+  cbEcnryption.Checked := RfCommServer.Encryption;
 end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclRfCommServer.Close;
-  wclRfCommServer.Free;
+  RfCommServer.Close;
+  RfCommServer.Free;
 
-  wclBluetoothManager.Close;
-  wclBluetoothManager.Free;
+  BluetoothManager.Close;
+  BluetoothManager.Free;
 end;
 
 function TfmMain.GetRadio: TwclBluetoothRadio;
@@ -125,7 +123,7 @@ var
   Res: Integer;
   Radio: TwclBluetoothRadio;
 begin
-  Res := wclBluetoothManager.GetClassicRadio(Radio);
+  Res := BluetoothManager.GetClassicRadio(Radio);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
@@ -146,13 +144,13 @@ begin
     Radio.SetDiscoverable(True);
     Radio.SetConnectable(True);
 
-    wclRfCommServer.Authentication := cbAuthentication.Checked;
-    wclRfCommServer.Encryption := cbEcnryption.Checked;
+    RfCommServer.Authentication := cbAuthentication.Checked;
+    RfCommServer.Encryption := cbEcnryption.Checked;
     
-    wclRfCommServer.Service := SerialPortServiceClass_UUID;
-    wclRfCommServer.ServiceName := edServiceName.Text;
+    RfCommServer.Service := SerialPortServiceClass_UUID;
+    RfCommServer.ServiceName := edServiceName.Text;
 
-    Res := wclRfCommServer.Listen(Radio);
+    Res := RfCommServer.Listen(Radio);
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
   end;
@@ -162,7 +160,7 @@ procedure TfmMain.btCloseClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclRfCommServer.Close;
+  Res := RfCommServer.Close;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -276,7 +274,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclBluetoothManagerNumericComparison(Sender: TObject;
+procedure TfmMain.BluetoothManagerNumericComparison(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   const Number: Cardinal; out Confirm: Boolean);
 begin
@@ -285,14 +283,14 @@ begin
   lbEvents.Items.Add('Numeric comparison: ' + IntToStr(Number));
 end;
 
-procedure TfmMain.wclBluetoothManagerPasskeyNotification(Sender: TObject;
+procedure TfmMain.BluetoothManagerPasskeyNotification(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   const Passkey: Cardinal);
 begin
   lbEvents.Items.Add('Passkey notification: ' + IntToStr(Passkey));
 end;
 
-procedure TfmMain.wclBluetoothManagerPasskeyRequest(Sender: TObject;
+procedure TfmMain.BluetoothManagerPasskeyRequest(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   out Passkey: Cardinal);
 begin
@@ -301,7 +299,7 @@ begin
   lbEvents.Items.Add('Passkey request: ' + IntToStr(Passkey));
 end;
 
-procedure TfmMain.wclBluetoothManagerPinRequest(Sender: TObject;
+procedure TfmMain.BluetoothManagerPinRequest(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64; out Pin: String);
 begin
   // Use '0000' as PIN.
@@ -309,7 +307,7 @@ begin
   lbEvents.Items.Add('Pin request: ' + Pin);
 end;
 
-procedure TfmMain.wclRfCommServerClosed(Sender: TObject;
+procedure TfmMain.RfCommServerClosed(Sender: TObject;
   const Reason: Integer);
 begin
   lbEvents.Items.Add('Server closed on radio ' +
@@ -322,7 +320,7 @@ begin
   edWriteBuffer.Text := '';
 end;
 
-procedure TfmMain.wclRfCommServerConnect(Sender: TObject;
+procedure TfmMain.RfCommServerConnect(Sender: TObject;
   const Client: TwclRfCommServerClientConnection; const Error: Integer);
 var
   Item: TListItem;
@@ -340,7 +338,7 @@ begin
   Item.Data := Client;
 end;
 
-procedure TfmMain.wclRfCommServerData(Sender: TObject;
+procedure TfmMain.RfCommServerData(Sender: TObject;
   const Client: TwclRfCommServerClientConnection; const Data: Pointer;
   const Size: Cardinal);
 var
@@ -348,6 +346,7 @@ var
   Server: TwclRfCommServerConnection;
 begin
   if Size > 0 then begin
+    Str := '';
     SetLength(Str, Size);
     CopyMemory(Pointer(Str), Data, Size);
 
@@ -357,7 +356,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclRfCommServerDisconnect(Sender: TObject;
+procedure TfmMain.RfCommServerDisconnect(Sender: TObject;
   const Client: TwclRfCommServerClientConnection; const Reason: Integer);
 var
   Server: TwclRfCommServerConnection;
@@ -376,7 +375,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclRfCommServerListen(Sender: TObject);
+procedure TfmMain.RfCommServerListen(Sender: TObject);
 begin
   lbEvents.Items.Add('Server listening on radio ' +
     TwclRfCommServer(Sender).Radio.ApiName + ' on channel: ' +

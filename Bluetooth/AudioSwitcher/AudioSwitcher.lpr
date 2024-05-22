@@ -1,10 +1,9 @@
-program RfCommServer_D7;
+program AudioSwitcher;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 uses
-  Interfaces,
-  Forms,
+  Forms, Interfaces,
   main in 'main.pas' {fmMain};
 
 {$R *.res}

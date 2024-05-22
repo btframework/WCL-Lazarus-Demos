@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -8,18 +8,12 @@ uses
   Forms, Controls, StdCtrls, Classes, wclBluetooth, ComCtrls;
 
 type
-
-  { TfmMain }
-
   TfmMain = class(TForm)
     btOpen: TButton;
     btClose: TButton;
     btStart: TButton;
     btStop: TButton;
     btClear: TButton;
-    btDefault: TButton;
-    cbScanMode: TCheckBox;
-    laScanMode: TLabel;
     ListBox: TListBox;
     btClearLogs: TButton;
     lbFrames: TListBox;
@@ -48,7 +42,10 @@ type
     cbUseExtended: TCheckBox;
     cbAnonymous: TCheckBox;
     cbIncludeTxRssi: TCheckBox;
-    procedure btDefaultClick(Sender: TObject);
+    cbMode: TCheckBox;
+    laScanMode: TLabel;
+    btDefaultScanParams: TButton;
+    btDefInterval: TButton;
     procedure FormDestroy(Sender: TObject);
     procedure btOpenClick(Sender: TObject);
     procedure btCloseClick(Sender: TObject);
@@ -59,94 +56,13 @@ type
     procedure btStartAdvertisingClick(Sender: TObject);
     procedure btStopAdvertisingClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure btDefaultScanParamsClick(Sender: TObject);
+    procedure btDefIntervalClick(Sender: TObject);
 
   private
-    wclBluetoothManager: TwclBluetoothManager;
-    wclBluetoothLeBeaconWatcher: TwclBluetoothLeBeaconWatcher;
-    wclBluetoothLeAdvertiser: TwclBluetoothLeAdvertiser;
-
-    procedure wclBluetoothManagerAfterOpen(Sender: TObject);
-    procedure wclBluetoothManagerBeforeClose(Sender: TObject);
-    procedure wclBluetoothManagerStatusChanged(Sender: TObject;
-      const Radio: TwclBluetoothRadio);
-
-    procedure wclBluetoothLeBeaconWatcherStarted(Sender: TObject);
-    procedure wclBluetoothLeBeaconWatcherStopped(Sender: TObject);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementRawFrame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const DataType: Byte;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherManufacturerRawFrame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const CompanyId: Word;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherProximityBeaconFrame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const CompanyId: Word; const Major: Word;
-      const Minor: Word; const Uuid: TGUID; const TxRssi: SByte;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherEddystoneUidFrame(Sender: TObject;
-      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
-      const TxRssi: SByte; const Uuid: TGUID;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherEddystoneUrlFrame(Sender: TObject;
-      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
-      const TxRssi: SByte; const Url: String);
-    procedure wclBluetoothLeBeaconWatcherEddystoneTlmFrame(Sender: TObject;
-      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
-      const AdvCnt: Cardinal; const Batt: Word; const SecCnt: Cardinal;
-      const Temp: Double; const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherAltBeaconFrame(Sender: TObject;
-      const Address: Int64; const  Timestamp: Int64; const Rssi: SByte;
-      const CompanyId: Word; const Major: Word; const Minor: Word;
-      const Uuid: TGUID; const TxRssi: SByte; const Reserved: Byte;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementFrameInformation(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Name: String;
-      const PacketType: TwclBluetoothLeAdvertisementType;
-      const Flags: TwclBluetoothLeAdvertisementFlags);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementUuidFrame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Uuid: TGUID);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementExtFrameInformation(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const AddressType: TwclBluetoothAddressType;
-      const TxPower: SByte; const Flags: TwclBluetoothLeExtendedFrameFlags);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementService128DataFrame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Uuid: TGUID;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementService16DataFrame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Uuid: Word;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementService32DataFrame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Uuid: Cardinal;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementServiceSol128Frame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Uuid: TGUID);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementServiceSol16Frame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Uuid: Word);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementServiceSol32Frame(
-      Sender: TObject; const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Uuid: Cardinal);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementReceived(
-      Sender: TObject; const Address, Timestamp: Int64;
-      const Rssi: SByte;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementTxPowerLevelFrame(
-      Sender: TObject; const Address, Timestamp: Int64; const Rssi,
-      TxPower: SByte);
-    procedure wclBluetoothLeBeaconWatcherAdvertisementAppearanceFrame(
-      Sender: TObject; const Address, Timestamp: Int64; const Rssi: SByte;
-      const Appearance: Word);
-
-    procedure wclBluetoothLeAdvertiserStarted(Sender: TObject);
-    procedure wclBluetoothLeAdvertiserStopped(Sender: TObject);
+    BluetoothManager: TwclBluetoothManager;
+    BluetoothLeAdvertiser: TwclBluetoothLeAdvertiser;
+    BluetoothLeBeaconWatcher: TwclBluetoothLeBeaconWatcher;
 
     function GetRadio: TwclBluetoothRadio;
 
@@ -158,6 +74,88 @@ type
     procedure EnableAdvertisements(const Enable: Boolean);
 
     procedure DefaultScanParams;
+
+    procedure BluetoothManagerAfterOpen(Sender: TObject);
+    procedure BluetoothManagerBeforeClose(Sender: TObject);
+    procedure BluetoothManagerStatusChanged(Sender: TObject;
+      const Radio: TwclBluetoothRadio);
+
+    procedure BluetoothLeAdvertiserStarted(Sender: TObject);
+    procedure BluetoothLeAdvertiserStopped(Sender: TObject);
+
+    procedure BluetoothLeBeaconWatcherStarted(Sender: TObject);
+    procedure BluetoothLeBeaconWatcherStopped(Sender: TObject);
+    procedure BluetoothLeBeaconWatcherAdvertisementExtFrameInformation(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const AddressType: TwclBluetoothAddressType;
+      const TxPower: SByte; const Flags: TwclBluetoothLeExtendedFrameFlags);
+    procedure BluetoothLeBeaconWatcherAdvertisementFrameInformation(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Name: String;
+      const PacketType: TwclBluetoothLeAdvertisementType;
+      const Flags: TwclBluetoothLeAdvertisementFlags);
+    procedure BluetoothLeBeaconWatcherAdvertisementRawFrame(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const DataType: Byte;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherAdvertisementReceived(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherAdvertisementService128DataFrame(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Uuid: TGUID;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherAdvertisementService16DataFrame(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Uuid: Word;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherAdvertisementService32DataFrame(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Uuid: Cardinal;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherAdvertisementServiceSol128Frame(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Uuid: TGUID);
+    procedure BluetoothLeBeaconWatcherAdvertisementServiceSol16Frame(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Uuid: Word);
+    procedure BluetoothLeBeaconWatcherAdvertisementServiceSol32Frame(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Uuid: Cardinal);
+    procedure BluetoothLeBeaconWatcherAdvertisementUuidFrame(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const Uuid: TGUID);
+    procedure BluetoothLeBeaconWatcherAltBeaconFrame(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const CompanyId: Word; const Major: Word; const Minor: Word;
+      const Uuid: TGUID; const TxRssi: SByte; const Reserved: Byte;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherEddystoneTlmFrame(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const AdvCnt: Cardinal; const Batt: Word; const SecCnt: Cardinal;
+      const Temp: Double; const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherEddystoneUidFrame(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: Sbyte;
+      const TxRssi: SByte; const Uuid: TGUID;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherEddystoneUrlFrame(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const TxRssi: SByte; const Url: String);
+    procedure BluetoothLeBeaconWatcherManufacturerRawFrame(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const CompanyId: Word;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherProximityBeaconFrame(Sender: TObject;
+      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+      const CompanyId: Word; const Major: Word; const Minor: Word;
+      const Uuid: TGUID; const TxRssi: SByte;
+      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BluetoothLeBeaconWatcherAdvertisementTxPowerLevelFrame(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const TxPower: SByte);
+    procedure BluetoothLeBeaconWatcherAdvertisementAppearanceFrame(
+      Sender: TObject; const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Appearance: Word);
   end;
 
 var
@@ -174,30 +172,21 @@ uses
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclBluetoothManager.Close;
+  BluetoothLeAdvertiser.Stop;
+  BluetoothLeAdvertiser.Free;
 
-  wclBluetoothLeAdvertiser.Free;
-  wclBluetoothLeBeaconWatcher.Free;
-  wclBluetoothManager.Free;
-end;
+  BluetoothLeBeaconWatcher.Stop;
+  BluetoothLeBeaconWatcher.Free;
 
-procedure TfmMain.btDefaultClick(Sender: TObject);
-begin
-  DefaultScanParams;
-end;
-
-procedure TfmMain.DefaultScanParams;
-begin
-  cbScanMode.Checked := True;
-  edScanInterval.Text := IntToStr(WCL_BLE_DEFAULT_SCAN_INTERVAL);
-  edScanWindow.Text := IntToStr(WCL_BLE_DEFAULT_SCAN_WINDOW);
+  BluetoothManager.Close;
+  BluetoothManager.Free;
 end;
 
 procedure TfmMain.btOpenClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclBluetoothManager.Open;
+  Res := BluetoothManager.Open;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -206,7 +195,7 @@ procedure TfmMain.btCloseClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclBluetoothManager.Close;
+  Res := BluetoothManager.Close;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
@@ -219,11 +208,11 @@ var
 begin
   Radio := GetRadio;
   if Radio <> nil then begin
-    if cbScanMode.Checked then
+    if cbMode.Checked then
       Mode := smActive
     else
       Mode := smPassive;
-    Res := wclBluetoothLeBeaconWatcher.Start(Radio, Mode,
+    Res := BluetoothLeBeaconWatcher.Start(Radio, Mode,
       StrToInt(edScanInterval.Text), StrToInt(edScanWindow.Text));
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
@@ -234,22 +223,22 @@ procedure TfmMain.btStopClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclBluetoothLeBeaconWatcher.Stop;
+  Res := BluetoothLeBeaconWatcher.Stop;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Error: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
 
-procedure TfmMain.wclBluetoothManagerAfterOpen(Sender: TObject);
+procedure TfmMain.BluetoothManagerAfterOpen(Sender: TObject);
 begin
   ListBox.Items.Add('Bluetooth Manager Opened');
 end;
 
-procedure TfmMain.wclBluetoothManagerBeforeClose(Sender: TObject);
+procedure TfmMain.BluetoothManagerBeforeClose(Sender: TObject);
 begin
   ListBox.Items.Add('Bluetooth Manager Closed');
 end;
 
-procedure TfmMain.wclBluetoothManagerStatusChanged(Sender: TObject;
+procedure TfmMain.BluetoothManagerStatusChanged(Sender: TObject;
   const Radio: TwclBluetoothRadio);
 var
   Str: string;
@@ -277,6 +266,7 @@ var
   ft: FILETIME;
   st: SYSTEMTIME;
 begin
+  ZeroMemory(@st, SizeOf(SYSTEMTIME));
   // Conver timestamp.
   li.QuadPart := Timestamp;
   ft.dwLowDateTime := li.LowPart;
@@ -286,149 +276,14 @@ begin
   Result := SystemTimeToDateTime(st);
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherStarted(Sender: TObject);
+procedure TfmMain.BluetoothLeBeaconWatcherStarted(Sender: TObject);
 begin
   ListBox.Items.Add('Beacons Monitoring Started');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherStopped(Sender: TObject);
+procedure TfmMain.BluetoothLeBeaconWatcherStopped(Sender: TObject);
 begin
   ListBox.Items.Add('Beacons Monitoring Stopped');
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementRawFrame(
-  Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const DataType: Byte;
-  const Data: TwclBluetoothLeAdvertisementFrameRawData);
-begin
-  lbFrames.Items.Add('UNKNOWN RAW FRAME');
-
-  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
-  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
-
-  lbFrames.Items.Add('  Data type: ' + IntToHex(DataType, 2));
-
-  DumpData(Data);
-
-  lbFrames.Items.Add('-------------------------------------------------------');
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherManufacturerRawFrame(
-  Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const CompanyId: Word;
-  const Data: TwclBluetoothLeAdvertisementFrameRawData);
-begin
-  lbFrames.Items.Add('UNKNOWN MANUFACTURER RAW FRAME');
-
-  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Company ID: ' + IntToHex(CompanyId, 4));
-  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
-  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
-
-  DumpData(Data);
-
-  lbFrames.Items.Add('-------------------------------------------------------');
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherProximityBeaconFrame(
-  Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const CompanyId: Word; const Major: Word;
-  const Minor: Word; const Uuid: TGUID; const TxRssi: SByte;
-  const Data: TwclBluetoothLeAdvertisementFrameRawData);
-var
-  Dist: Double;
-begin
-  // Calculate distance.
-  Dist := Power(10.0, (TxRssi - Rssi) / 20.0);
-
-  lbFrames.Items.Add('PROXIMITY BEACON FRAME');
-
-  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Company ID: ' + IntToHex(CompanyId, 4));
-  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
-  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
-
-  lbFrames.Items.Add('  UUID: ' + GUIDToString(Uuid));
-  lbFrames.Items.Add('  Major: ' + IntToHex(Major, 4));
-  lbFrames.Items.Add('  Minor: ' + IntToHex(Minor, 4));
-  lbFrames.Items.Add('  TX RSSI: ' + IntToStr(TxRssi));
-  lbFrames.Items.Add('  Distance: ' + FloatToStr(Dist));
-
-  DumpData(Data);
-
-  lbFrames.Items.Add('-------------------------------------------------------');
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherEddystoneUidFrame(
-  Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const TxRssi: SByte; const Uuid: TGUID;
-  const Data: TwclBluetoothLeAdvertisementFrameRawData);
-var
-  Dist: Double;
-begin
-  // Calculate distance.
-  Dist := Power(10.0, (TxRssi - 41 - Rssi) / 20.0);
-
-  lbFrames.Items.Add('EDDYSTONE UID FRAME');
-
-  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
-  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
-
-  lbFrames.Items.Add('  UUID: ' + GUIDToString(Uuid));
-
-  lbFrames.Items.Add('  TX RSSI: ' + IntToStr(TxRssi));
-  lbFrames.Items.Add('  Distance: ' + FloatToStr(Dist));
-
-  DumpData(Data);
-
-  lbFrames.Items.Add('-------------------------------------------------------');
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherEddystoneUrlFrame(
-  Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const TxRssi: SByte; const Url: String);
-var
-  Dist: Double;
-begin
-  // Calculate distance.
-  Dist := Power(10.0, (TxRssi - 41 - Rssi) / 20.0);
-
-  lbFrames.Items.Add('EDDYSTONE URL FRAME');
-
-  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
-  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
-
-  lbFrames.Items.Add('  URL: ' + Url);
-
-  lbFrames.Items.Add('  TX RSSI: ' + IntToStr(TxRssi));
-  lbFrames.Items.Add('  Distance: ' + FloatToStr(Dist));
-
-  lbFrames.Items.Add('-------------------------------------------------------');
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherEddystoneTlmFrame(
-  Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const AdvCnt: Cardinal; const Batt: Word;
-  const SecCnt: Cardinal; const Temp: Double;
-  const Data: TwclBluetoothLeAdvertisementFrameRawData);
-begin
-  lbFrames.Items.Add('EDDYSTONE TLM FRAME');
-
-  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
-  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
-
-  lbFrames.Items.Add('  Advertisements counter: ' + IntToStr(AdvCnt));
-  lbFrames.Items.Add('  Battery (mv): ' + IntToStr(Batt));
-  lbFrames.Items.Add('  Seconds running: ' + FloatToStr(SecCnt / 10));
-  lbFrames.Items.Add('  Temperature: ' + FloatToStr(Temp));
-
-  DumpData(Data);
-
-  lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
 procedure TfmMain.btStartAdvertisingClick(Sender: TObject);
@@ -441,7 +296,7 @@ var
   Data: TwclBluetoothLeAdvertisementFrameRawData;
   Adv: TwclBluetoothLeAdvertisement;
 begin
-  wclBluetoothLeAdvertiser.Stop;
+  BluetoothLeAdvertiser.Stop;
 
   Radio := GetRadio;
   if Radio <> nil then begin
@@ -482,6 +337,7 @@ begin
 
     if cb128SolUuid.Checked then begin
       // Create and add custom advertisement.
+      Data := nil;
       SetLength(Data, 16);
       Data[0] := $D0;
       Data[1] := $00;
@@ -588,20 +444,19 @@ begin
       AddAdvertisement(Adv);
     end;
 
-    if wclBluetoothLeAdvertiser.Count = 0 then
+    if BluetoothLeAdvertiser.Count = 0 then
       ShowMessage('Select at least one advertisement type.')
-
     else begin
-      wclBluetoothLeAdvertiser.UseExtendedAdvertisement := cbUseExtended.Checked;
-      wclBluetoothLeAdvertiser.Anonymous := cbAnonymous.Checked;
-      wclBluetoothLeAdvertiser.IncludeTxRssi := cbIncludeTxRssi.Checked;
-      wclBluetoothLeAdvertiser.PreferredTxRssi := 10;
+      BluetoothLeAdvertiser.UseExtendedAdvertisement := cbUseExtended.Checked;
+      BluetoothLeAdvertiser.Anonymous := cbAnonymous.Checked;
+      BluetoothLeAdvertiser.IncludeTxRssi := cbIncludeTxRssi.Checked;
+      BluetoothLeAdvertiser.PreferredTxRssi := 10;
 
-      Res := wclBluetoothLeAdvertiser.Start(Radio,
+      Res := BluetoothLeAdvertiser.Start(Radio,
         StrToInt(edAdvInterval.Text));
       if Res <> WCL_E_SUCCESS then begin
         ListBox.Items.Add('Start advertiser failed: 0x' + IntToHex(Res, 8));
-        wclBluetoothLeAdvertiser.Clear;
+        BluetoothLeAdvertiser.Clear;
       end;
     end;
   end;
@@ -611,42 +466,194 @@ procedure TfmMain.btStopAdvertisingClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclBluetoothLeAdvertiser.Stop;
+  Res := BluetoothLeAdvertiser.Stop;
   if Res <> WCL_E_SUCCESS then
     ListBox.Items.Add('Stop advertiser failed: 0x' + IntToHex(Res, 8));
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAltBeaconFrame(
-  Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const CompanyId: Word; const Major: Word;
-  const Minor: Word; const Uuid: TGUID; const TxRssi: SByte;
-  const Reserved: Byte; const Data: TwclBluetoothLeAdvertisementFrameRawData);
+function TfmMain.GetRadio: TwclBluetoothRadio;
 var
-  Dist: Double;
+  Res: Integer;
+  Radio: TwclBluetoothRadio;
 begin
-  // Calculate distance.
-  Dist := Power(10.0, (TxRssi - Rssi) / 20.0);
+  Res := BluetoothManager.GetLeRadio(Radio);
+  if Res <> WCL_E_SUCCESS then begin
+    MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
+      [mbOK], 0);
+    Result := nil;
+  end else
+    Result := Radio;
+end;
 
-  lbFrames.Items.Add('ALT BEACON FRAME');
+procedure TfmMain.AddAdvertisement(Adv: TwclBluetoothLeAdvertisement);
+var
+  Res: Integer;
+begin
+  Res := BluetoothLeAdvertiser.Add(Adv);
+  if Res <> WCL_E_SUCCESS then begin
+    ListBox.Items.Add('Add advertisement failed: 0x' + IntToHex(Res, 8));
+    Adv.Free;
+  end;
+end;
+
+procedure TfmMain.BluetoothLeAdvertiserStarted(Sender: TObject);
+begin
+  ListBox.Items.Add('Bluetooth LE Advertising Started');
+
+  EnableAdvertisements(False);
+end;
+
+procedure TfmMain.BluetoothLeAdvertiserStopped(Sender: TObject);
+begin
+  ListBox.Items.Add('Bluetooth LE Advertising Stopped');
+  BluetoothLeAdvertiser.Clear;
+
+  EnableAdvertisements(True);
+end;
+
+procedure TfmMain.EnableAdvertisements(const Enable: Boolean);
+begin
+  cbIBeacon.Enabled := Enable;
+  cbProximityBeacon.Enabled := Enable;
+  cbAltBeacon.Enabled := Enable;
+  cbEddystoneUid.Enabled := Enable;
+  cbEddystoneUrl.Enabled := Enable;
+  cb128SolUuid.Enabled := Enable;
+  cbManufacturer.Enabled := Enable;
+  cb16UuidService.Enabled := Enable;
+  cb32UuidService.Enabled := Enable;
+  cb128UuidService.Enabled := Enable;
+  cb16UuidData.Enabled := Enable;
+  cb32UuidData.Enabled := Enable;
+  cb128UuidData.Enabled := Enable;
+  cbCustomRaw.Enabled := Enable;
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  BluetoothManager := TwclBluetoothManager.Create(nil);
+  BluetoothManager.AfterOpen := BluetoothManagerAfterOpen;
+  BluetoothManager.BeforeClose := BluetoothManagerBeforeClose;
+  BluetoothManager.OnStatusChanged := BluetoothManagerStatusChanged;
+
+  BluetoothLeAdvertiser := TwclBluetoothLeAdvertiser.Create(nil);
+  BluetoothLeAdvertiser.OnStarted := BluetoothLeAdvertiserStarted;
+  BluetoothLeAdvertiser.OnStopped := BluetoothLeAdvertiserStopped;
+
+  BluetoothLeBeaconWatcher := TwclBluetoothLeBeaconWatcher.Create(nil);
+  BluetoothLeBeaconWatcher.OnStarted := BluetoothLeBeaconWatcherStarted;
+  BluetoothLeBeaconWatcher.OnStopped := BluetoothLeBeaconWatcherStopped;
+  BluetoothLeBeaconWatcher.OnAdvertisementExtFrameInformation := BluetoothLeBeaconWatcherAdvertisementExtFrameInformation;
+  BluetoothLeBeaconWatcher.OnAdvertisementFrameInformation := BluetoothLeBeaconWatcherAdvertisementFrameInformation;
+  BluetoothLeBeaconWatcher.OnAdvertisementRawFrame := BluetoothLeBeaconWatcherAdvertisementRawFrame;
+  BluetoothLeBeaconWatcher.OnAdvertisementReceived := BluetoothLeBeaconWatcherAdvertisementReceived;
+  BluetoothLeBeaconWatcher.OnAdvertisementService128DataFrame := BluetoothLeBeaconWatcherAdvertisementService128DataFrame;
+  BluetoothLeBeaconWatcher.OnAdvertisementService16DataFrame := BluetoothLeBeaconWatcherAdvertisementService16DataFrame;
+  BluetoothLeBeaconWatcher.OnAdvertisementService32DataFrame := BluetoothLeBeaconWatcherAdvertisementService32DataFrame;
+  BluetoothLeBeaconWatcher.OnAdvertisementServiceSol128Frame := BluetoothLeBeaconWatcherAdvertisementServiceSol128Frame;
+  BluetoothLeBeaconWatcher.OnAdvertisementServiceSol16Frame := BluetoothLeBeaconWatcherAdvertisementServiceSol16Frame;
+  BluetoothLeBeaconWatcher.OnAdvertisementServiceSol32Frame := BluetoothLeBeaconWatcherAdvertisementServiceSol32Frame;
+  BluetoothLeBeaconWatcher.OnAdvertisementUuidFrame := BluetoothLeBeaconWatcherAdvertisementUuidFrame;
+  BluetoothLeBeaconWatcher.OnAltBeaconFrame := BluetoothLeBeaconWatcherAltBeaconFrame;
+  BluetoothLeBeaconWatcher.OnEddystoneTlmFrame := BluetoothLeBeaconWatcherEddystoneTlmFrame;
+  BluetoothLeBeaconWatcher.OnEddystoneUidFrame := BluetoothLeBeaconWatcherEddystoneUidFrame;
+  BluetoothLeBeaconWatcher.OnEddystoneUrlFrame := BluetoothLeBeaconWatcherEddystoneUrlFrame;
+  BluetoothLeBeaconWatcher.OnManufacturerRawFrame := BluetoothLeBeaconWatcherManufacturerRawFrame;
+  BluetoothLeBeaconWatcher.OnProximityBeaconFrame := BluetoothLeBeaconWatcherProximityBeaconFrame;
+  BluetoothLeBeaconWatcher.OnAdvertisementTxPowerLevelFrame := BluetoothLeBeaconWatcherAdvertisementTxPowerLevelFrame;
+  BluetoothLeBeaconWatcher.OnAdvertisementAppearanceFrame := BluetoothLeBeaconWatcherAdvertisementAppearanceFrame;
+
+  edAdvInterval.Text := IntToStr(WCL_BLE_DEFAULT_ADVERTISING_INTERVAL);
+
+  DefaultScanParams;
+end;
+
+procedure TfmMain.DumpData(
+  const Data: TwclBluetoothLeAdvertisementFrameRawData);
+var
+  Str: string;
+  c: Byte;
+  i: Integer;
+begin
+  if Length(Data) > 0 then begin
+    Str := '';
+    c := 0;
+    for i := 0 to Length(Data) - 1 do begin
+      Str := Str + IntToHex(Data[i], 2);
+      if c = 15 then begin
+        lbFrames.Items.Add('    ' + Str);
+        Str := '';
+        c := 0;
+      end else
+        Inc(c);
+    end;
+    if Str <> '' then
+      lbFrames.Items.Add('    ' + Str);
+  end;
+end;
+
+procedure TfmMain.btDefaultScanParamsClick(Sender: TObject);
+begin
+  DefaultScanParams;
+end;
+
+procedure TfmMain.DefaultScanParams;
+begin
+  cbMode.Checked := True;
+  edScanInterval.Text := IntToStr(WCL_BLE_DEFAULT_SCAN_INTERVAL);
+  edScanWindow.Text := IntToStr(WCL_BLE_DEFAULT_SCAN_WINDOW);
+end;
+
+procedure TfmMain.btDefIntervalClick(Sender: TObject);
+begin
+  edAdvInterval.Text := IntToStr(WCL_BLE_DEFAULT_ADVERTISING_INTERVAL);
+end;
+
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementExtFrameInformation(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const AddressType: TwclBluetoothAddressType;
+  const TxPower: SByte; const Flags: TwclBluetoothLeExtendedFrameFlags);
+var
+  Str: string;
+begin
+  lbFrames.Items.Add('EXTENDED FRAME INFORMATION');
 
   lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Company ID: ' + IntToHex(CompanyId, 4));
   lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
   lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
 
-  lbFrames.Items.Add('  UUID: ' + GUIDToString(Uuid));
-  lbFrames.Items.Add('  Major: ' + IntToHex(Major, 4));
-  lbFrames.Items.Add('  Minor: ' + IntToHex(Minor, 4));
-  lbFrames.Items.Add('  Reserved: ' + IntToHex(Reserved, 2));
-  lbFrames.Items.Add('  TX RSSI: ' + IntToStr(TxRssi));
-  lbFrames.Items.Add('  Distance: ' + FloatToStr(Dist));
+  case AddressType of
+    atPublic:
+      Str := 'Public';
+    atRandom:
+      Str := 'Random';
+    atUnspecified:
+      Str := 'Unspecified';
+    else
+      Str := 'Unknown';
+  end;
+  lbFrames.Items.Add('  Address type: ' + Str);
 
-  DumpData(Data);
+  lbFrames.Items.Add('  TX Power: ' + IntToStr(TxPower));
+
+  Str := '[';
+  if efAnonymous in Flags then
+    Str := Str + ' efAnonymous';
+  if efConnectable in Flags then
+    Str := Str + ' efConnectable';
+  if efDirected in Flags then
+    Str := Str + ' efDirected';
+  if efScannable in Flags then
+    Str := Str + ' efScannable';
+  if efScanResponse in Flags then
+    Str := Str + ' efScanResponse';
+  Str := Str + ' ]';
+  lbFrames.Items.Add('  Flags: ' + Str);
 
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementFrameInformation(
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementFrameInformation(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
   const Rssi: SByte; const Name: String;
   const PacketType: TwclBluetoothLeAdvertisementType;
@@ -694,65 +701,40 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementUuidFrame(
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementRawFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const Uuid: TGUID);
+  const Rssi: SByte; const DataType: Byte;
+  const Data: TwclBluetoothLeAdvertisementFrameRawData);
 begin
-  lbFrames.Items.Add('UUID FRAME');
-
-  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
-  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
-  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
-  lbFrames.Items.Add('  UUID: ' + GUIDToString(Uuid));
-
-  lbFrames.Items.Add('-------------------------------------------------------');
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementExtFrameInformation(
-  Sender: TObject; const Address: Int64; const Timestamp: Int64;
-  const Rssi: SByte; const AddressType: TwclBluetoothAddressType;
-  const TxPower: SByte; const Flags: TwclBluetoothLeExtendedFrameFlags);
-var
-  Str: string;
-begin
-  lbFrames.Items.Add('EXTENDED FRAME INFORMATION');
+  lbFrames.Items.Add('UNKNOWN RAW FRAME');
 
   lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
   lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
   lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
 
-  case AddressType of
-    atPublic:
-      Str := 'Public';
-    atRandom:
-      Str := 'Random';
-    atUnspecified:
-      Str := 'Unspecified';
-    else
-      Str := 'Unknown';
-  end;
-  lbFrames.Items.Add('  Address type: ' + Str);
+  lbFrames.Items.Add('  Data type: ' + IntToHex(DataType, 2));
 
-  lbFrames.Items.Add('  TX Power: ' + IntToStr(TxPower));
-
-  Str := '[';
-  if efAnonymous in Flags then
-    Str := Str + ' efAnonymous';
-  if efConnectable in Flags then
-    Str := Str + ' efConnectable';
-  if efDirected in Flags then
-    Str := Str + ' efDirected';
-  if efScannable in Flags then
-    Str := Str + ' efScannable';
-  if efScanResponse in Flags then
-    Str := Str + ' efScanResponse';
-  Str := Str + ' ]';
-  lbFrames.Items.Add('  Flags: ' + Str);
+  DumpData(Data);
 
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementService128DataFrame(
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementReceived(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const Data: TwclBluetoothLeAdvertisementFrameRawData);
+begin
+  lbFrames.Items.Add('RAW ADVERTISEMENT FRAME');
+
+  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
+  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
+  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
+
+  DumpData(Data);
+
+  lbFrames.Items.Add('-------------------------------------------------------');
+end;
+
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementService128DataFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
   const Rssi: SByte; const Uuid: TGUID;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
@@ -769,7 +751,7 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementService16DataFrame(
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementService16DataFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
   const Rssi: SByte; const Uuid: Word;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
@@ -786,7 +768,7 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementService32DataFrame(
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementService32DataFrame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
   const Rssi: SByte; const Uuid: Cardinal;
   const Data: TwclBluetoothLeAdvertisementFrameRawData);
@@ -803,7 +785,7 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementServiceSol128Frame(
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementServiceSol128Frame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
   const Rssi: SByte; const Uuid: TGUID);
 begin
@@ -817,7 +799,7 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementServiceSol16Frame(
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementServiceSol16Frame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
   const Rssi: SByte; const Uuid: Word);
 begin
@@ -831,7 +813,7 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementServiceSol32Frame(
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementServiceSol32Frame(
   Sender: TObject; const Address: Int64; const Timestamp: Int64;
   const Rssi: SByte; const Uuid: Cardinal);
 begin
@@ -845,132 +827,130 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-function TfmMain.GetRadio: TwclBluetoothRadio;
-var
-  Res: Integer;
-  Radio: TwclBluetoothRadio;
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementUuidFrame(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const Uuid: TGUID);
 begin
-  Res := wclBluetoothManager.GetLeRadio(Radio);
-  if Res <> WCL_E_SUCCESS then begin
-    MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
-      [mbOK], 0);
-    Result := nil;
-  end else
-    Result := Radio;
-end;
-
-procedure TfmMain.AddAdvertisement(Adv: TwclBluetoothLeAdvertisement);
-var
-  Res: Integer;
-begin
-  Res := wclBluetoothLeAdvertiser.Add(Adv);
-  if Res <> WCL_E_SUCCESS then begin
-    ListBox.Items.Add('Add advertisement failed: 0x' + IntToHex(Res, 8));
-    Adv.Free;
-  end;
-end;
-
-procedure TfmMain.wclBluetoothLeAdvertiserStarted(Sender: TObject);
-begin
-  ListBox.Items.Add('Bluetooth LE Advertising Started');
-
-  EnableAdvertisements(False);
-end;
-
-procedure TfmMain.wclBluetoothLeAdvertiserStopped(Sender: TObject);
-begin
-  ListBox.Items.Add('Bluetooth LE Advertising Stopped');
-  wclBluetoothLeAdvertiser.Clear;
-
-  EnableAdvertisements(True);
-end;
-
-procedure TfmMain.EnableAdvertisements(const Enable: Boolean);
-begin
-  cbIBeacon.Enabled := Enable;
-  cbProximityBeacon.Enabled := Enable;
-  cbAltBeacon.Enabled := Enable;
-  cbEddystoneUid.Enabled := Enable;
-  cbEddystoneUrl.Enabled := Enable;
-  cb128SolUuid.Enabled := Enable;
-  cbManufacturer.Enabled := Enable;
-  cb16UuidService.Enabled := Enable;
-  cb32UuidService.Enabled := Enable;
-  cb128UuidService.Enabled := Enable;
-  cb16UuidData.Enabled := Enable;
-  cb32UuidData.Enabled := Enable;
-  cb128UuidData.Enabled := Enable;
-  cbCustomRaw.Enabled := Enable;
-end;
-
-procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  wclBluetoothManager := TwclBluetoothManager.Create(nil);
-  wclBluetoothManager.AfterOpen := wclBluetoothManagerAfterOpen;
-  wclBluetoothManager.BeforeClose := wclBluetoothManagerBeforeClose;
-  wclBluetoothManager.OnStatusChanged := wclBluetoothManagerStatusChanged;
-
-  wclBluetoothLeBeaconWatcher := TwclBluetoothLeBeaconWatcher.Create(nil);
-  wclBluetoothLeBeaconWatcher.OnAdvertisementFrameInformation := wclBluetoothLeBeaconWatcherAdvertisementFrameInformation;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementExtFrameInformation := wclBluetoothLeBeaconWatcherAdvertisementExtFrameInformation;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementRawFrame := wclBluetoothLeBeaconWatcherAdvertisementRawFrame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementReceived := wclBluetoothLeBeaconWatcherAdvertisementReceived;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementService16DataFrame := wclBluetoothLeBeaconWatcherAdvertisementService16DataFrame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementService32DataFrame := wclBluetoothLeBeaconWatcherAdvertisementService32DataFrame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementService128DataFrame := wclBluetoothLeBeaconWatcherAdvertisementService128DataFrame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementServiceSol16Frame := wclBluetoothLeBeaconWatcherAdvertisementServiceSol16Frame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementServiceSol32Frame := wclBluetoothLeBeaconWatcherAdvertisementServiceSol32Frame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementServiceSol128Frame := wclBluetoothLeBeaconWatcherAdvertisementServiceSol128Frame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementUuidFrame := wclBluetoothLeBeaconWatcherAdvertisementUuidFrame;
-  wclBluetoothLeBeaconWatcher.OnAltBeaconFrame := wclBluetoothLeBeaconWatcherAltBeaconFrame;
-  wclBluetoothLeBeaconWatcher.OnEddystoneTlmFrame := wclBluetoothLeBeaconWatcherEddystoneTlmFrame;
-  wclBluetoothLeBeaconWatcher.OnEddystoneUidFrame := wclBluetoothLeBeaconWatcherEddystoneUidFrame;
-  wclBluetoothLeBeaconWatcher.OnEddystoneUrlFrame := wclBluetoothLeBeaconWatcherEddystoneUrlFrame;
-  wclBluetoothLeBeaconWatcher.OnManufacturerRawFrame := wclBluetoothLeBeaconWatcherManufacturerRawFrame;
-  wclBluetoothLeBeaconWatcher.OnProximityBeaconFrame := wclBluetoothLeBeaconWatcherProximityBeaconFrame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementTxPowerLevelFrame := wclBluetoothLeBeaconWatcherAdvertisementTxPowerLevelFrame;
-  wclBluetoothLeBeaconWatcher.OnAdvertisementAppearanceFrame := wclBluetoothLeBeaconWatcherAdvertisementAppearanceFrame;
-  wclBluetoothLeBeaconWatcher.OnStarted := wclBluetoothLeBeaconWatcherStarted;
-  wclBluetoothLeBeaconWatcher.OnStopped := wclBluetoothLeBeaconWatcherStopped;
-
-  wclBluetoothLeAdvertiser := TwclBluetoothLeAdvertiser.Create(nil);
-  wclBluetoothLeAdvertiser.OnStarted := wclBluetoothLeAdvertiserStarted;
-  wclBluetoothLeAdvertiser.OnStopped := wclBluetoothLeAdvertiserStopped;
-
-  DefaultScanParams;
-end;
-
-procedure TfmMain.DumpData(
-  const Data: TwclBluetoothLeAdvertisementFrameRawData);
-var
-  Str: string;
-  c: Byte;
-  i: Integer;
-begin
-  if Length(Data) > 0 then begin
-    Str := '';
-    c := 0;
-    for i := 0 to Length(Data) - 1 do begin
-      Str := Str + IntToHex(Data[i], 2);
-      if c = 15 then begin
-        lbFrames.Items.Add('    ' + Str);
-        Str := '';
-        c := 0;
-      end else
-        Inc(c);
-    end;
-    if Str <> '' then
-      lbFrames.Items.Add('    ' + Str);
-  end;
-end;
-
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementReceived(
-  Sender: TObject; const Address, Timestamp: Int64; const Rssi: SByte;
-  const Data: TwclBluetoothLeAdvertisementFrameRawData);
-begin
-  lbFrames.Items.Add('RAW ADVERTISEMENT FRAME');
+  lbFrames.Items.Add('UUID FRAME');
 
   lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
+  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
+  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
+  lbFrames.Items.Add('  UUID: ' + GUIDToString(Uuid));
+
+  lbFrames.Items.Add('-------------------------------------------------------');
+end;
+
+procedure TfmMain.BluetoothLeBeaconWatcherAltBeaconFrame(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const CompanyId: Word; const Major: Word;
+  const Minor: Word; const Uuid: TGUID; const TxRssi: SByte;
+  const Reserved: Byte; const Data: TwclBluetoothLeAdvertisementFrameRawData);
+var
+  Dist: Double;
+begin
+  // Calculate distance.
+  Dist := Power(10.0, (TxRssi - Rssi) / 20.0);
+
+  lbFrames.Items.Add('ALT BEACON FRAME');
+
+  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
+  lbFrames.Items.Add('  Company ID: ' + IntToHex(CompanyId, 4));
+  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
+  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
+
+  lbFrames.Items.Add('  UUID: ' + GUIDToString(Uuid));
+  lbFrames.Items.Add('  Major: ' + IntToHex(Major, 4));
+  lbFrames.Items.Add('  Minor: ' + IntToHex(Minor, 4));
+  lbFrames.Items.Add('  Reserved: ' + IntToHex(Reserved, 2));
+  lbFrames.Items.Add('  TX RSSI: ' + IntToStr(TxRssi));
+  lbFrames.Items.Add('  Distance: ' + FloatToStr(Dist));
+
+  DumpData(Data);
+
+  lbFrames.Items.Add('-------------------------------------------------------');
+end;
+
+procedure TfmMain.BluetoothLeBeaconWatcherEddystoneTlmFrame(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const AdvCnt: Cardinal; const Batt: Word;
+  const SecCnt: Cardinal; const Temp: Double;
+  const Data: TwclBluetoothLeAdvertisementFrameRawData);
+begin
+  lbFrames.Items.Add('EDDYSTONE TLM FRAME');
+
+  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
+  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
+  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
+
+  lbFrames.Items.Add('  Advertisements counter: ' + IntToStr(AdvCnt));
+  lbFrames.Items.Add('  Battery (mv): ' + IntToStr(Batt));
+  lbFrames.Items.Add('  Seconds running: ' + FloatToStr(SecCnt / 10));
+  lbFrames.Items.Add('  Temperature: ' + FloatToStr(Temp));
+
+  DumpData(Data);
+
+  lbFrames.Items.Add('-------------------------------------------------------');
+end;
+
+procedure TfmMain.BluetoothLeBeaconWatcherEddystoneUidFrame(Sender: TObject;
+  const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+  const TxRssi: SByte; const Uuid: TGUID;
+  const Data: TwclBluetoothLeAdvertisementFrameRawData);
+var
+  Dist: Double;
+begin
+  // Calculate distance.
+  Dist := Power(10.0, (TxRssi - 41 - Rssi) / 20.0);
+
+  lbFrames.Items.Add('EDDYSTONE UID FRAME');
+
+  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
+  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
+  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
+
+  lbFrames.Items.Add('  UUID: ' + GUIDToString(Uuid));
+
+  lbFrames.Items.Add('  TX RSSI: ' + IntToStr(TxRssi));
+  lbFrames.Items.Add('  Distance: ' + FloatToStr(Dist));
+
+  DumpData(Data);
+
+  lbFrames.Items.Add('-------------------------------------------------------');
+end;
+
+procedure TfmMain.BluetoothLeBeaconWatcherEddystoneUrlFrame(Sender: TObject;
+  const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+  const TxRssi: SByte; const Url: String);
+var
+  Dist: Double;
+begin
+  // Calculate distance.
+  Dist := Power(10.0, (TxRssi - 41 - Rssi) / 20.0);
+
+  lbFrames.Items.Add('EDDYSTONE URL FRAME');
+
+  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
+  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
+  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
+
+  lbFrames.Items.Add('  URL: ' + Url);
+
+  lbFrames.Items.Add('  TX RSSI: ' + IntToStr(TxRssi));
+  lbFrames.Items.Add('  Distance: ' + FloatToStr(Dist));
+
+  lbFrames.Items.Add('-------------------------------------------------------');
+end;
+
+procedure TfmMain.BluetoothLeBeaconWatcherManufacturerRawFrame(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const CompanyId: Word;
+  const Data: TwclBluetoothLeAdvertisementFrameRawData);
+begin
+  lbFrames.Items.Add('UNKNOWN MANUFACTURER RAW FRAME');
+
+  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
+  lbFrames.Items.Add('  Company ID: ' + IntToHex(CompanyId, 4));
   lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
   lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
 
@@ -979,8 +959,38 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementTxPowerLevelFrame(
-  Sender: TObject; const Address, Timestamp: Int64; const Rssi, TxPower: SByte);
+procedure TfmMain.BluetoothLeBeaconWatcherProximityBeaconFrame(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const CompanyId: Word; const Major: Word;
+  const Minor: Word; const Uuid: TGUID; const TxRssi: SByte;
+  const Data: TwclBluetoothLeAdvertisementFrameRawData);
+var
+  Dist: Double;
+begin
+  // Calculate distance.
+  Dist := Power(10.0, (TxRssi - Rssi) / 20.0);
+
+  lbFrames.Items.Add('PROXIMITY BEACON FRAME');
+
+  lbFrames.Items.Add('  Address: ' + IntToHex(Address, 12));
+  lbFrames.Items.Add('  Company ID: ' + IntToHex(CompanyId, 4));
+  lbFrames.Items.Add('  Timestamp: ' + DateTimeToStr(ConvertTime(Timestamp)));
+  lbFrames.Items.Add('  RSSI: ' + IntToStr(Rssi));
+
+  lbFrames.Items.Add('  UUID: ' + GUIDToString(Uuid));
+  lbFrames.Items.Add('  Major: ' + IntToHex(Major, 4));
+  lbFrames.Items.Add('  Minor: ' + IntToHex(Minor, 4));
+  lbFrames.Items.Add('  TX RSSI: ' + IntToStr(TxRssi));
+  lbFrames.Items.Add('  Distance: ' + FloatToStr(Dist));
+
+  DumpData(Data);
+
+  lbFrames.Items.Add('-------------------------------------------------------');
+end;
+
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementTxPowerLevelFrame(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const TxPower: SByte);
 begin
   lbFrames.Items.Add('TX POWER FRAME');
 
@@ -993,9 +1003,9 @@ begin
   lbFrames.Items.Add('-------------------------------------------------------');
 end;
 
-procedure TfmMain.wclBluetoothLeBeaconWatcherAdvertisementAppearanceFrame(
-  Sender: TObject; const Address, Timestamp: Int64; const Rssi: SByte;
-  const Appearance: Word);
+procedure TfmMain.BluetoothLeBeaconWatcherAdvertisementAppearanceFrame(
+  Sender: TObject; const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const Appearance: Word);
 begin
   lbFrames.Items.Add('APPEARANCE FRAME');
 

@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -50,41 +50,9 @@ type
     procedure btMkDirClick(Sender: TObject);
 
   private
-    wclBluetoothManager: TwclBluetoothManager;
-    wclRfCommClient: TwclRfCommClient;
-    FFtp: TwclObexFtpClient;
-
-    procedure wclBluetoothManagerAfterOpen(Sender: TObject);
-    procedure wclBluetoothManagerAuthenticationCompleted(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Error: Integer);
-    procedure wclBluetoothManagerDiscoveringCompleted(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Error: Integer);
-    procedure wclBluetoothManagerDiscoveringStarted(Sender: TObject;
-      const Radio: TwclBluetoothRadio);
-    procedure wclBluetoothManagerNumericComparison(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Number: Cardinal; out Confirm: Boolean);
-    procedure wclBluetoothManagerPasskeyNotification(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      const Passkey: Cardinal);
-    procedure wclBluetoothManagerPasskeyRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Passkey: Cardinal);
-    procedure wclBluetoothManagerPinRequest(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64;
-      out Pin: String);
-    procedure wclBluetoothManagerDeviceFound(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64);
-
-    procedure wclRfCommClientDisconnect(Sender: TObject;
-      const Reason: Integer);
-    procedure wclRfCommClientConnect(Sender: TObject;
-      const Error: Integer);
-    procedure wclRfCommClientDestroyProcessor(Sender: TObject;
-      const Connection: TwclClientDataConnection);
-    procedure wclRfCommClientCreateProcessor(Sender: TObject;
-      const Connection: TwclClientDataConnection);
+    BluetoothManager: TwclBluetoothManager;
+    RfCommClient: TwclRfCommClient;
+    Ftp: TwclObexFtpClient;
 
     function GetRadio: TwclBluetoothRadio;
 
@@ -106,6 +74,38 @@ type
       const Description: string);
     procedure FtpMkDirComplete(Sender: TObject; const Error: Integer;
       const Description: string);
+
+    procedure BluetoothManagerAfterOpen(Sender: TObject);
+    procedure BluetoothManagerAuthenticationCompleted(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Error: Integer);
+    procedure BluetoothManagerDiscoveringCompleted(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Error: Integer);
+    procedure BluetoothManagerDiscoveringStarted(Sender: TObject;
+      const Radio: TwclBluetoothRadio);
+    procedure BluetoothManagerNumericComparison(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Number: Cardinal; out Confirm: Boolean);
+    procedure BluetoothManagerPasskeyNotification(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      const Passkey: Cardinal);
+    procedure BluetoothManagerPasskeyRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Passkey: Cardinal);
+    procedure BluetoothManagerPinRequest(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64;
+      out Pin: String);
+    procedure BluetoothManagerDeviceFound(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64);
+
+    procedure RfCommClientDisconnect(Sender: TObject;
+      const Reason: Integer);
+    procedure RfCommClientConnect(Sender: TObject;
+      const Error: Integer);
+    procedure RfCommClientDestroyProcessor(Sender: TObject;
+      const Connection: TwclClientDataConnection);
+    procedure RfCommClientCreateProcessor(Sender: TObject;
+      const Connection: TwclClientDataConnection);
   end;
 
 var
@@ -122,29 +122,30 @@ procedure TfmMain.FormCreate(Sender: TObject);
 var
   Res: Integer;
 begin
-  wclBluetoothManager := TwclBluetoothManager.Create(nil);
-  wclBluetoothManager.AfterOpen := wclBluetoothManagerAfterOpen;
-  wclBluetoothManager.OnAuthenticationCompleted := wclBluetoothManagerAuthenticationCompleted;
-  wclBluetoothManager.OnDeviceFound := wclBluetoothManagerDeviceFound;
-  wclBluetoothManager.OnDiscoveringCompleted := wclBluetoothManagerDiscoveringCompleted;
-  wclBluetoothManager.OnDiscoveringStarted := wclBluetoothManagerDiscoveringStarted;
-  wclBluetoothManager.OnNumericComparison := wclBluetoothManagerNumericComparison;
-  wclBluetoothManager.OnPasskeyNotification := wclBluetoothManagerPasskeyNotification;
-  wclBluetoothManager.OnPasskeyRequest := wclBluetoothManagerPasskeyRequest;
-  wclBluetoothManager.OnPinRequest := wclBluetoothManagerPinRequest;
+  BluetoothManager := TwclBluetoothManager.Create(nil);
+  BluetoothManager.AfterOpen := BluetoothManagerAfterOpen;
+  BluetoothManager.OnDiscoveringCompleted := BluetoothManagerDiscoveringCompleted;
+  BluetoothManager.OnDiscoveringStarted := BluetoothManagerDiscoveringStarted;
+  BluetoothManager.OnNumericComparison := BluetoothManagerNumericComparison;
+  BluetoothManager.OnPasskeyNotification := BluetoothManagerPasskeyNotification;
+  BluetoothManager.OnPasskeyRequest := BluetoothManagerPasskeyRequest;
+  BluetoothManager.OnPinRequest := BluetoothManagerPinRequest;
+  BluetoothManager.OnDeviceFound := BluetoothManagerDeviceFound;
+  BluetoothManager.OnAuthenticationCompleted := BluetoothManagerAuthenticationCompleted;
 
-  wclRfCommClient := TwclRfCommClient.Create(nil);
+  RfCommClient := TwclRfCommClient.Create(nil);
+  RfCommClient.OnDisconnect := RfCommClientDisconnect;
+  RfCommClient.OnConnect := RfCommClientConnect;
+  RfCommClient.OnDestroyProcessor := RfCommClientDestroyProcessor;
+  RfCommClient.OnCreateProcessor := RfCommClientCreateProcessor;
+
   // We use ObjectPush Profile so must set the profile's UUID.
-  wclRfCommClient.Service := OBEXFileTransferServiceClass_UUID;
-  wclRfCommClient.OnConnect := wclRfCommClientConnect;
-  wclRfCommClient.OnCreateProcessor := wclRfCommClientCreateProcessor;
-  wclRfCommClient.OnDestroyProcessor := wclRfCommClientDestroyProcessor;
-  wclRfCommClient.OnDisconnect := wclRfCommClientDisconnect;
+  RfCommClient.Service := OBEXFileTransferServiceClass_UUID;
 
-  FFtp := nil;
+  Ftp := nil;
 
   // Try to open Bluetooth Manager.
-  Res := wclBluetoothManager.Open;
+  Res := BluetoothManager.Open;
   if Res <> WCL_E_SUCCESS then
     lbLog.Items.Add('Bluetooth Manager Open failed: 0x' + IntToHex(Res, 8));
 end;
@@ -156,19 +157,19 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclRfCommClient.Disconnect;
-  wclRfCommClient.Free;
+  RfCommClient.Disconnect;
+  RfCommClient.Free;
 
-  wclBluetoothManager.Close;
-  wclBluetoothManager.Free;
+  BluetoothManager.Close;
+  BluetoothManager.Free;
 end;
 
-procedure TfmMain.wclBluetoothManagerAfterOpen(Sender: TObject);
+procedure TfmMain.BluetoothManagerAfterOpen(Sender: TObject);
 begin
   lbLog.Items.Add('Bluetooth Manager has been opened');
 end;
 
-procedure TfmMain.wclBluetoothManagerAuthenticationCompleted(
+procedure TfmMain.BluetoothManagerAuthenticationCompleted(
   Sender: TObject; const Radio: TwclBluetoothRadio; const Address: Int64;
   const Error: Integer);
 begin
@@ -176,7 +177,7 @@ begin
     IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclBluetoothManagerDiscoveringCompleted(Sender: TObject;
+procedure TfmMain.BluetoothManagerDiscoveringCompleted(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Error: Integer);
 var
   i: Integer;
@@ -198,7 +199,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclBluetoothManagerDiscoveringStarted(Sender: TObject;
+procedure TfmMain.BluetoothManagerDiscoveringStarted(Sender: TObject;
   const Radio: TwclBluetoothRadio);
 begin
   lbLog.Items.Add('Discovering started');
@@ -206,7 +207,7 @@ begin
   lvDevices.Items.Clear;
 end;
 
-procedure TfmMain.wclBluetoothManagerNumericComparison(Sender: TObject;
+procedure TfmMain.BluetoothManagerNumericComparison(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   const Number: Cardinal; out Confirm: Boolean);
 begin
@@ -214,14 +215,14 @@ begin
   Confirm := True;
 end;
 
-procedure TfmMain.wclBluetoothManagerPasskeyNotification(Sender: TObject;
+procedure TfmMain.BluetoothManagerPasskeyNotification(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   const Passkey: Cardinal);
 begin
   lbLog.Items.Add('Passkey notification. Passkey: ' + IntToStr(Passkey));
 end;
 
-procedure TfmMain.wclBluetoothManagerPasskeyRequest(Sender: TObject;
+procedure TfmMain.BluetoothManagerPasskeyRequest(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64;
   out Passkey: Cardinal);
 begin
@@ -229,14 +230,14 @@ begin
   Passkey := 12345678;
 end;
 
-procedure TfmMain.wclBluetoothManagerPinRequest(Sender: TObject;
+procedure TfmMain.BluetoothManagerPinRequest(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64; out Pin: String);
 begin
   lbLog.Items.Add('PIN code request. PIN: 0000');
   Pin := '0000';
 end;
 
-procedure TfmMain.wclBluetoothManagerDeviceFound(Sender: TObject;
+procedure TfmMain.BluetoothManagerDeviceFound(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64);
 var
   Item: TListItem;
@@ -251,7 +252,7 @@ var
   Res: Integer;
   Radio: TwclBluetoothRadio;
 begin
-  Res := wclBluetoothManager.GetClassicRadio(Radio);
+  Res := BluetoothManager.GetClassicRadio(Radio);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
@@ -280,63 +281,62 @@ procedure TfmMain.btDisconnectClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclRfCommClient.Disconnect;
+  Res := RfCommClient.Disconnect;
   if Res <> WCL_E_SUCCESS then
     MessageDlg('Disconnect failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
 end;
 
-procedure TfmMain.wclRfCommClientDisconnect(Sender: TObject;
+procedure TfmMain.RfCommClientDisconnect(Sender: TObject;
   const Reason: Integer);
 begin
   lbLog.Items.Add('Disconnected with reason: 0x' + IntToHex(Reason, 8));
 end;
 
-procedure TfmMain.wclRfCommClientConnect(Sender: TObject;
+procedure TfmMain.RfCommClientConnect(Sender: TObject;
   const Error: Integer);
 begin
   lbLog.Items.Add('Connect. Operation result: 0x' + IntToHex(Error, 8));
 end;
 
-procedure TfmMain.wclRfCommClientDestroyProcessor(Sender: TObject;
+procedure TfmMain.RfCommClientDestroyProcessor(Sender: TObject;
   const Connection: TwclClientDataConnection);
 begin
   // Do we have any data processor created?
-  if FFtp <> nil then begin
+  if Ftp <> nil then begin
     // Make sure it is our connection is goind to destroy.
-    if Connection.Processor = FFtp then begin
+    if Connection.Processor = Ftp then begin
       // Ok, destroy the data processor here.
-      FFtp.Free;
-      FFtp := nil;
+      Ftp.Free;
+      Ftp := nil;
     end;
   end;
 end;
 
-procedure TfmMain.wclRfCommClientCreateProcessor(Sender: TObject;
+procedure TfmMain.RfCommClientCreateProcessor(Sender: TObject;
   const Connection: TwclClientDataConnection);
 begin
   // here we must create the data processor for the connection. In this demo
   // we use OPPClient.
-  FFtp := TwclObexFtpClient.Create(Connection);
-  FFtp.OnConnect := FtpConnect;
-  FFtp.OnDisconnect := FtpDisconnect;
-  FFtp.OnGetComplete := FtpGetComplete;
-  FFtp.OnPutComplete := FtpPutComplete;
-  FFtp.OnProgress := FtpProgress;
-  FFtp.OnDirComplete := FtpDirComplete;
-  FFtp.OnChangeDirComplete := FtpChangeDirComplete;
-  FFtp.OnDeleteComplete := FtpDeleteComplete;
-  FFtp.OnMakeDirComplete := FtpMkDirComplete;
+  Ftp := TwclObexFtpClient.Create(Connection);
+  Ftp.OnConnect := FtpConnect;
+  Ftp.OnDisconnect := FtpDisconnect;
+  Ftp.OnGetComplete := FtpGetComplete;
+  Ftp.OnPutComplete := FtpPutComplete;
+  Ftp.OnProgress := FtpProgress;
+  Ftp.OnDirComplete := FtpDirComplete;
+  Ftp.OnChangeDirComplete := FtpChangeDirComplete;
+  Ftp.OnDeleteComplete := FtpDeleteComplete;
+  Ftp.OnMakeDirComplete := FtpMkDirComplete;
 end;
 
 procedure TfmMain.btCloseSessionClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
-
   else begin
-    Res := FFtp.Disconnect('');
+    Res := Ftp.Disconnect('');
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Close session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -348,11 +348,10 @@ procedure TfmMain.btOpenSessionClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
-
   else begin
-    Res := FFtp.Connect;
+    Res := Ftp.Connect;
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Open session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -381,7 +380,7 @@ var
   Addr: Int64;
   Res: Integer;
 begin
-  if wclRfCommClient.State <> csDisconnected then
+  if RfCommClient.State <> csDisconnected then
     MessageDlg('Client is connected', mtWarning, [mbOK], 0)
 
   else begin
@@ -392,8 +391,8 @@ begin
       Radio := GetRadio;
       if Radio <> nil then begin
         Addr := StrToInt64('$' + lvDevices.Selected.Caption);
-        wclRfCommClient.Address := Addr;
-        Res := wclRfCommClient.Connect(Radio);
+        RfCommClient.Address := Addr;
+        Res := RfCommClient.Connect(Radio);
         if Res <> WCL_E_SUCCESS then begin
           MessageDlg('Failed to connect: 0x' + IntToHex(Res, 8),
             mtError, [mbOK], 0);
@@ -433,11 +432,11 @@ procedure TfmMain.btAbortClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
   else begin
-    Res := FFtp.Abort('');
+    Res := Ftp.Abort('');
     if Res <> WCL_E_SUCCESS then begin
       MessageDlg('Open session failed: 0x' + IntToHex(Res, 8), mtError,
         [mbOK], 0);
@@ -450,7 +449,7 @@ var
   Res: Integer;
   Stream: TStream;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
   else begin
@@ -459,7 +458,7 @@ begin
 
     else begin
       Stream := TFileStream.Create(edFileName.Text, fmOpenRead);
-      Res := FFtp.Put(ExtractFileName(edFileName.Text), '', Stream);
+      Res := Ftp.Put(ExtractFileName(edFileName.Text), '', Stream);
       if Res <> WCL_E_SUCCESS then begin
         MessageDlg('Send file failed: 0x' + IntToHex(Res, 8), mtError,
           [mbOK], 0);
@@ -486,11 +485,11 @@ procedure TfmMain.btDirClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
   else begin
-    Res := FFtp.Dir;
+    Res := Ftp.Dir;
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Dir failed: 0x' + IntToHex(Res, 8), mtError, [mbOK], 0)
     else
@@ -551,12 +550,12 @@ var
   Stream: TFileStream;
 begin
   if lvFiles.Selected <> nil then begin
-    if FFtp = nil then
+    if Ftp = nil then
       MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
     else begin
       if lvFiles.Selected.SubItems[0] = 'Folder' then begin
-        Res := FFtp.ChangeDir(lvFiles.Selected.Caption);
+        Res := Ftp.ChangeDir(lvFiles.Selected.Caption);
         if Res <> WCL_E_SUCCESS then begin
           MessageDlg('Change path failed 0x' + IntToHex(Res, 8),
             mtError, [mbOK], 0);
@@ -565,7 +564,7 @@ begin
       end else begin
         Stream := TFileStream.Create('.\' + lvFiles.Selected.Caption,
            fmCreate);
-        Res := FFtp.Get(lvFiles.Selected.Caption, Stream);
+        Res := Ftp.Get(lvFiles.Selected.Caption, Stream);
         if Res <> WCL_E_SUCCESS then begin
           MessageDlg('Get failed 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
           Stream.Free;
@@ -585,18 +584,18 @@ begin
   ProgressBar.Max := 0;
 
   lvFiles.Items.Clear;
-  FFtp.Dir;
+  Ftp.Dir;
 end;
 
 procedure TfmMain.btRootClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
   else begin
-    Res := FFtp.ChangeDir('');
+    Res := Ftp.ChangeDir('');
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Root failed 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
   end;
@@ -612,7 +611,7 @@ begin
   ProgressBar.Max := 0;
 
   lvFiles.Items.Clear;
-  FFtp.Dir;
+  Ftp.Dir;
 end;
 
 procedure TfmMain.btDeleteClick(Sender: TObject);
@@ -620,11 +619,11 @@ var
   Res: Integer;
 begin
   if lvFiles.Selected <> nil then begin
-    if FFtp = nil then
+    if Ftp = nil then
       MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
     else begin
-      Res := FFtp.Delete(lvFiles.Selected.Caption);
+      Res := Ftp.Delete(lvFiles.Selected.Caption);
       if Res <> WCL_E_SUCCESS then
         MessageDlg('Delete failed 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
     end;
@@ -635,11 +634,11 @@ procedure TfmMain.btMkDirClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  if FFtp = nil then
+  if Ftp = nil then
     MessageDlg('Not connected', mtWarning, [mbOK], 0)
 
   else begin
-    Res := FFtp.MkDir(edNewDirName.Text);
+    Res := Ftp.MkDir(edNewDirName.Text);
     if Res <> WCL_E_SUCCESS then
       MessageDlg('Make sire failed 0x' + IntToHex(Res, 8), mtError, [mbOK], 0);
   end;
@@ -655,7 +654,7 @@ begin
   ProgressBar.Max := 0;
 
   lvFiles.Items.Clear;
-  FFtp.Dir;
+  Ftp.Dir;
 end;
 
 end.

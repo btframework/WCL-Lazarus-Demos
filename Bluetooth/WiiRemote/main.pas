@@ -1,11 +1,11 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, StdCtrls, wclBluetooth;
 
 type
@@ -116,42 +116,16 @@ type
     procedure btGetStatusClick(Sender: TObject);
     procedure btGetLedsClick(Sender: TObject);
     procedure btSetLedsClick(Sender: TObject);
-    procedure btEnableAccelClick(Sender: TObject);
-    procedure btDisableAccelClick(Sender: TObject);
     procedure btEnableIrClick(Sender: TObject);
     procedure btDisableIrClick(Sender: TObject);
     procedure btRumbleOnClick(Sender: TObject);
     procedure btRumbleOffClick(Sender: TObject);
+    procedure btEnableAccelClick(Sender: TObject);
+    procedure btDisableAccelClick(Sender: TObject);
 
   private
-    wclBluetoothManager: TwclBluetoothManager;
-    wclWiiRemoteClient: TwclWiiRemoteClient;
-
-    procedure wclBluetoothManagerDiscoveringStarted(Sender: TObject;
-      const Radio: TwclBluetoothRadio);
-    procedure wclBluetoothManagerDeviceFound(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Address: Int64);
-    procedure wclBluetoothManagerDiscoveringCompleted(Sender: TObject;
-      const Radio: TwclBluetoothRadio; const Error: Integer);
-
-    procedure wclWiiRemoteClientConnect(Sender: TObject;
-      const Error: Integer);
-    procedure wclWiiRemoteClientDisconnect(Sender: TObject;
-      const Reason: Integer);
-    procedure wclWiiRemoteClientStatusChanged(Sender: TObject;
-      const Batt: Double; const Leds: TwclWiiRemoteLeds);
-    procedure wclWiiRemoteClientButtonsChanged(Sender: TObject;
-      const Buttons: TwclWiiRemoteButtons);
-    procedure wclWiiRemoteClientAccelChanged(Sender: TObject;
-      const Accel: TwclWiiRemoteAccel);
-    procedure wclWiiRemoteClientIrChanged(Sender: TObject;
-      const Ir: TwclWiiRemoteIrSensors);
-    procedure wclWiiRemoteClientExtensionAttached(Sender: TObject);
-    procedure wclWiiRemoteClientExtensionDetached(Sender: TObject);
-    procedure wclWiiRemoteClientNunchukChanged(Sender: TObject;
-      const Nunchuk: TwclWiiRemoteNunchuk);
-    procedure wclWiiRemoteClientBalanceBoardChanged(Sender: TObject;
-      const Board: TwclWiiRemoteBalanceBoard);
+    BluetoothManager: TwclBluetoothManager;
+    WiiRemoteClient: TwclWiiRemoteClient;
 
     function GetRadio: TwclBluetoothRadio;
 
@@ -165,6 +139,32 @@ type
     procedure ClearNunchuk;
     procedure ClearExtensions;
     procedure ClearBalanceBoard;
+
+    procedure BluetoothManagerDiscoveringStarted(Sender: TObject;
+      const Radio: TwclBluetoothRadio);
+    procedure BluetoothManagerDeviceFound(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Address: Int64);
+    procedure BluetoothManagerDiscoveringCompleted(Sender: TObject;
+      const Radio: TwclBluetoothRadio; const Error: Integer);
+
+    procedure WiiRemoteClientConnect(Sender: TObject;
+      const Error: Integer);
+    procedure WiiRemoteClientDisconnect(Sender: TObject;
+      const Reason: Integer);
+    procedure WiiRemoteClientStatusChanged(Sender: TObject;
+      const Batt: Double; const Leds: TwclWiiRemoteLeds);
+    procedure WiiRemoteClientButtonsChanged(Sender: TObject;
+      const Buttons: TwclWiiRemoteButtons);
+    procedure WiiRemoteClientAccelChanged(Sender: TObject;
+      const Accel: TwclWiiRemoteAccel);
+    procedure WiiRemoteClientIrChanged(Sender: TObject;
+      const Ir: TwclWiiRemoteIrSensors);
+    procedure WiiRemoteClientExtensionAttached(Sender: TObject);
+    procedure WiiRemoteClientExtensionDetached(Sender: TObject);
+    procedure WiiRemoteClientNunchukChanged(Sender: TObject;
+      const Nunchuk: TwclWiiRemoteNunchuk);
+    procedure WiiRemoteClientBalanceBoardChanged(Sender: TObject;
+      const Board: TwclWiiRemoteBalanceBoard);
   end;
 
 var
@@ -182,7 +182,7 @@ var
   Res: Integer;
   Radio: TwclBluetoothRadio;
 begin
-  Res := wclBluetoothManager.GetClassicRadio(Radio);
+  Res := BluetoothManager.GetClassicRadio(Radio);
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Get working radio failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
@@ -193,24 +193,25 @@ end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclBluetoothManager := TwclBluetoothManager.Create(nil);
-  wclBluetoothManager.OnDeviceFound := wclBluetoothManagerDeviceFound;
-  wclBluetoothManager.OnDiscoveringCompleted := wclBluetoothManagerDiscoveringCompleted;
-  wclBluetoothManager.OnDiscoveringStarted := wclBluetoothManagerDiscoveringStarted;
+  BluetoothManager := TwclBluetoothManager.Create(nil);
+  BluetoothManager.OnDiscoveringStarted := BluetoothManagerDiscoveringStarted;
+  BluetoothManager.OnDeviceFound := BluetoothManagerDeviceFound;
+  BluetoothManager.OnDiscoveringCompleted := BluetoothManagerDiscoveringCompleted;
 
-  wclWiiRemoteClient := TwclWiiRemoteClient.Create(nil);
-  wclWiiRemoteClient.OnAccelChanged := wclWiiRemoteClientAccelChanged;
-  wclWiiRemoteClient.OnBalanceBoardChanged := wclWiiRemoteClientBalanceBoardChanged;
-  wclWiiRemoteClient.OnButtonsChanged := wclWiiRemoteClientButtonsChanged;
-  wclWiiRemoteClient.OnConnect := wclWiiRemoteClientConnect;
-  wclWiiRemoteClient.OnDisconnect := wclWiiRemoteClientDisconnect;
-  wclWiiRemoteClient.OnExtensionAttached := wclWiiRemoteClientExtensionAttached;
-  wclWiiRemoteClient.OnExtensionDetached := wclWiiRemoteClientExtensionDetached;
-  wclWiiRemoteClient.OnIrChanged := wclWiiRemoteClientIrChanged;
-  wclWiiRemoteClient.OnNunchukChanged := wclWiiRemoteClientNunchukChanged;
-  wclWiiRemoteClient.OnStatusChanged := wclWiiRemoteClientStatusChanged;
+  WiiRemoteClient := TwclWiiRemoteClient.Create(nil);
+  WiiRemoteClient.OnConnect := WiiRemoteClientConnect;
+  WiiRemoteClient.OnDisconnect := WiiRemoteClientDisconnect;
+  WiiRemoteClient.OnStatusChanged := WiiRemoteClientStatusChanged;
+  WiiRemoteClient.OnButtonsChanged := WiiRemoteClientButtonsChanged;
+  WiiRemoteClient.OnAccelChanged := WiiRemoteClientAccelChanged;
+  WiiRemoteClient.OnIrChanged := WiiRemoteClientIrChanged;
+  WiiRemoteClient.OnExtensionAttached := WiiRemoteClientExtensionAttached;
+  WiiRemoteClient.OnExtensionDetached := WiiRemoteClientExtensionDetached;
+  WiiRemoteClient.OnNunchukChanged := WiiRemoteClientNunchukChanged;
+  WiiRemoteClient.OnBalanceBoardChanged := WiiRemoteClientBalanceBoardChanged;
 
-  wclBluetoothManager.Open;
+  BluetoothManager.Open;
+
   ClearAccel;
   ClearIr;
   ClearExtensions;
@@ -218,21 +219,21 @@ end;
 
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
-  wclWiiRemoteClient.Disconnect;
-  wclWiiRemoteClient.Free;
+  WiiRemoteClient.Disconnect;
+  WiiRemoteClient.Free;
 
-  wclBluetoothManager.Close;
-  wclBluetoothManager.Free;
+  BluetoothManager.Close;
+  BluetoothManager.Free;
 end;
 
-procedure TfmMain.wclBluetoothManagerDiscoveringStarted(Sender: TObject;
+procedure TfmMain.BluetoothManagerDiscoveringStarted(Sender: TObject;
   const Radio: TwclBluetoothRadio);
 begin
   lvDevices.Items.Clear;
   Trace('Discovering started');
 end;
 
-procedure TfmMain.wclBluetoothManagerDeviceFound(Sender: TObject;
+procedure TfmMain.BluetoothManagerDeviceFound(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Address: Int64);
 var
   Item: TListItem;
@@ -242,7 +243,7 @@ begin
   Item.SubItems.Add('');
 end;
 
-procedure TfmMain.wclBluetoothManagerDiscoveringCompleted(Sender: TObject;
+procedure TfmMain.BluetoothManagerDiscoveringCompleted(Sender: TObject;
   const Radio: TwclBluetoothRadio; const Error: Integer);
 var
   i: Integer;
@@ -282,7 +283,7 @@ var
   Radio: TwclBluetoothRadio;
   Res: Integer;
 begin
-  if wclWiiRemoteClient.State <> csDisconnected then
+  if WiiRemoteClient.State <> csDisconnected then
     ShowMessage('Wii Remote is connected')
 
   else begin
@@ -292,8 +293,8 @@ begin
         ShowMessage('Select device')
 
       else begin
-        wclWiiRemoteClient.Address := StrToInt64('$' + lvDevices.Selected.Caption);
-        Res := wclWiiRemoteClient.Connect(Radio);
+        WiiRemoteClient.Address := StrToInt64('$' + lvDevices.Selected.Caption);
+        Res := WiiRemoteClient.Connect(Radio);
         if Res <> WCL_E_SUCCESS then
           ShowMessage('Unable connect: 0x' + IntToHex(Res, 8));
       end;
@@ -305,12 +306,12 @@ procedure TfmMain.btDisconnectClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.Disconnect;
+  Res := WiiRemoteClient.Disconnect;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Unable disconnect: 0x' + IntToHex(Res, 8));
 end;
 
-procedure TfmMain.wclWiiRemoteClientConnect(Sender: TObject;
+procedure TfmMain.WiiRemoteClientConnect(Sender: TObject;
   const Error: Integer);
 begin
   if Error <> WCL_E_SUCCESS then
@@ -321,7 +322,7 @@ begin
   end;
 end;
 
-procedure TfmMain.wclWiiRemoteClientDisconnect(Sender: TObject;
+procedure TfmMain.WiiRemoteClientDisconnect(Sender: TObject;
   const Reason: Integer);
 begin
   Trace('Disconnected. Reason', Reason);
@@ -349,7 +350,7 @@ begin
   ClearExtensions;
 end;
 
-procedure TfmMain.wclWiiRemoteClientStatusChanged(Sender: TObject;
+procedure TfmMain.WiiRemoteClientStatusChanged(Sender: TObject;
   const Batt: Double; const Leds: TwclWiiRemoteLeds);
 begin
   Trace('Status changed');
@@ -381,20 +382,20 @@ procedure TfmMain.btGetStatusClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.GetStatus;
+  Res := WiiRemoteClient.GetStatus;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Get status failed; 0x' + IntToHex(Res, 8));
 end;
 
 procedure TfmMain.btGetLedsClick(Sender: TObject);
 begin
-  if wclWiiRemoteClient.State <> csConnected then
+  if WiiRemoteClient.State <> csConnected then
     ShowMessage('Not connected')
   else begin
-    cbLed1.Checked := wclWiiRemoteClient.Leds.Led1;
-    cbLed2.Checked := wclWiiRemoteClient.Leds.Led2;
-    cbLed3.Checked := wclWiiRemoteClient.Leds.Led3;
-    cbLed4.Checked := wclWiiRemoteClient.Leds.Led4;
+    cbLed1.Checked := WiiRemoteClient.Leds.Led1;
+    cbLed2.Checked := WiiRemoteClient.Leds.Led2;
+    cbLed3.Checked := WiiRemoteClient.Leds.Led3;
+    cbLed4.Checked := WiiRemoteClient.Leds.Led4;
   end;
 end;
 
@@ -407,13 +408,13 @@ procedure TfmMain.SetLeds;
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.SetLeds(cbLed1.Checked, cbLed2.Checked,
+  Res := WiiRemoteClient.SetLeds(cbLed1.Checked, cbLed2.Checked,
     cbLed3.Checked, cbLed4.Checked);
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Set LEDs failed: 0x' + IntToHex(Res, 8));
 end;
 
-procedure TfmMain.wclWiiRemoteClientButtonsChanged(Sender: TObject;
+procedure TfmMain.WiiRemoteClientButtonsChanged(Sender: TObject;
   const Buttons: TwclWiiRemoteButtons);
 begin
   cbA.Checked := Buttons.A;
@@ -429,7 +430,7 @@ begin
   cbRight.Checked := Buttons.Right;
 end;
 
-procedure TfmMain.wclWiiRemoteClientAccelChanged(Sender: TObject;
+procedure TfmMain.WiiRemoteClientAccelChanged(Sender: TObject;
   const Accel: TwclWiiRemoteAccel);
 begin
   laX.Caption := IntToStr(Accel.Values.X);
@@ -441,7 +442,7 @@ procedure TfmMain.btEnableAccelClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.EnableAccel;
+  Res := WiiRemoteClient.EnableAccel;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Enable accelerometer failed: 0x' + IntToHex(Res, 8));
 end;
@@ -450,14 +451,14 @@ procedure TfmMain.btDisableAccelClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.DisableAccel;
+  Res := WiiRemoteClient.DisableAccel;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Disable accelerometer failed: 0x' + IntToHex(Res, 8))
   else
     ClearAccel;
 end;
 
-procedure TfmMain.wclWiiRemoteClientIrChanged(Sender: TObject;
+procedure TfmMain.WiiRemoteClientIrChanged(Sender: TObject;
   const Ir: TwclWiiRemoteIrSensors);
 begin
   case Ir.Mode of
@@ -572,7 +573,7 @@ procedure TfmMain.btEnableIrClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.SetIrSensitivity(wiiIrLevelMax);
+  Res := WiiRemoteClient.SetIrSensitivity(wiiIrLevelMax);
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Enable IR failed: 0x' + IntToHex(Res, 8));
 end;
@@ -581,7 +582,7 @@ procedure TfmMain.btDisableIrClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.SetIrSensitivity(wiiIrLevelOff);
+  Res := WiiRemoteClient.SetIrSensitivity(wiiIrLevelOff);
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Disable IR failed: 0x' + IntToHex(Res, 8))
   else
@@ -592,7 +593,7 @@ procedure TfmMain.btRumbleOnClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.SetRumble(True);
+  Res := WiiRemoteClient.SetRumble(True);
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Set Rumble ON failed; 0x' + IntToHex(Res, 8));
 end;
@@ -601,16 +602,16 @@ procedure TfmMain.btRumbleOffClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclWiiRemoteClient.SetRumble(False);
+  Res := WiiRemoteClient.SetRumble(False);
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Set Rumble OFF failed; 0x' + IntToHex(Res, 8));
 end;
 
-procedure TfmMain.wclWiiRemoteClientExtensionAttached(Sender: TObject);
+procedure TfmMain.WiiRemoteClientExtensionAttached(Sender: TObject);
 var
   Ext: string;
 begin
-  case wclWiiRemoteClient.Extension of
+  case WiiRemoteClient.Extension of
     wiiNoExtension:
       Ext := 'wiiNoExtension';
     wiiNunchuk:
@@ -636,13 +637,13 @@ begin
   Trace('Extension attached: ' + Ext);
 end;
 
-procedure TfmMain.wclWiiRemoteClientExtensionDetached(Sender: TObject);
+procedure TfmMain.WiiRemoteClientExtensionDetached(Sender: TObject);
 begin
   Trace('Extension detached');
   ClearExtensions;
 end;
 
-procedure TfmMain.wclWiiRemoteClientNunchukChanged(Sender: TObject;
+procedure TfmMain.WiiRemoteClientNunchukChanged(Sender: TObject;
   const Nunchuk: TwclWiiRemoteNunchuk);
 begin
   laNunchukX.Caption := IntToStr(Nunchuk.Accel.Values.X);
@@ -687,7 +688,7 @@ begin
   laBbBottomLeft.Caption := '0';
 end;
 
-procedure TfmMain.wclWiiRemoteClientBalanceBoardChanged(Sender: TObject;
+procedure TfmMain.WiiRemoteClientBalanceBoardChanged(Sender: TObject;
   const Board: TwclWiiRemoteBalanceBoard);
 begin
   laBbTopRight.Caption := FormatFloat('0.00', Board.SensorsKg.TopRight);

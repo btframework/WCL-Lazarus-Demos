@@ -1,4 +1,4 @@
-program AudioSwitcher_D7;
+program RfCommServer;
 
 {$MODE Delphi}
 
