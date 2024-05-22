@@ -1,6 +1,6 @@
 object fmMain: TfmMain
-  Left = 419
-  Top = 191
+  Left = 579
+  Top = 237
   BorderStyle = bsSingle
   Caption = 'Timeline demo'
   ClientHeight = 358

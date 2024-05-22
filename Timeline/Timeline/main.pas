@@ -1,6 +1,6 @@
 unit main;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 interface
 
@@ -45,9 +45,8 @@ type
     procedure btEndSessionClick(Sender: TObject);
 
   private
-    wclTimelineChannel: TwclTimelineChannel;
-
     FActivity: TwclUserActivity;
+    TimelineChannel: TwclTimelineChannel;
 
     procedure DestroyActivity;
     procedure CheckParams;
@@ -65,8 +64,8 @@ uses
 
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-  wclTimelineChannel := TwclTimelineChannel.Create(nil);
-
+  TimelineChannel := TwclTimelineChannel.Create(nil);
+  
   edActivationProtocol.Text := 'uatest';
   edActivationProtocolDescription.Text := 'User Activity Test';
   edActivityId.Text := 'TestUserActivity';
@@ -93,7 +92,7 @@ begin
       ShowMessage('Protocol description can not be an empty string')
 
     else begin
-      Res := wclTimelineChannel.RegisterProtocol(edActivationProtocol.Text,
+      Res := TimelineChannel.RegisterProtocol(edActivationProtocol.Text,
         edActivationProtocolDescription.Text);
       if Res <> WCL_E_SUCCESS then
         ShowMessage('Failed to register protocol: ' + IntToHex(Res, 8))
@@ -111,7 +110,7 @@ begin
     ShowMessage('Activation protocol can not be an empty string')
 
   else begin
-    Res := wclTimelineChannel.UnregisterProtocol(edActivationProtocol.Text);
+    Res := TimelineChannel.UnregisterProtocol(edActivationProtocol.Text);
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Failed to unregister protocol: ' + IntToHex(Res, 8))
     else
@@ -135,9 +134,9 @@ begin
       Str := Copy(Str, p + 1, Length(Str) - p);
       // Start activity with given ID.
       if Str <> '' then begin
-        Res := wclTimelineChannel.Open;
+        Res := TimelineChannel.Open;
         if Res = WCL_E_SUCCESS then begin
-          Res := wclTimelineChannel.CreateActivity(Str, FActivity);
+          Res := TimelineChannel.CreateActivity(Str, FActivity);
           if Res = WCL_E_SUCCESS then begin
             ShowMessage('Application started from Activity. Activity opened.');
             laState.Caption := 'Published';
@@ -147,7 +146,7 @@ begin
             laProtocol.Caption := FActivity.Protocol;
             edTitleCaption.Text := FActivity.Title;
           end else
-            wclTimelineChannel.Close;
+            TimelineChannel.Close;
         end;
       end;
     end;
@@ -158,7 +157,7 @@ procedure TfmMain.btOpenClick(Sender: TObject);
 var
   Res: Integer;
 begin
-  Res := wclTimelineChannel.Open;
+  Res := TimelineChannel.Open;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Open channel failed: 0x' + IntToHex(Res, 8))
   else
@@ -171,7 +170,7 @@ var
 begin
   DestroyActivity;
 
-  Res := wclTimelineChannel.Close;
+  Res := TimelineChannel.Close;
   if Res <> WCL_E_SUCCESS then
     ShowMessage('Close channel failed: 0x' + IntToHex(Res, 8))
   else
@@ -181,8 +180,9 @@ end;
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
   DestroyActivity;
-  wclTimelineChannel.Close;
-  wclTimelineChannel.Free;
+
+  TimelineChannel.Close;
+  TimelineChannel.Free;
 end;
 
 procedure TfmMain.btCreateActivityClick(Sender: TObject);
@@ -193,7 +193,7 @@ begin
     ShowMessage('Activity has already been created')
 
   else begin
-    Res := wclTimelineChannel.CreateActivity(edActivityId.Text, FActivity);
+    Res := TimelineChannel.CreateActivity(edActivityId.Text, FActivity);
     if Res <> WCL_E_SUCCESS then
       ShowMessage('Create activity failed: 0x' + IntToHex(Res, 8))
 

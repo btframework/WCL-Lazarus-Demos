@@ -1,10 +1,9 @@
-program TimelineDemo_D7;
+program TimelineDemo;
 
-{$I wcl.inc}
+{$MODE Delphi}
 
 uses
-  Interfaces,
-  Forms,
+  Forms, Interfaces,
   main in 'main.pas' {fmMain};
 
 {$R *.res}
