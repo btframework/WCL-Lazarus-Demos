@@ -909,7 +909,7 @@ end;
 
 procedure TfmMain.edRepeatsKeyPress(Sender: TObject; var Key: Char);
 begin
-  if Key in ['0'..'9'] then
+  if (Key in ['0'..'9']) or (Key = #8) then
     inherited
   else
     Key := #0;
