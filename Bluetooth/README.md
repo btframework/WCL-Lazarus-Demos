@@ -1,16 +1,16 @@
 # Bluetooth Framework Demos for Lazarus
 
-This directory contains the **Bluetooth Framework** demos for **Lazarus**/**Free Pascal**.
+Bluetooth Framework **VCL Edition** can be used with **Lazarus**/**Free Pascal**. This repository contains Bluetooth Framework sample applications for FPC Lazarus IDE.
 
 ## Pre-requirements
 
-Pre-compiled demo libraries were built in Lazarus 2.2.6. To be able to run the sample applications you need Lazarus 2.2.6 with default FPC version.
+Pre-compiled Lazarus libraries are built in Lazarus 2.2.6. To be able to run the sample applications you need Lazarus 2.2.6 with default FPC version.
 
 ## Full version
 
-Because of Lazarus License to be able to build commercial application with Bluetooth Framework you need its source code. You can get it from [our site](https://www.btframework.com/bluetoothframework.htm).
+To be able to use registered/full version of Bluetooth Framework with your Lazarus projects you need its source code. You can get it from [our site](https://www.btframework.com/bluetoothframework.htm).
 
-Please read Wireless Communication Library [EULA](https://www.btframework.com/eula.htm) before re-distributing your Lazarus application/package. This repository contains pre-compiled Lazarus demos for testing purpose only. It can not be used in any final products.
+Please read Wireless Communication Library [EULA](https://www.btframework.com/eula.htm) before re-distributing your Lazarus application/package. This repository contains pre-compiled Lazarus libraries for testing purpose only. It can not be used in any final products.
 
 ## Redistributing Bluetooth Framework libraries from this repository
 
