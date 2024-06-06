@@ -2,18 +2,18 @@
 
 Wireless Communication Library **VCL Edition** can be used with **Lazarus**/**Free Pascal**. This repository contains Wireless Communication Library demo applications for FPC Lazarus IDE.
 
-## How to run demos with Lazarus IDE
+## Pre-requirements
 
-To be able to build this demos you should use Wireless Communication Library Framework **with source code**. Before building the project open .lpi file. For example, for *Bluetooth Manager* demo it is *BluetoothManager_D7.lpi*. Find **<SearchPaths>** tag there. It will look like below
+Pre-compiled demo libraries were built in Lazarus 2.2.6. To be able to run the sample applications you need Lazarus 2.2.6 with default FPC version.
 
-```XML
-<SearchPaths>
-  <IncludeFiles Value="..\..\..\..\..\WCL7\VCL\Source"/>
-  <OtherUnitFiles Value="..\..;..\..\..\..\..\WCL7\VCL\Source\Common;..\..\..\..\..\WCL7\VCL\Source\Communication;..\..\..\..\..\WCL7\VCL\Source\Bluetooth"/>
-  <UnitOutputDirectory Value="build"/>
-</SearchPaths>
-```
-  
-Change path to the Framework's source code to the path that is correct on your machine. Now you can open the project in Lazarus IDE and build it.
+## Full version
+
+Because of Lazarus License to be able to build commercial application with Wireless Communication Library you need the WCL source code. You can get it from [our site](https://www.btframework.com/wcl.htm).
+
+Please read Wireless Communication Library [EULA](https://www.btframework.com/eula.htm) before re-distributing your Lazarus application/package. This repository contains pre-compiled Lazarus demos for testing purpose only. It can not be used in any final products.
+
+## Redistributing WCL libraries from this repository
+
+You **can not** redistribute any content of **Libs** folder. You are free to redistribute/clone/fork the repository but you **MUST NOT** clone/redistribute/fork any content of the **Libs** folder. If you need/want to do so simple **add link** to the original Libs folder.
 
 Should you have any questions please do not hesitate to contact us at support@btframework.com
