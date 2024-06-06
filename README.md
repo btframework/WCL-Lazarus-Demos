@@ -1,10 +1,10 @@
 # Wireless Communication Library Demos for Lazarus
 
-Wireless Communication Library **VCL Edition** can be used with **Lazarus**/**Free Pascal**. This repository contains Wireless Communication Library demo applications for FPC Lazarus IDE.
+Wireless Communication Library **VCL Edition** can be used with **Lazarus**/**Free Pascal**. This repository contains Wireless Communication Library sample applications for FPC Lazarus IDE.
 
 ## Pre-requirements
 
-Pre-compiled demo libraries were built in Lazarus 2.2.6. To be able to run the sample applications you need Lazarus 2.2.6 with default FPC version.
+Pre-compiled Lazarus libraries are built in Lazarus 2.2.6. To be able to run the sample applications you need Lazarus 2.2.6 with default FPC version.
 
 ## Full version
 
