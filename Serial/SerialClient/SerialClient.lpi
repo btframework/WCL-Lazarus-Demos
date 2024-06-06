@@ -48,8 +48,8 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <SearchPaths>
-      <IncludeFiles Value="..\..\..\..\..\WCL7\VCL\Source;$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..;..\..\..\..\..\WCL7\VCL\Source\Common;..\..\..\..\..\WCL7\VCL\Source\Communication;..\..\..\..\..\WCL7\VCL\Source\Serial"/>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="..\..\Libs\Serial;..\..\Libs\Common;..\..\Libs\Communication"/>
       <UnitOutputDirectory Value="build"/>
     </SearchPaths>
     <Parsing>

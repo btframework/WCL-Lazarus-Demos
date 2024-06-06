@@ -38,7 +38,9 @@
       <Unit>
         <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="fmMain"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit>
     </Units>
   </ProjectOptions>
@@ -46,8 +48,8 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <SearchPaths>
-      <IncludeFiles Value="..\..\..\..\..\WCL7\VCL\Source;$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..;..\..\..\..\..\WCL7\VCL\Source\Common;..\..\..\..\..\WCL7\VCL\Source\Communication;..\..\..\..\..\WCL7\VCL\Source\IrDA"/>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="..\..\Libs\IrDA;..\..\Libs\Common;..\..\Libs\Communication"/>
       <UnitOutputDirectory Value="build"/>
     </SearchPaths>
     <Parsing>

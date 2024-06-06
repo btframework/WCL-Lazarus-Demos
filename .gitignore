@@ -1,19 +1,8 @@
 /**/build
+/**/Packages
 
-*.ppu
-*.o
-*.a
 *.lps
 *.or
 *.rst
-*.compiled
 *.exe
 *.bak
-Bluetooth/GattClient/backup/GattClient_D7.lpi
-Bluetooth/GattClient/backup/main.lfm
-Bluetooth/GattClient/backup/main.pas
-Serial/SerialClient/backup/main.lfm
-Serial/SerialClient/backup/main.pas
-Serial/SerialClient/backup/SerialClient_D7.lpi
-Bluetooth/AudioSwitcher/backup/main.lfm
-Bluetooth/AudioSwitcher/backup/main.pas

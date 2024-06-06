@@ -1,13 +1,5 @@
 # Wireless Communication Library Demos for Lazarus
 
-Starting from:
-
-- Bluetooth Framework 7.14.1.1
-- IrDA Framework 7.8.4.1
-- Serial Framework 7.7.4.1
-- Timeline Framework 7.1.4.1
-- WiFi Framework 7.10.5.1
-
 Wireless Communication Library **VCL Edition** can be used with **Lazarus**/**Free Pascal**. This repository contains Wireless Communication Library demo applications for FPC Lazarus IDE.
 
 ## How to run demos with Lazarus IDE
