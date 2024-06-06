@@ -8,9 +8,9 @@ Pre-compiled demo libraries were built in Lazarus 2.2.6. To be able to run the s
 
 ## Full version
 
-Because of Lazarus License to be able to build commercial application with Wireless Communication Library you need the WCL source code. You can get it from [our site](https://www.btframework.com/wcl.htm).
+To be able to use registered/full version of Wireless Communication Library with your Lazarus projects you need the WCL source code. You can get it from [our site](https://www.btframework.com/wcl.htm).
 
-Please read Wireless Communication Library [EULA](https://www.btframework.com/eula.htm) before re-distributing your Lazarus application/package. This repository contains pre-compiled Lazarus demos for testing purpose only. It can not be used in any final products.
+Please read Wireless Communication Library [EULA](https://www.btframework.com/eula.htm) before re-distributing your Lazarus application/package. This repository contains pre-compiled Lazarus libraries for testing purpose only. It can not be used in any final products.
 
 ## Redistributing WCL libraries from this repository
 
