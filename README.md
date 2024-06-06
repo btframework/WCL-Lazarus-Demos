@@ -2,6 +2,24 @@
 
 Wireless Communication Library **VCL Edition** can be used with **Lazarus**/**Free Pascal**. This repository contains Wireless Communication Library sample applications for FPC Lazarus IDE.
 
+## Frameworks
+
+This repository contains sample applications for the following **Wireless Communication Library Frameworks**
+
+- [Bluetooth Framework](https://www.btframework.com/bluetoothframework.htm)
+- [IrDA Framework](https://www.btframework.com/irdaframework.htm)
+- [Serial Framework](https://www.btframework.com/serialframework.htm)
+- [Timeline Framework](https://www.btframework.com/timelineframework.htm)
+- [WiFi Framework](https://www.btframework.com/bluetoothframework.htm)
+
+Please refer to the **ReadMe** file of the specific framework in this repository to find more details about framework specific **pre-requirements**. Here are the links:
+
+- [Bluetooth Framework Read Me](https://github.com/btframework/WCL-Lazarus-Demos/tree/main/Bluetooth)
+- [IrDA Framework Read Me](https://github.com/btframework/WCL-Lazarus-Demos/tree/main/IrDA)
+- [Serial Framework Read Me](https://github.com/btframework/WCL-Lazarus-Demos/tree/main/Serial)
+- [Timeline Framework Read Me](https://github.com/btframework/WCL-Lazarus-Demos/tree/main/Timeline)
+- [WiFi Framework Read Me](https://github.com/btframework/WCL-Lazarus-Demos/tree/main/WiFi)
+
 ## Pre-requirements
 
 Pre-compiled Lazarus libraries are built in Lazarus 2.2.6. To be able to run the sample applications you need Lazarus 2.2.6 with default FPC version.
