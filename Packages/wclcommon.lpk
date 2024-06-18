@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <PathDelim Value="\"/>
+    <Name Value="wclCommon"/>
+    <Type Value="RunTimeOnly"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="..\..\..\..\WCL7\VCL\Source"/>
+        <OtherUnitFiles Value="..\..\..\..\WCL7\VCL\Source\Common;..;..\Libs"/>
+        <UnitOutputDirectory Value="..\Libs\Common"/>
+      </SearchPaths>
+      <Parsing>
+        <SyntaxOptions>
+          <SyntaxMode Value="Delphi"/>
+        </SyntaxOptions>
+      </Parsing>
+      <Other>
+        <CustomOptions Value="-d_WCL_DEMO_"/>
+        <OtherDefines Count="1">
+          <Define0 Value="_WCL_DEMO_"/>
+        </OtherDefines>
+      </Other>
+    </CompilerOptions>
+    <Files>
+      <Item>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclErrors.pas"/>
+        <UnitName Value="wclErrors"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclHelpers.pas"/>
+        <UnitName Value="wclHelpers"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclMessaging.pas"/>
+        <UnitName Value="wclMessaging"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclPowerEvents.pas"/>
+        <UnitName Value="wclPowerEvents"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclThread.pas"/>
+        <UnitName Value="wclThread"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclWinAPI.pas"/>
+        <UnitName Value="wclWinAPI"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclWinUsb.pas"/>
+        <UnitName Value="wclWinUsb"/>
+      </Item>
+      <Item>
+        <Filename Value="..\Libs\msxml.pas"/>
+        <UnitName Value="msxml"/>
+      </Item>
+    </Files>
+    <RequiredPkgs>
+      <Item>
+        <PackageName Value="FCL"/>
+      </Item>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
