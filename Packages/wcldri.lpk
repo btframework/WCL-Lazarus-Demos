@@ -2,15 +2,15 @@
 <CONFIG>
   <Package Version="5">
     <PathDelim Value="\"/>
-    <Name Value="wclWiFiFramework"/>
+    <Name Value="wcldri"/>
     <Type Value="RunTimeOnly"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value="..\..\..\..\WCL7\VCL\Source"/>
-        <OtherUnitFiles Value="..\..\..\..\WCL7\VCL\Source\WiFi"/>
-        <UnitOutputDirectory Value="..\Libs\WiFi"/>
+        <OtherUnitFiles Value="..\..\..\..\WCL7\VCL\Source\DRI"/>
+        <UnitOutputDirectory Value="..\Libs\Dri"/>
       </SearchPaths>
       <Parsing>
         <SyntaxOptions>
@@ -26,33 +26,13 @@
     </CompilerOptions>
     <Files>
       <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclNlm.pas"/>
-        <UnitName Value="wclNlm"/>
-      </Item>
-      <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclNlmAPI.pas"/>
-        <UnitName Value="wclNlmAPI"/>
-      </Item>
-      <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclWiFi.pas"/>
-        <UnitName Value="wclWiFi"/>
-      </Item>
-      <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclWiFiDri.pas"/>
-        <UnitName Value="wclWiFiDri"/>
-      </Item>
-      <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclWiFiErrors.pas"/>
-        <UnitName Value="wclWiFiErrors"/>
-      </Item>
-      <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclWlan.pas"/>
-        <UnitName Value="wclWlan"/>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\DRI\wclDroneRemoteId.pas"/>
+        <UnitName Value="wclDroneRemoteId"/>
       </Item>
     </Files>
     <RequiredPkgs>
       <Item>
-        <PackageName Value="wcldri"/>
+        <PackageName Value="wclCommon"/>
       </Item>
       <Item>
         <PackageName Value="FCL"/>
