@@ -2,13 +2,13 @@
   This source is only used to compile and install the package.
  }
 
-unit wcldri;
+unit wclDri;
 
 {$warn 5023 off : no warning about unused units}
 interface
 
 uses
-  wclDroneRemoteId;
+  wclDriCommon, wclDriAsd;
 
 implementation
 

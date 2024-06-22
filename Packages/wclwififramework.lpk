@@ -38,10 +38,6 @@
         <UnitName Value="wclWiFi"/>
       </Item>
       <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclWiFiDri.pas"/>
-        <UnitName Value="wclWiFiDri"/>
-      </Item>
-      <Item>
         <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclWiFiErrors.pas"/>
         <UnitName Value="wclWiFiErrors"/>
       </Item>
@@ -52,7 +48,7 @@
     </Files>
     <RequiredPkgs>
       <Item>
-        <PackageName Value="wcldri"/>
+        <PackageName Value="wclDri"/>
       </Item>
       <Item>
         <PackageName Value="FCL"/>

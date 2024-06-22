@@ -76,6 +76,9 @@
     </Files>
     <RequiredPkgs>
       <Item>
+        <PackageName Value="wclDri"/>
+      </Item>
+      <Item>
         <PackageName Value="wclCommunication"/>
       </Item>
       <Item>

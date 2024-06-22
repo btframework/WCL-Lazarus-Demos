@@ -2,7 +2,7 @@
 <CONFIG>
   <Package Version="5">
     <PathDelim Value="\"/>
-    <Name Value="wcldri"/>
+    <Name Value="wclDri"/>
     <Type Value="RunTimeOnly"/>
     <CompilerOptions>
       <Version Value="11"/>
@@ -26,8 +26,12 @@
     </CompilerOptions>
     <Files>
       <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\DRI\wclDroneRemoteId.pas"/>
-        <UnitName Value="wclDroneRemoteId"/>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\DRI\wclDriCommon.pas"/>
+        <UnitName Value="wclDriCommon"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\DRI\wclDriAsd.pas"/>
+        <UnitName Value="wclDriAsd"/>
       </Item>
     </Files>
     <RequiredPkgs>

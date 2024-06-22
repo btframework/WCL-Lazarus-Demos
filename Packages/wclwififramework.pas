@@ -8,7 +8,7 @@ unit wclWiFiFramework;
 interface
 
 uses
-  wclNlm, wclNlmAPI, wclWiFi, wclWiFiDri, wclWiFiErrors, wclWlan;
+  wclNlm, wclNlmAPI, wclWiFi, wclWiFiErrors, wclWlan;
 
 implementation
 
