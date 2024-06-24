@@ -5,7 +5,8 @@ unit main;
 interface
 
 uses
-  Forms, Controls, StdCtrls, Classes, wclBluetooth, ComCtrls;
+  Forms, Controls, StdCtrls, Classes, wclBluetooth, ComCtrls, wclDriCommon,
+  wclDriAsd;
 
 type
   TAdvertisementFrame = (
@@ -29,6 +30,7 @@ type
     afManufacturerRaw,
     afMicrosoftCdpBeacon,
     afProximityBeacon,
+    afDriAsd,
     afUnknown
   );
 
@@ -353,6 +355,17 @@ type
     property CompanyId: Word read FCompanyId;
   end;
 
+  TDriAsdFrame = class(TFrameStorage)
+  private
+    FRaw: TwclDriRawData;
+
+  public
+    constructor Create(const Address: Int64; const Timestamp: Int64;
+      const Rssi: SByte; const Raw: TwclDriRawData);
+
+    property Raw: TwclDriRawData read FRaw;
+  end;
+
   TfmMain = class(TForm)
     btWatcherStart: TButton;
     btWatcherStop: TButton;
@@ -491,6 +504,8 @@ type
       const ExtendedDeviceStatus: TwclBluetoothLeCdpBeaconExtendedDeviceStatuses;
       const Salt: TwclBluetoothLeCdpBeaconSalt;
       const Hash: TwclBluetoothLeCdpBeaconHash);
+    procedure BeaconWatcherDriAsdMessage(Sender: TObject; const Address: Int64;
+      const Timestamp: Int64; const Rssi: SByte; const Raw: TwclDriRawData);
     procedure BeaconWatcherProximityBeaconFrame(Sender: TObject;
       const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
       const CompanyId: Word; const Major: Word; const Minor: Word;
@@ -520,6 +535,7 @@ type
     procedure ShowFrameBaseData(const Frame: TFrameStorage);
     procedure ShowFrameRawData(
       const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure ShowDriFrameRawData(const Raw: TwclDriRawData);
 
     procedure ShowAppearanceFrame(const Frame: TAppearanceFrame);
     procedure ShowExtInformationFrame(const Frame: TExtInformationFrame);
@@ -542,6 +558,7 @@ type
     procedure ShowMicrosoftCdpBeaconFrame(const Frame: TMicrosoftCdpBeaconFrame);
     procedure ShowProximityBeaconFrame(const Frame: TProximityBeaconFrame);
     procedure ShowFrameData(const Frame: TFrameStorage);
+    procedure ShowDriAsdFrame(const Frame: TDriAsdFrame);
 
     procedure AddAdvertisement(const Adv: TwclBluetoothLeAdvertisement);
   end;
@@ -849,6 +866,16 @@ begin
   FCompanyId := CompanyId;
 end;
 
+{ TDriAsdFrame }
+
+constructor TDriAsdFrame.Create(const Address: Int64; const Timestamp: Int64;
+  const Rssi: SByte; const Raw: TwclDriRawData);
+begin
+  inherited Create(afDriAsd, Address, Timestamp, Rssi);
+
+  FRaw := Raw;
+end;
+
 { TfmMain }
 
 procedure TfmMain.AdvertiserDefaults;
@@ -1040,6 +1067,7 @@ begin
       afManufacturerRaw: FrameItem.SubItems.Add('Manufacturer');
       afMicrosoftCdpBeacon: FrameItem.SubItems.Add('Microsoft CDP');
       afProximityBeacon: FrameItem.SubItems.Add('Proximity');
+      afDriAsd: FrameItem.SubItems.Add('DRI ASD');
       else FrameItem.SubItems.Add('Unknown');
     end;
   end;
@@ -1114,6 +1142,20 @@ begin
 
     if Str <> '' then
       ShowData(First, Str);
+  end;
+end;
+
+procedure TfmMain.ShowDriFrameRawData(const Raw: TwclDriRawData);
+var
+  Len: Integer;
+  Data: TwclBluetoothLeAdvertisementFrameRawData;
+begin
+  Len := Length(Raw);
+  if Len > 0 then begin
+    Data := nil;
+    SetLength(Data, Len);
+    CopyMemory(Pointer(Data), Pointer(Raw), Len);
+    ShowFrameRawData(Data);
   end;
 end;
 
@@ -1392,6 +1434,13 @@ begin
   ShowFrameRawData(Frame.Data);
 end;
 
+procedure TfmMain.ShowDriAsdFrame(const Frame: TDriAsdFrame);
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowDriFrameRawData(Frame.Raw);
+end;
+
 procedure TfmMain.ShowFrameData(const Frame: TFrameStorage);
 begin
   lvFrameDetails.Items.Clear;
@@ -1417,6 +1466,7 @@ begin
     afManufacturerRaw: ShowManufacturerFrame(TManufacturerFrame(Frame));
     afMicrosoftCdpBeacon: ShowMicrosoftCdpBeaconFrame(TMicrosoftCdpBeaconFrame(Frame));
     afProximityBeacon: ShowProximityBeaconFrame(TProximityBeaconFrame(Frame));
+    afDriAsd: ShowDriAsdFrame(TDriAsdFrame(Frame));
   end;
 end;
 
@@ -1817,6 +1867,16 @@ var
 begin
   Frame := TProximityBeaconFrame.Create(Address, Timestamp, Rssi, Data, Uuid,
     CompanyId, Major, Minor, TxRssi);
+  AddFrame(Frame);
+end;
+
+procedure TfmMain.BeaconWatcherDriAsdMessage(Sender: TObject;
+  const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
+  const Raw: TwclDriRawData);
+var
+  Frame: TFrameStorage;
+begin
+  Frame := TDriAsdFrame.Create(Address, Timestamp, Rssi, Raw);
   AddFrame(Frame);
 end;
 

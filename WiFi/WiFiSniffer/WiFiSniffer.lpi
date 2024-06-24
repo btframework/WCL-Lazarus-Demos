@@ -49,7 +49,7 @@
     <PathDelim Value="\"/>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\Libs\Common;..\..\Libs\WiFi"/>
+      <OtherUnitFiles Value="..\..\Libs\Common;..\..\Libs\WiFi;..\..\Libs\DRI"/>
       <UnitOutputDirectory Value="build"/>
     </SearchPaths>
     <Parsing>
