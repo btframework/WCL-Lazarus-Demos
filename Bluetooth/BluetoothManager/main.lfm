@@ -1,88 +1,95 @@
 object fmMain: TfmMain
-  Left = 404
-  Top = 193
+  Left = 399
+  Height = 759
+  Top = 259
+  Width = 811
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Bluetooth Manager Demo (for Classic Devices)'
   ClientHeight = 759
   ClientWidth = 811
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
+  Position = poScreenCenter
+  LCLVersion = '2.2.6.0'
   object laTimeout: TLabel
-    Left = 88
-    Top = 120
-    Width = 38
+    Left = 86
     Height = 13
+    Top = 136
+    Width = 38
     Caption = 'Timeout'
+    ParentColor = False
   end
   object laPin: TLabel
-    Left = 176
-    Top = 280
-    Width = 18
+    Left = 174
     Height = 13
+    Top = 296
+    Width = 18
     Caption = 'PIN'
+    ParentColor = False
   end
   object laDiscoveringMode: TLabel
-    Left = 192
-    Top = 120
-    Width = 27
+    Left = 190
     Height = 13
+    Top = 136
+    Width = 27
     Caption = 'Mode'
+    ParentColor = False
   end
   object laMitmProtection: TLabel
-    Left = 232
-    Top = 280
-    Width = 28
+    Left = 230
     Height = 13
+    Top = 296
+    Width = 28
     Caption = 'MITM'
+    ParentColor = False
   end
   object laIoCap: TLabel
-    Left = 440
-    Top = 280
-    Width = 33
+    Left = 438
     Height = 13
+    Top = 296
+    Width = 33
     Caption = 'IO Cap'
+    ParentColor = False
   end
   object laBleProtection: TLabel
-    Left = 592
-    Top = 280
-    Width = 71
+    Left = 590
     Height = 13
+    Top = 296
+    Width = 71
     Caption = 'BLE Protection'
+    ParentColor = False
   end
   object laPairingMethod: TLabel
-    Left = 720
-    Top = 280
-    Width = 70
+    Left = 718
     Height = 13
+    Top = 296
+    Width = 70
     Caption = 'Pairing method'
+    ParentColor = False
   end
   object lvEvents: TListView
     Left = 8
+    Height = 137
     Top = 584
     Width = 793
-    Height = 137
-    Columns = <
+    Columns = <    
       item
         Caption = 'Driver'
         Width = 100
-      end
+      end    
       item
         Caption = 'Event'
         Width = 220
-      end
+      end    
       item
         Caption = 'Parameter'
         Width = 220
-      end
+      end    
       item
         Caption = 'Value'
         Width = 220
@@ -97,74 +104,74 @@ object fmMain: TfmMain
   end
   object btClearEvents: TButton
     Left = 728
+    Height = 25
     Top = 728
     Width = 75
-    Height = 25
     Anchors = [akTop, akRight]
     Caption = 'Clear'
-    TabOrder = 1
     OnClick = btClearEventsClick
+    TabOrder = 1
   end
   object btOpen: TButton
     Left = 8
-    Top = 8
-    Width = 75
     Height = 25
+    Top = 8
+    Width = 50
     Caption = 'Open'
-    TabOrder = 2
     OnClick = btOpenClick
+    TabOrder = 2
   end
   object btClose: TButton
-    Left = 88
-    Top = 8
-    Width = 75
+    Left = 64
     Height = 25
+    Top = 8
+    Width = 48
     Caption = 'Close'
-    TabOrder = 3
     OnClick = btCloseClick
+    TabOrder = 3
   end
   object lvRadios: TListView
     Left = 8
+    Height = 82
     Top = 38
     Width = 793
-    Height = 67
-    Columns = <
+    Columns = <    
       item
         Caption = 'Driver'
         Width = 100
-      end
+      end    
       item
         Caption = 'Available'
         Width = 70
-      end
+      end    
       item
         Caption = 'Address'
         Width = 100
-      end
+      end    
       item
         Caption = 'Connectable'
         Width = 80
-      end
+      end    
       item
         Caption = 'Discoverable'
         Width = 80
-      end
+      end    
       item
         Caption = 'HCI version'
         Width = 70
-      end
+      end    
       item
         Caption = 'LMP version'
         Width = 80
-      end
+      end    
       item
         Caption = 'Manufacturer'
         Width = 80
-      end
+      end    
       item
         Caption = 'Name'
         Width = 100
-      end
+      end    
       item
         Caption = 'COD'
         Width = 100
@@ -178,91 +185,91 @@ object fmMain: TfmMain
     ViewStyle = vsReport
   end
   object btRefreshRadio: TButton
-    Left = 272
+    Left = 224
+    Height = 25
     Top = 8
     Width = 51
-    Height = 25
     Caption = 'Refresh'
-    TabOrder = 5
     OnClick = btRefreshRadioClick
+    TabOrder = 5
   end
   object btSetConnectable: TButton
-    Left = 328
-    Top = 8
-    Width = 89
+    Left = 280
     Height = 25
-    Caption = 'Set connectable'
-    TabOrder = 6
+    Top = 8
+    Width = 80
+    Caption = 'Connectable'
     OnClick = btSetConnectableClick
+    TabOrder = 6
   end
   object btSetDiscoverable: TButton
-    Left = 424
-    Top = 8
-    Width = 89
+    Left = 368
     Height = 25
-    Caption = 'Set discoverable'
-    TabOrder = 7
+    Top = 8
+    Width = 81
+    Caption = 'Discoverable'
     OnClick = btSetDiscoverableClick
+    TabOrder = 7
   end
   object btSetName: TButton
-    Left = 520
+    Left = 552
+    Height = 25
     Top = 8
     Width = 59
-    Height = 25
     Caption = 'Set name'
-    TabOrder = 8
     OnClick = btSetNameClick
+    TabOrder = 8
   end
   object edName: TEdit
-    Left = 584
-    Top = 8
-    Width = 89
+    Left = 456
     Height = 21
+    Top = 12
+    Width = 89
     TabOrder = 9
     Text = 'NewRadioName'
   end
   object btEnumPaired: TButton
-    Left = 400
-    Top = 112
-    Width = 75
+    Left = 398
     Height = 25
+    Top = 128
+    Width = 75
     Caption = 'Enum paired'
-    TabOrder = 10
     OnClick = btEnumPairedClick
+    TabOrder = 10
   end
   object lvDevices: TListView
-    Left = 8
-    Top = 144
-    Width = 793
+    Left = 6
     Height = 121
-    Columns = <
+    Top = 160
+    Width = 793
+    Columns = <    
       item
         Caption = 'Driver'
         Width = 100
-      end
+      end    
       item
         Caption = 'Address'
         Width = 100
-      end
+      end    
       item
         Caption = 'Class Of Device'
         Width = 90
-      end
+      end    
       item
         Caption = 'Device type'
         Width = 80
-      end
+      end    
       item
         Caption = 'Name'
         Width = 100
-      end
+      end    
       item
         Caption = 'Paired'
-      end
+      end    
       item
         Caption = 'Connected'
         Width = 80
-      end
+      end    
       item
         Caption = 'Address type'
         Width = 80
@@ -276,54 +283,54 @@ object fmMain: TfmMain
     ViewStyle = vsReport
   end
   object btRefreshDevice: TButton
-    Left = 728
-    Top = 112
-    Width = 75
+    Left = 726
     Height = 25
+    Top = 128
+    Width = 75
     Anchors = [akTop, akRight]
     Caption = 'Refresh'
-    TabOrder = 12
     OnClick = btRefreshDeviceClick
+    TabOrder = 12
   end
   object btEnumServices: TButton
-    Left = 8
-    Top = 272
-    Width = 75
+    Left = 6
     Height = 25
+    Top = 288
+    Width = 75
     Caption = 'Enum services'
-    TabOrder = 13
     OnClick = btEnumServicesClick
+    TabOrder = 13
   end
   object lvServices: TListView
     Left = 8
-    Top = 336
+    Height = 105
+    Top = 352
     Width = 793
-    Height = 121
-    Columns = <
+    Columns = <    
       item
         Caption = 'Driver'
         Width = 80
-      end
+      end    
       item
         Caption = 'Address'
         Width = 90
-      end
+      end    
       item
         Caption = 'Handle'
         Width = 80
-      end
+      end    
       item
         Caption = 'UUID'
         Width = 230
-      end
+      end    
       item
         Caption = 'Channel'
         Width = 60
-      end
+      end    
       item
         Caption = 'Name'
         Width = 200
-      end
+      end    
       item
         Caption = 'Comment'
         Width = 100
@@ -337,129 +344,129 @@ object fmMain: TfmMain
     ViewStyle = vsReport
   end
   object btDiscover: TButton
-    Left = 8
-    Top = 112
-    Width = 75
+    Left = 6
     Height = 25
+    Top = 128
+    Width = 75
     Caption = 'Discover'
-    TabOrder = 15
     OnClick = btDiscoverClick
+    TabOrder = 15
   end
   object edTimeout: TEdit
-    Left = 136
-    Top = 112
-    Width = 41
+    Left = 134
     Height = 21
+    Top = 128
+    Width = 41
     TabOrder = 16
     Text = '10'
   end
   object btTerminate: TButton
-    Left = 312
-    Top = 112
-    Width = 75
+    Left = 310
     Height = 25
+    Top = 128
+    Width = 75
     Caption = 'Terminate'
-    TabOrder = 17
     OnClick = btTerminateClick
+    TabOrder = 17
   end
   object btUnpair: TButton
-    Left = 96
-    Top = 304
-    Width = 73
+    Left = 94
     Height = 25
+    Top = 320
+    Width = 73
     Caption = 'Unpair'
-    TabOrder = 18
     OnClick = btUnpairClick
+    TabOrder = 18
   end
   object btPair: TButton
-    Left = 96
-    Top = 272
-    Width = 75
+    Left = 94
     Height = 25
+    Top = 288
+    Width = 75
     Caption = 'Pair'
-    TabOrder = 19
     OnClick = btPairClick
+    TabOrder = 19
   end
   object edPin: TEdit
-    Left = 176
-    Top = 296
-    Width = 49
+    Left = 174
     Height = 21
+    Top = 312
+    Width = 49
     TabOrder = 20
     Text = '0000'
   end
   object btRSSI: TButton
-    Left = 592
-    Top = 112
-    Width = 49
+    Left = 590
     Height = 25
+    Top = 128
+    Width = 49
     Caption = 'RSSI'
-    TabOrder = 21
     OnClick = btRSSIClick
+    TabOrder = 21
   end
   object btTurnOn: TButton
-    Left = 680
-    Top = 8
-    Width = 59
+    Left = 616
     Height = 25
-    Caption = 'Turn ON'
-    TabOrder = 22
+    Top = 8
+    Width = 32
+    Caption = 'ON'
     OnClick = btTurnOnClick
+    TabOrder = 22
   end
   object btTurnOff: TButton
-    Left = 744
-    Top = 8
-    Width = 59
+    Left = 656
     Height = 25
-    Caption = 'Turn OFF'
-    TabOrder = 23
+    Top = 8
+    Width = 32
+    Caption = 'OFF'
     OnClick = btTurnOffClick
+    TabOrder = 23
   end
   object btCreateVCOM: TButton
     Left = 8
+    Height = 25
     Top = 464
     Width = 75
-    Height = 25
     Caption = 'Create vCOM'
-    TabOrder = 24
     OnClick = btCreateVCOMClick
+    TabOrder = 24
   end
   object btDestroyVCOM: TButton
     Left = 88
+    Height = 25
     Top = 464
     Width = 75
-    Height = 25
     Caption = 'Destroy vCOM'
-    TabOrder = 25
     OnClick = btDestroyVCOMClick
+    TabOrder = 25
   end
   object btEnumVCOMs: TButton
     Left = 168
+    Height = 25
     Top = 464
     Width = 75
-    Height = 25
     Caption = 'Enum vCOMs'
-    TabOrder = 26
     OnClick = btEnumVCOMsClick
+    TabOrder = 26
   end
   object lvVComs: TListView
     Left = 8
+    Height = 81
     Top = 496
     Width = 793
-    Height = 81
-    Columns = <
+    Columns = <    
       item
         Caption = 'Driver'
         Width = 80
-      end
+      end    
       item
         Caption = 'Address'
         Width = 90
-      end
+      end    
       item
         Caption = 'Service'
         Width = 230
-      end
+      end    
       item
         Caption = 'Number'
         Width = 60
@@ -474,63 +481,61 @@ object fmMain: TfmMain
   end
   object cbEnumPreinstalled: TCheckBox
     Left = 256
+    Height = 19
     Top = 472
-    Width = 105
-    Height = 17
+    Width = 103
     Caption = 'Enum preinstalled'
     TabOrder = 28
   end
   object btInstallDevice: TButton
     Left = 384
+    Height = 25
     Top = 464
     Width = 91
-    Height = 25
     Caption = 'Install device'
-    TabOrder = 29
     OnClick = btInstallDeviceClick
+    TabOrder = 29
   end
   object btUninstallDevice: TButton
     Left = 480
+    Height = 25
     Top = 464
     Width = 89
-    Height = 25
     Caption = 'Uninstall device'
-    TabOrder = 30
     OnClick = btUninstallDeviceClick
+    TabOrder = 30
   end
   object btIsInRange: TButton
-    Left = 648
-    Top = 112
-    Width = 75
+    Left = 646
     Height = 25
+    Top = 128
+    Width = 75
     Caption = 'Is in range'
-    TabOrder = 31
     OnClick = btIsInRangeClick
+    TabOrder = 31
   end
   object cbDiscoveringMode: TComboBox
-    Left = 224
-    Top = 112
-    Width = 81
+    Left = 222
     Height = 21
-    Style = csDropDownList
+    Top = 128
+    Width = 81
     ItemHeight = 13
     ItemIndex = 0
-    TabOrder = 32
-    Text = 'Classic'
     Items.Strings = (
       'Classic'
-      'BLE')
+      'BLE'
+    )
+    Style = csDropDownList
+    TabOrder = 32
+    Text = 'Classic'
   end
   object cbMitmProtection: TComboBox
-    Left = 232
-    Top = 296
-    Width = 201
+    Left = 230
     Height = 21
-    Style = csDropDownList
+    Top = 312
+    Width = 201
     ItemHeight = 13
     ItemIndex = 3
-    TabOrder = 33
-    Text = 'mitmProtectionRequiredBonding'
     Items.Strings = (
       'mitmProtectionNotRequired'
       'mitmProtectionRequired'
@@ -538,92 +543,107 @@ object fmMain: TfmMain
       'mitmProtectionRequiredBonding'
       'mitmProtectionNotRequiredGeneralBonding'
       'mitmProtectionRequiredGeneralBonding'
-      'mitmProtectionNotDefined')
+      'mitmProtectionNotDefined'
+    )
+    Style = csDropDownList
+    TabOrder = 33
+    Text = 'mitmProtectionRequiredBonding'
   end
   object cbIoCap: TComboBox
-    Left = 440
-    Top = 296
-    Width = 145
+    Left = 438
     Height = 21
-    Style = csDropDownList
+    Top = 312
+    Width = 145
     ItemHeight = 13
     ItemIndex = 1
-    TabOrder = 34
-    Text = 'iocapDisplayYesNo'
     Items.Strings = (
       'iocapDisplayOnly'
       'iocapDisplayYesNo'
       'iocapKeyboardOnly'
       'iocapNoInputNoOutput'
       'iocapDisplayKeyboard'
-      'iocapNotDefined')
+      'iocapNotDefined'
+    )
+    Style = csDropDownList
+    TabOrder = 34
+    Text = 'iocapDisplayYesNo'
   end
   object cbBleProtection: TComboBox
-    Left = 592
-    Top = 296
-    Width = 121
+    Left = 590
     Height = 21
-    Style = csDropDownList
+    Top = 312
+    Width = 121
     ItemHeight = 13
     ItemIndex = 0
-    TabOrder = 35
-    Text = 'pplDefault'
     Items.Strings = (
       'pplDefault'
       'pplNone'
       'pplEncryption'
-      'pplEncryptionAndAuthentication')
+      'pplEncryptionAndAuthentication'
+    )
+    Style = csDropDownList
+    TabOrder = 35
+    Text = 'pplDefault'
   end
   object cbPairingMethod: TComboBox
-    Left = 720
-    Top = 296
-    Width = 73
+    Left = 718
     Height = 21
-    Style = csDropDownList
+    Top = 312
+    Width = 73
     ItemHeight = 13
     ItemIndex = 0
-    TabOrder = 36
-    Text = 'pmAuto'
     Items.Strings = (
       'pmAuto'
       'pmClassic'
-      'pmLe')
+      'pmLe'
+    )
+    Style = csDropDownList
+    TabOrder = 36
+    Text = 'pmAuto'
   end
   object btDisconnect: TButton
     Left = 632
+    Height = 25
     Top = 464
     Width = 75
-    Height = 25
     Caption = 'Disconnect'
-    TabOrder = 37
     OnClick = btDisconnectClick
+    TabOrder = 37
   end
   object btEnumConnected: TButton
-    Left = 480
-    Top = 112
-    Width = 89
+    Left = 478
     Height = 25
+    Top = 128
+    Width = 89
     Caption = 'Enum connected'
-    TabOrder = 38
     OnClick = btEnumConnectedClick
+    TabOrder = 38
   end
   object btEnumInstalledServices: TButton
-    Left = 8
-    Top = 304
-    Width = 75
+    Left = 6
     Height = 25
+    Top = 320
+    Width = 75
     Caption = 'Inst services'
-    TabOrder = 39
     OnClick = btEnumInstalledServicesClick
+    TabOrder = 39
   end
   object cbHandlePairing: TCheckBox
-    Left = 168
-    Top = 16
-    Width = 97
-    Height = 17
+    Left = 120
+    Height = 19
+    Top = 14
+    Width = 88
     Caption = 'Handle pairing'
     Checked = True
     State = cbChecked
     TabOrder = 40
+  end
+  object cbDontTurnOff: TCheckBox
+    Left = 704
+    Height = 19
+    Top = 10
+    Width = 89
+    Caption = 'Don''t turn OFF'
+    TabOrder = 41
   end
 end

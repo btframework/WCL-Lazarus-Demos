@@ -8,7 +8,11 @@ uses
   Forms, wclBluetooth, StdCtrls, Classes, Controls, ComCtrls, wclPowerEvents;
 
 type
+
+  { TfmMain }
+
   TfmMain = class(TForm)
+    cbDontTurnOff: TCheckBox;
     lvEvents: TListView;
     btClearEvents: TButton;
     btOpen: TButton;
@@ -819,6 +823,7 @@ var
   Status: string;
   Found: Boolean;
   Item: TListItem;
+  Res: Integer;
 begin
   if Radio.Available then
     Status := 'Available'
@@ -855,6 +860,17 @@ begin
     Item.SubItems.Add(''); // COD
 
     RefreshRadio(Item);
+  end;
+
+  if cbDontTurnOff.Checked and Radio.Plugged and (not Radio.Available) then
+  begin
+    Res := Radio.TurnOn;
+    if Res = WCL_E_BLUETOOTH_DRIVER_BUSY then begin
+      Sleep(200);
+      Res := Radio.TurnOn;
+    end;
+    if Res <> WCL_E_SUCCESS then
+      TraceEvent(Radio, 'Turn ON', 'Error', IntToHex(Res, 8));
   end;
 end;
 
