@@ -4,7 +4,7 @@ IrDA Framework **VCL Edition** can be used with **Lazarus**/**Free Pascal**. Thi
 
 ## Pre-requirements
 
-Pre-compiled Lazarus libraries are built in Lazarus 2.2.6. To be able to run the sample applications you need Lazarus 2.2.6 with default FPC version.
+Pre-compiled Lazarus libraries are built in **Lazarus 3.4** and **FPC 3.2.2**. To be able to run the sample applications you need Lazarus **3.4** with FPC **3.2.2**.
 
 ## Full version
 
