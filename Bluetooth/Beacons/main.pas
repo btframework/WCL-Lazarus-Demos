@@ -5,8 +5,7 @@ unit main;
 interface
 
 uses
-  Forms, Controls, StdCtrls, Classes, wclBluetooth, ComCtrls, wclDriCommon,
-  wclDriAsd;
+  Forms, Controls, StdCtrls, Classes, wclBluetooth, ComCtrls, wclDriCommon;
 
 type
   TAdvertisementFrame = (
