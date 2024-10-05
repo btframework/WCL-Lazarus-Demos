@@ -291,6 +291,9 @@ begin
         lbEvents.Items.Add('Power state: psSuspend');
       end;
 
+    psPowerStatusChanged:
+      lbEvents.Items.Add('Power state: psPowerStatusChanged');
+
     psUnknown:
       lbEvents.Items.Add('Power state: psUnknown');
   end;

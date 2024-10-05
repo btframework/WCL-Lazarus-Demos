@@ -15,6 +15,8 @@
       <Parsing>
         <SyntaxOptions>
           <SyntaxMode Value="Delphi"/>
+          <CStyleOperator Value="False"/>
+          <CPPInline Value="False"/>
         </SyntaxOptions>
       </Parsing>
       <Other>
@@ -30,8 +32,8 @@
         <UnitName Value="wclErrors"/>
       </Item>
       <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclHelpers.pas"/>
-        <UnitName Value="wclHelpers"/>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclSync.pas"/>
+        <UnitName Value="wclSync"/>
       </Item>
       <Item>
         <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclMessaging.pas"/>
@@ -42,10 +44,6 @@
         <UnitName Value="wclPowerEvents"/>
       </Item>
       <Item>
-        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclThread.pas"/>
-        <UnitName Value="wclThread"/>
-      </Item>
-      <Item>
         <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclWinAPI.pas"/>
         <UnitName Value="wclWinAPI"/>
       </Item>
@@ -54,8 +52,8 @@
         <UnitName Value="wclWinUsb"/>
       </Item>
       <Item>
-        <Filename Value="..\Libs\msxml.pas"/>
-        <UnitName Value="msxml"/>
+        <Filename Value="..\..\..\..\WCL7\VCL\Source\Common\wclOsVer.pas"/>
+        <UnitName Value="wclOsVer"/>
       </Item>
     </Files>
     <RequiredPkgs>

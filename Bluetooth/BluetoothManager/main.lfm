@@ -15,7 +15,7 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.4.0.0'
   object laTimeout: TLabel
     Left = 86
     Height = 13
@@ -109,8 +109,8 @@ object fmMain: TfmMain
     Width = 75
     Anchors = [akTop, akRight]
     Caption = 'Clear'
-    OnClick = btClearEventsClick
     TabOrder = 1
+    OnClick = btClearEventsClick
   end
   object btOpen: TButton
     Left = 8
@@ -118,8 +118,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 50
     Caption = 'Open'
-    OnClick = btOpenClick
     TabOrder = 2
+    OnClick = btOpenClick
   end
   object btClose: TButton
     Left = 64
@@ -127,8 +127,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 48
     Caption = 'Close'
-    OnClick = btCloseClick
     TabOrder = 3
+    OnClick = btCloseClick
   end
   object lvRadios: TListView
     Left = 8
@@ -190,8 +190,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 51
     Caption = 'Refresh'
-    OnClick = btRefreshRadioClick
     TabOrder = 5
+    OnClick = btRefreshRadioClick
   end
   object btSetConnectable: TButton
     Left = 280
@@ -199,8 +199,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 80
     Caption = 'Connectable'
-    OnClick = btSetConnectableClick
     TabOrder = 6
+    OnClick = btSetConnectableClick
   end
   object btSetDiscoverable: TButton
     Left = 368
@@ -208,8 +208,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 81
     Caption = 'Discoverable'
-    OnClick = btSetDiscoverableClick
     TabOrder = 7
+    OnClick = btSetDiscoverableClick
   end
   object btSetName: TButton
     Left = 552
@@ -217,8 +217,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 59
     Caption = 'Set name'
-    OnClick = btSetNameClick
     TabOrder = 8
+    OnClick = btSetNameClick
   end
   object edName: TEdit
     Left = 456
@@ -234,8 +234,8 @@ object fmMain: TfmMain
     Top = 128
     Width = 75
     Caption = 'Enum paired'
-    OnClick = btEnumPairedClick
     TabOrder = 10
+    OnClick = btEnumPairedClick
   end
   object lvDevices: TListView
     Left = 6
@@ -289,8 +289,8 @@ object fmMain: TfmMain
     Width = 75
     Anchors = [akTop, akRight]
     Caption = 'Refresh'
-    OnClick = btRefreshDeviceClick
     TabOrder = 12
+    OnClick = btRefreshDeviceClick
   end
   object btEnumServices: TButton
     Left = 6
@@ -298,8 +298,8 @@ object fmMain: TfmMain
     Top = 288
     Width = 75
     Caption = 'Enum services'
-    OnClick = btEnumServicesClick
     TabOrder = 13
+    OnClick = btEnumServicesClick
   end
   object lvServices: TListView
     Left = 8
@@ -349,8 +349,8 @@ object fmMain: TfmMain
     Top = 128
     Width = 75
     Caption = 'Discover'
-    OnClick = btDiscoverClick
     TabOrder = 15
+    OnClick = btDiscoverClick
   end
   object edTimeout: TEdit
     Left = 134
@@ -366,8 +366,8 @@ object fmMain: TfmMain
     Top = 128
     Width = 75
     Caption = 'Terminate'
-    OnClick = btTerminateClick
     TabOrder = 17
+    OnClick = btTerminateClick
   end
   object btUnpair: TButton
     Left = 94
@@ -375,8 +375,8 @@ object fmMain: TfmMain
     Top = 320
     Width = 73
     Caption = 'Unpair'
-    OnClick = btUnpairClick
     TabOrder = 18
+    OnClick = btUnpairClick
   end
   object btPair: TButton
     Left = 94
@@ -384,8 +384,8 @@ object fmMain: TfmMain
     Top = 288
     Width = 75
     Caption = 'Pair'
-    OnClick = btPairClick
     TabOrder = 19
+    OnClick = btPairClick
   end
   object edPin: TEdit
     Left = 174
@@ -401,8 +401,8 @@ object fmMain: TfmMain
     Top = 128
     Width = 49
     Caption = 'RSSI'
-    OnClick = btRSSIClick
     TabOrder = 21
+    OnClick = btRSSIClick
   end
   object btTurnOn: TButton
     Left = 616
@@ -410,8 +410,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 32
     Caption = 'ON'
-    OnClick = btTurnOnClick
     TabOrder = 22
+    OnClick = btTurnOnClick
   end
   object btTurnOff: TButton
     Left = 656
@@ -419,8 +419,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 32
     Caption = 'OFF'
-    OnClick = btTurnOffClick
     TabOrder = 23
+    OnClick = btTurnOffClick
   end
   object btCreateVCOM: TButton
     Left = 8
@@ -428,8 +428,8 @@ object fmMain: TfmMain
     Top = 464
     Width = 75
     Caption = 'Create vCOM'
-    OnClick = btCreateVCOMClick
     TabOrder = 24
+    OnClick = btCreateVCOMClick
   end
   object btDestroyVCOM: TButton
     Left = 88
@@ -437,8 +437,8 @@ object fmMain: TfmMain
     Top = 464
     Width = 75
     Caption = 'Destroy vCOM'
-    OnClick = btDestroyVCOMClick
     TabOrder = 25
+    OnClick = btDestroyVCOMClick
   end
   object btEnumVCOMs: TButton
     Left = 168
@@ -446,8 +446,8 @@ object fmMain: TfmMain
     Top = 464
     Width = 75
     Caption = 'Enum vCOMs'
-    OnClick = btEnumVCOMsClick
     TabOrder = 26
+    OnClick = btEnumVCOMsClick
   end
   object lvVComs: TListView
     Left = 8
@@ -481,9 +481,9 @@ object fmMain: TfmMain
   end
   object cbEnumPreinstalled: TCheckBox
     Left = 256
-    Height = 19
+    Height = 17
     Top = 472
-    Width = 103
+    Width = 101
     Caption = 'Enum preinstalled'
     TabOrder = 28
   end
@@ -493,8 +493,8 @@ object fmMain: TfmMain
     Top = 464
     Width = 91
     Caption = 'Install device'
-    OnClick = btInstallDeviceClick
     TabOrder = 29
+    OnClick = btInstallDeviceClick
   end
   object btUninstallDevice: TButton
     Left = 480
@@ -502,8 +502,8 @@ object fmMain: TfmMain
     Top = 464
     Width = 89
     Caption = 'Uninstall device'
-    OnClick = btUninstallDeviceClick
     TabOrder = 30
+    OnClick = btUninstallDeviceClick
   end
   object btIsInRange: TButton
     Left = 646
@@ -511,8 +511,8 @@ object fmMain: TfmMain
     Top = 128
     Width = 75
     Caption = 'Is in range'
-    OnClick = btIsInRangeClick
     TabOrder = 31
+    OnClick = btIsInRangeClick
   end
   object cbDiscoveringMode: TComboBox
     Left = 222
@@ -607,8 +607,8 @@ object fmMain: TfmMain
     Top = 464
     Width = 75
     Caption = 'Disconnect'
-    OnClick = btDisconnectClick
     TabOrder = 37
+    OnClick = btDisconnectClick
   end
   object btEnumConnected: TButton
     Left = 478
@@ -616,8 +616,8 @@ object fmMain: TfmMain
     Top = 128
     Width = 89
     Caption = 'Enum connected'
-    OnClick = btEnumConnectedClick
     TabOrder = 38
+    OnClick = btEnumConnectedClick
   end
   object btEnumInstalledServices: TButton
     Left = 6
@@ -625,14 +625,14 @@ object fmMain: TfmMain
     Top = 320
     Width = 75
     Caption = 'Inst services'
-    OnClick = btEnumInstalledServicesClick
     TabOrder = 39
+    OnClick = btEnumInstalledServicesClick
   end
   object cbHandlePairing: TCheckBox
     Left = 120
-    Height = 19
+    Height = 17
     Top = 14
-    Width = 88
+    Width = 86
     Caption = 'Handle pairing'
     Checked = True
     State = cbChecked
@@ -640,9 +640,9 @@ object fmMain: TfmMain
   end
   object cbDontTurnOff: TCheckBox
     Left = 704
-    Height = 19
+    Height = 17
     Top = 10
-    Width = 89
+    Width = 87
     Caption = 'Don''t turn OFF'
     TabOrder = 41
   end

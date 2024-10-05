@@ -156,7 +156,7 @@ var
 implementation
 
 uses
-  Dialogs, SysUtils, wclErrors, wclHelpers;
+  Dialogs, SysUtils, wclErrors;
 
 {$R *.lfm}
 

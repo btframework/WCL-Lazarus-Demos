@@ -14,7 +14,7 @@ object fmMain: TfmMain
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   Position = poScreenCenter
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.4.0.0'
   object laBaudRate: TLabel
     Left = 8
     Height = 13
@@ -221,8 +221,8 @@ object fmMain: TfmMain
     Top = 352
     Width = 75
     Caption = 'Clear'
-    OnClick = btClearClick
     TabOrder = 1
+    OnClick = btClearClick
   end
   object btEnum: TButton
     Left = 8
@@ -230,8 +230,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 75
     Caption = 'Enum'
-    OnClick = btEnumClick
     TabOrder = 2
+    OnClick = btEnumClick
   end
   object cbPorts: TComboBox
     Left = 88
@@ -248,8 +248,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 75
     Caption = 'Connect'
-    OnClick = btConnectClick
     TabOrder = 4
+    OnClick = btConnectClick
   end
   object btDisconnect: TButton
     Left = 280
@@ -257,8 +257,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 75
     Caption = 'Disconnect'
-    OnClick = btDisconnectClick
     TabOrder = 5
+    OnClick = btDisconnectClick
   end
   object btGetConfig: TButton
     Left = 8
@@ -266,8 +266,8 @@ object fmMain: TfmMain
     Top = 48
     Width = 75
     Caption = 'Get Config'
-    OnClick = btGetConfigClick
     TabOrder = 6
+    OnClick = btGetConfigClick
   end
   object edBaudRate: TEdit
     Left = 72
@@ -278,25 +278,25 @@ object fmMain: TfmMain
   end
   object cbParityCheck: TCheckBox
     Left = 80
-    Height = 19
+    Height = 17
     Top = 224
-    Width = 79
+    Width = 77
     Caption = 'Parity check'
     TabOrder = 8
   end
   object cbOutxCtsFlow: TCheckBox
     Left = 224
-    Height = 19
+    Height = 17
     Top = 224
-    Width = 85
+    Width = 83
     Caption = 'Outx Cts Flow'
     TabOrder = 9
   end
   object cbOutxDsrFlow: TCheckBox
     Left = 80
-    Height = 19
+    Height = 17
     Top = 248
-    Width = 86
+    Width = 84
     Caption = 'Outx Dsr Flow'
     TabOrder = 10
   end
@@ -316,49 +316,49 @@ object fmMain: TfmMain
   end
   object cbDsrSensitivity: TCheckBox
     Left = 224
-    Height = 19
+    Height = 17
     Top = 248
-    Width = 86
+    Width = 84
     Caption = 'Dsr Sensitivity'
     TabOrder = 12
   end
   object cbTXContinueOnXoff: TCheckBox
     Left = 80
-    Height = 19
+    Height = 17
     Top = 272
-    Width = 118
+    Width = 116
     Caption = 'TX Continue OnX off'
     TabOrder = 13
   end
   object cbOutX: TCheckBox
     Left = 224
-    Height = 19
+    Height = 17
     Top = 272
-    Width = 44
+    Width = 42
     Caption = 'OutX'
     TabOrder = 14
   end
   object cbInX: TCheckBox
     Left = 224
-    Height = 19
+    Height = 17
     Top = 296
-    Width = 36
+    Width = 34
     Caption = 'InX'
     TabOrder = 15
   end
   object cbErrorCharReplace: TCheckBox
     Left = 80
-    Height = 19
+    Height = 17
     Top = 296
-    Width = 110
+    Width = 108
     Caption = 'Error Char Replace'
     TabOrder = 16
   end
   object cbNullStrip: TCheckBox
     Left = 80
-    Height = 19
+    Height = 17
     Top = 320
-    Width = 62
+    Width = 60
     Caption = 'Null Strip'
     TabOrder = 17
   end
@@ -379,9 +379,9 @@ object fmMain: TfmMain
   end
   object cbAbortOnError: TCheckBox
     Left = 224
-    Height = 19
+    Height = 17
     Top = 320
-    Width = 87
+    Width = 85
     Caption = 'Abort On Error'
     TabOrder = 19
   end
@@ -486,8 +486,8 @@ object fmMain: TfmMain
     Top = 48
     Width = 75
     Caption = 'Set Config'
-    OnClick = btSetConfigClick
     TabOrder = 30
+    OnClick = btSetConfigClick
   end
   object edReadBufferSize: TEdit
     Left = 520
@@ -509,8 +509,8 @@ object fmMain: TfmMain
     Top = 48
     Width = 75
     Caption = 'Get buffers'
-    OnClick = btGetBuffersClick
     TabOrder = 33
+    OnClick = btGetBuffersClick
   end
   object btSetBuffers: TButton
     Left = 520
@@ -518,8 +518,8 @@ object fmMain: TfmMain
     Top = 48
     Width = 75
     Caption = 'Set buffers'
-    OnClick = btSetBuffersClick
     TabOrder = 34
+    OnClick = btSetBuffersClick
   end
   object edReadInterval: TEdit
     Left = 520
@@ -562,8 +562,8 @@ object fmMain: TfmMain
     Top = 152
     Width = 75
     Caption = 'Get timeouts'
-    OnClick = btGetTimeoutsClick
     TabOrder = 40
+    OnClick = btGetTimeoutsClick
   end
   object btSetTimeouts: TButton
     Left = 520
@@ -571,8 +571,8 @@ object fmMain: TfmMain
     Top = 152
     Width = 75
     Caption = 'Set timeouts'
-    OnClick = btSetTimeoutsClick
     TabOrder = 41
+    OnClick = btSetTimeoutsClick
   end
   object btClearCommBreak: TButton
     Left = 624
@@ -580,8 +580,8 @@ object fmMain: TfmMain
     Top = 48
     Width = 105
     Caption = 'Clear comm break'
-    OnClick = btClearCommBreakClick
     TabOrder = 42
+    OnClick = btClearCommBreakClick
   end
   object cbFunc: TComboBox
     Left = 680
@@ -610,8 +610,8 @@ object fmMain: TfmMain
     Top = 80
     Width = 75
     Caption = 'Exec func'
-    OnClick = btFuncClick
     TabOrder = 44
+    OnClick = btFuncClick
   end
   object btFlushBuffers: TButton
     Left = 624
@@ -619,38 +619,38 @@ object fmMain: TfmMain
     Top = 224
     Width = 75
     Caption = 'Flush buffers'
-    OnClick = btFlushBuffersClick
     TabOrder = 45
+    OnClick = btFlushBuffersClick
   end
   object cbpurgeRxAbort: TCheckBox
     Left = 624
-    Height = 19
+    Height = 17
     Top = 128
-    Width = 61
+    Width = 59
     Caption = 'Rx Abort'
     TabOrder = 46
   end
   object cbpurgeRxClear: TCheckBox
     Left = 624
-    Height = 19
+    Height = 17
     Top = 152
-    Width = 60
+    Width = 58
     Caption = 'Rx Clear'
     TabOrder = 47
   end
   object cbpurgeTxAbort: TCheckBox
     Left = 704
-    Height = 19
+    Height = 17
     Top = 128
-    Width = 60
+    Width = 58
     Caption = 'Tx Abort'
     TabOrder = 48
   end
   object cbpurgeTxClear: TCheckBox
     Left = 704
-    Height = 19
+    Height = 17
     Top = 152
-    Width = 59
+    Width = 57
     Caption = 'Tx Clear'
     TabOrder = 49
   end
@@ -660,8 +660,8 @@ object fmMain: TfmMain
     Top = 136
     Width = 75
     Caption = 'Purge'
-    OnClick = btPurgeClick
     TabOrder = 50
+    OnClick = btPurgeClick
   end
   object btSetCommBreak: TButton
     Left = 736
@@ -669,8 +669,8 @@ object fmMain: TfmMain
     Top = 48
     Width = 89
     Caption = 'Set comm break'
-    OnClick = btSetCommBreakClick
     TabOrder = 51
+    OnClick = btSetCommBreakClick
   end
   object edChar: TEdit
     Left = 720
@@ -686,8 +686,8 @@ object fmMain: TfmMain
     Top = 184
     Width = 75
     Caption = 'Transmit'
-    OnClick = btTransmitClick
     TabOrder = 53
+    OnClick = btTransmitClick
   end
   object btSend: TButton
     Left = 480
@@ -695,8 +695,8 @@ object fmMain: TfmMain
     Top = 352
     Width = 75
     Caption = 'Send'
-    OnClick = btSendClick
     TabOrder = 54
+    OnClick = btSendClick
   end
   object edText: TEdit
     Left = 8
@@ -720,8 +720,8 @@ object fmMain: TfmMain
     Top = 8
     Width = 105
     Caption = 'Set write timeout'
-    OnClick = btSetWriteTimeoutClick
     TabOrder = 57
+    OnClick = btSetWriteTimeoutClick
   end
   object cbLineFeed: TComboBox
     Left = 616

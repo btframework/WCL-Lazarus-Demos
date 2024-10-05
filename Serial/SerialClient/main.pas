@@ -150,6 +150,92 @@ implementation
 uses
   SysUtils, wclErrors, Windows, Dialogs;
 
+function DtrControlToIndex(Control: TwclSerialDtrControl): Integer;
+begin
+  case Control of
+    dtrControlDisable: Result := 0;
+    dtrControlEnable: Result := 1;
+    dtrControlHandshake: Result := 2;
+    else Result := -1;
+  end;
+end;
+
+function IndexToDtrControl(Index: Integer): TwclSerialDtrControl;
+begin
+  case Index of
+    0: Result := dtrControlDisable;
+    1: Result := dtrControlEnable;
+    2: Result := dtrControlHandshake;
+    else Result := dtrControlDisable;
+  end;
+end;
+
+function RtsControlToIndex(Control: TwclSerialRtsControl): Integer;
+begin
+  case Control of
+    rtsControlDisable: Result := 0;
+    rtsControlEnable: Result := 1;
+    rtsControlHandshake: Result := 2;
+    rtsControlToggle: Result := 3;
+    else Result := -1;
+  end;
+end;
+
+function IndexToRtsControl(Index: Integer): TwclSerialRtsControl;
+begin
+  case Index of
+    0: Result := rtsControlDisable;
+    1: Result := rtsControlEnable;
+    2: Result := rtsControlHandshake;
+    3: Result := rtsControlToggle;
+    else Result := rtsControlDisable;
+  end;
+end;
+
+function ParityToIndex(Parity: TwclSerialParity): Integer;
+begin
+  case Parity of
+    spNo: Result := 0;
+    spOdd: Result := 1;
+    spEven: Result := 2;
+    spMark: Result := 3;
+    spSpace: Result := 4;
+    else Result := -1;
+  end;
+end;
+
+function IndexToParity(Index: Integer): TwclSerialParity;
+begin
+  case Index of
+    0: Result := spNo;
+    1: Result := spOdd;
+    2: Result := spEven;
+    3: Result := spMark;
+    4: Result := spSpace;
+    else Result := spNo;
+  end;
+end;
+
+function StopBitsToIndex(StopBits: TwclSerialStopBits): Integer;
+begin
+  case StopBits of
+    sbOne: Result := 0;
+    sbOne5: Result := 1;
+    sbTwo: Result := 2;
+    else Result := -1;
+  end;
+end;
+
+function IndexToStopBits(Index: Integer): TwclSerialStopBits;
+begin
+  case Index of
+    0: Result := sbOne;
+    1: Result := sbOne5;
+    2: Result := sbTwo;
+    else Result := sbOne;
+  end;
+end;
+
 {$R *.lfm}
 
 procedure TfmMain.FormCreate(Sender: TObject);
@@ -216,11 +302,11 @@ begin
     cbNullStrip.Checked := Config.NullStrip;
     cbAbortOnError.Checked := Config.AbortOnError;
 
-    cbRtsControl.ItemIndex := Integer(Config.RtsControl);
-    cbDtrControl.ItemIndex := Integer(Config.DtrControl);
+    cbRtsControl.ItemIndex := RtsControlToIndex(Config.RtsControl);
+    cbDtrControl.ItemIndex := DtrControlToIndex(Config.DtrControl);
+    cbParity.ItemIndex := ParityToIndex(Config.Parity);
+    cbStopBits.ItemIndex := StopBitsToIndex(Config.StopBits);
     cbByteSize.ItemIndex := Config.ByteSize - 4;
-    cbParity.ItemIndex := Integer(Config.Parity);
-    cbStopBits.ItemIndex := Integer(Config.StopBits);
   end;
 end;
 
@@ -349,11 +435,11 @@ begin
   Config.NullStrip := cbNullStrip.Checked;
   Config.AbortOnError := cbAbortOnError.Checked;
 
-  Config.RtsControl := TwclSerialRtsControl(cbRtsControl.ItemIndex);
-  Config.DtrControl := TwclSerialDtrControl(cbDtrControl.ItemIndex);
+  Config.RtsControl := IndexToRtsControl(cbRtsControl.ItemIndex);
+  Config.DtrControl := IndexToDtrControl(cbDtrControl.ItemIndex);
+  Config.Parity := IndexToParity(cbParity.ItemIndex);
+  Config.StopBits := IndexToStopBits(cbStopBits.ItemIndex);
   Config.ByteSize := cbByteSize.ItemIndex + 4;
-  Config.Parity := TwclSerialParity(cbParity.ItemIndex);
-  Config.StopBits := TwclSerialStopBits(cbStopBits.ItemIndex);
 
   Res := SerialClient.SetConfig(Config);
   if Res <> WCL_E_SUCCESS then

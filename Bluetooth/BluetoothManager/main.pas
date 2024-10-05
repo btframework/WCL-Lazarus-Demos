@@ -1194,6 +1194,9 @@ begin
         end;
       end;
 
+    psPowerStatusChanged:
+      TraceEvent(nil, 'Power', 'State', 'psPowerStatusChanged');
+
     psUnknown:
       TraceEvent(nil, 'Power', 'State', 'psUnknown');
   end;

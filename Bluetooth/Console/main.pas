@@ -21,8 +21,6 @@ type
     procedure ManagerDeviceFound(Sender: TObject;
       const Radio: TwclBluetoothRadio; const Address: Int64);
 
-    procedure WaitForOperationCompletion;
-
   public
     procedure Run;
   end;
@@ -69,12 +67,12 @@ begin
   WriteLn('  The demo is very simple: it just discovers nearby classic and LE');
   WriteLn('  devices.');
   WriteLn('  The demo shows how to use Bluetooth Framework in console');
-  WriteLn('  applications with APC synchronization.');
+  WriteLn('  applications with Asynchronous messages processing.');
   WriteLn('Press ENTER to continue');
   ReadLn;
 
   // Change default synchronization method.
-  TwclMessageBroadcaster.SetSyncMethod(skApc);
+  TwclMessageBroadcaster.SetMessageProcessingMethod(mpAsync);
 
   // Create classes we have to use.
   Manager := TwclBluetoothManager.Create(nil);
@@ -97,7 +95,7 @@ begin
 
     else begin
       // Wait for Open completion.
-      WaitForOperationCompletion;
+      WaitForSingleObject(FEvent, INFINITE);
 
       // Try to find available Bluetooth Radio. Use first one found.
       if Manager.Count = 0 then
@@ -123,7 +121,7 @@ begin
             WriteLn('Start classic discovering failed: 0x' + IntToHex(Res, 8))
           else
             // Wait for discovering completion.
-            WaitForOperationCompletion;
+            WaitForSingleObject(FEvent, INFINITE);
 
           // Discover LE devices
           WriteLn('Try to start LE discovering');
@@ -132,7 +130,7 @@ begin
             WriteLn('Start LE discovering failed: 0x' + IntToHex(Res, 8))
           else
             // Wait for discovering completion.
-            WaitForOperationCompletion;
+            WaitForSingleObject(FEvent, INFINITE);
         end;
       end;
 
@@ -142,11 +140,11 @@ begin
         WriteLn('Open Bluetooth Manager failed: 0x' + IntToHex(Res, 8))
       else
         // Wait for Close completion.
-        WaitForOperationCompletion;
+        WaitForSingleObject(FEvent, INFINITE);
     end;
 
     // Do not forget about event.
-    FileClose(FEvent);
+    CloseHandle(FEvent);
   end;
 
   // Do not forget to destroy Bluetooth Manager.
@@ -154,11 +152,6 @@ begin
 
   WriteLn('Demo finished. Press ENTER');
   ReadLn;
-end;
-
-procedure TwclConsole.WaitForOperationCompletion;
-begin
-  TwclMessageBroadcaster.Wait(FEvent);
 end;
 
 end.

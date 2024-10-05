@@ -1,56 +1,56 @@
 object fmMain: TfmMain
   Left = 612
+  Height = 457
   Top = 241
+  Width = 814
   BorderStyle = bsSingle
   Caption = 'WiFi Events Demo'
   ClientHeight = 457
   ClientWidth = 814
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
+  Position = poScreenCenter
+  LCLVersion = '3.4.0.0'
   object btEventsOpen: TButton
     Left = 8
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Open'
     TabOrder = 0
     OnClick = btEventsOpenClick
   end
   object btEventsClose: TButton
     Left = 88
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Close'
     TabOrder = 1
     OnClick = btEventsCloseClick
   end
   object lvEvents: TListView
     Left = 8
+    Height = 409
     Top = 40
     Width = 795
-    Height = 409
-    Columns = <
+    Columns = <    
       item
         Caption = 'Interface ID'
         Width = 200
-      end
+      end    
       item
         Caption = 'Event name'
         Width = 200
-      end
+      end    
       item
         Caption = 'Parameter name'
         Width = 200
-      end
+      end    
       item
         Caption = 'Parameter value'
         Width = 200
@@ -65,9 +65,9 @@ object fmMain: TfmMain
   end
   object btEventsClear: TButton
     Left = 729
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Clear'
     TabOrder = 3
     OnClick = btEventsClearClick

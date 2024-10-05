@@ -1,96 +1,96 @@
 object fmMain: TfmMain
   Left = 441
+  Height = 733
   Top = 166
+  Width = 781
   BorderStyle = bsSingle
   Caption = 'Bluetooth GATT Client Demo'
   ClientHeight = 733
   ClientWidth = 781
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
+  Position = poScreenCenter
+  LCLVersion = '3.4.0.0'
   object laCharVal: TLabel
     Left = 216
+    Height = 13
     Top = 272
     Width = 119
-    Height = 13
     Caption = 'Characteristic value (hex)'
   end
   object laOperationFlag: TLabel
     Left = 520
+    Height = 13
     Top = 48
     Width = 66
-    Height = 13
     Caption = 'Operation flag'
   end
   object laProtection: TLabel
     Left = 248
+    Height = 13
     Top = 48
     Width = 48
-    Height = 13
     Caption = 'Protection'
   end
   object laWriteKind: TLabel
     Left = 592
+    Height = 13
     Top = 272
     Width = 51
-    Height = 13
     Caption = 'Write kind:'
   end
   object laSubscribeKind: TLabel
     Left = 104
+    Height = 13
     Top = 424
     Width = 73
-    Height = 13
     Caption = 'Subscribe kind:'
   end
   object laIoCap: TLabel
     Left = 520
+    Height = 13
     Top = 16
     Width = 33
-    Height = 13
     Caption = 'IO Cap'
   end
   object laMitmProtection: TLabel
     Left = 264
+    Height = 13
     Top = 16
     Width = 28
-    Height = 13
     Caption = 'MITM'
   end
   object btDiscover: TButton
     Left = 8
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Discover'
     TabOrder = 0
     OnClick = btDiscoverClick
   end
   object lvDevices: TListView
     Left = 8
+    Height = 69
     Top = 72
     Width = 762
-    Height = 69
-    Columns = <
+    Columns = <    
       item
         Caption = 'Address'
         Width = 150
-      end
+      end    
       item
         Caption = 'Name'
         Width = 150
-      end
+      end    
       item
         Caption = 'Device type'
         Width = 150
-      end
+      end    
       item
         Caption = 'Paired'
         Width = 80
@@ -105,22 +105,22 @@ object fmMain: TfmMain
   end
   object lvEvents: TListView
     Left = 8
+    Height = 97
     Top = 592
     Width = 762
-    Height = 97
-    Columns = <
+    Columns = <    
       item
         Caption = 'Address'
         Width = 100
-      end
+      end    
       item
         Caption = 'Event'
         Width = 150
-      end
+      end    
       item
         Caption = 'Param'
         Width = 150
-      end
+      end    
       item
         Caption = 'Value'
         Width = 150
@@ -135,45 +135,45 @@ object fmMain: TfmMain
   end
   object btClearEvents: TButton
     Left = 695
+    Height = 25
     Top = 696
     Width = 75
-    Height = 25
     Caption = 'Clear'
     TabOrder = 3
     OnClick = btClearEventsClick
   end
   object btConnect: TButton
     Left = 8
+    Height = 25
     Top = 144
     Width = 73
-    Height = 25
     Caption = 'Connect'
     TabOrder = 4
     OnClick = btConnectClick
   end
   object btDisconnect: TButton
     Left = 88
+    Height = 25
     Top = 144
     Width = 73
-    Height = 25
     Caption = 'Disconnect'
     TabOrder = 5
     OnClick = btDisconnectClick
   end
   object lvServices: TListView
     Left = 8
+    Height = 81
     Top = 176
     Width = 762
-    Height = 81
-    Columns = <
+    Columns = <    
       item
         Caption = 'UUID'
         Width = 200
-      end
+      end    
       item
         Caption = 'Is short UUID'
         Width = 80
-      end
+      end    
       item
         Caption = 'Handle'
         Width = 100
@@ -188,85 +188,85 @@ object fmMain: TfmMain
   end
   object btGetServices: TButton
     Left = 576
+    Height = 25
     Top = 144
     Width = 73
-    Height = 25
     Caption = 'Get services'
     TabOrder = 7
     OnClick = btGetServicesClick
   end
   object btGetIncludedServices: TButton
     Left = 656
+    Height = 25
     Top = 144
     Width = 113
-    Height = 25
     Caption = 'Get included services'
     TabOrder = 8
     OnClick = btGetIncludedServicesClick
   end
   object btGetCharacteristics: TButton
     Left = 8
+    Height = 25
     Top = 264
     Width = 121
-    Height = 25
     Caption = 'Get characteristics'
     TabOrder = 9
     OnClick = btGetCharacteristicsClick
   end
   object lvCharacteristics: TListView
     Left = 8
+    Height = 81
     Top = 296
     Width = 762
-    Height = 81
-    Columns = <
+    Columns = <    
       item
         Caption = 'UUID'
         Width = 200
-      end
+      end    
       item
         Caption = 'Is short UUID'
         Width = 80
-      end
+      end    
       item
         Caption = 'Service handle'
         Width = 90
-      end
+      end    
       item
         Caption = 'Handle'
         Width = 100
-      end
+      end    
       item
         Caption = 'Value handle'
         Width = 100
-      end
+      end    
       item
         Caption = 'Is broadcastable'
         Width = 80
-      end
+      end    
       item
         Caption = 'Is readable'
         Width = 80
-      end
+      end    
       item
         Caption = 'Is writable'
         Width = 80
-      end
+      end    
       item
         Caption = 'Is writable without response'
         Width = 80
-      end
+      end    
       item
         Caption = 'Is signed writable'
         Width = 80
-      end
+      end    
       item
         Caption = 'Is notifiable'
         Width = 80
-      end
+      end    
       item
         Caption = 'Is indicatable'
         Width = 80
-      end
+      end    
       item
         Caption = 'Has extended properties'
         Width = 80
@@ -281,48 +281,48 @@ object fmMain: TfmMain
   end
   object btGetCharValue: TButton
     Left = 136
+    Height = 25
     Top = 264
     Width = 75
-    Height = 25
     Caption = 'Get value'
     TabOrder = 11
     OnClick = btGetCharValueClick
   end
   object btGetDescriptors: TButton
     Left = 8
+    Height = 25
     Top = 384
     Width = 89
-    Height = 25
     Caption = 'Get descriptors'
     TabOrder = 12
     OnClick = btGetDescriptorsClick
   end
   object lvDescriptors: TListView
     Left = 8
+    Height = 65
     Top = 448
     Width = 762
-    Height = 65
-    Columns = <
+    Columns = <    
       item
         Caption = 'UUID'
         Width = 200
-      end
+      end    
       item
         Caption = 'Is short UUID'
         Width = 80
-      end
+      end    
       item
         Caption = 'Service handle'
         Width = 80
-      end
+      end    
       item
         Caption = 'Characteristic handle'
         Width = 80
-      end
+      end    
       item
         Caption = 'Handle'
         Width = 100
-      end
+      end    
       item
         Caption = 'Type'
         Width = 100
@@ -337,23 +337,23 @@ object fmMain: TfmMain
   end
   object btGetDescValue: TButton
     Left = 8
+    Height = 25
     Top = 416
     Width = 89
-    Height = 25
     Caption = 'Get value'
     TabOrder = 14
     OnClick = btGetDescValueClick
   end
   object lvDescriptorValue: TListView
     Left = 8
+    Height = 65
     Top = 520
     Width = 762
-    Height = 65
-    Columns = <
+    Columns = <    
       item
         Caption = 'Property name'
         Width = 200
-      end
+      end    
       item
         Caption = 'Property value'
         Width = 200
@@ -368,241 +368,244 @@ object fmMain: TfmMain
   end
   object btSetValue: TButton
     Left = 504
+    Height = 25
     Top = 264
     Width = 75
-    Height = 25
     Caption = 'Set value'
     TabOrder = 16
     OnClick = btSetValueClick
   end
   object edCharVal: TEdit
     Left = 344
+    Height = 21
     Top = 264
     Width = 153
-    Height = 21
     TabOrder = 17
     Text = '00FFAA00'
   end
   object btSubscribe: TButton
     Left = 336
+    Height = 25
     Top = 384
     Width = 73
-    Height = 25
     Caption = 'Subscribe'
     TabOrder = 18
     OnClick = btSubscribeClick
   end
   object btUnsubscribe: TButton
     Left = 336
+    Height = 25
     Top = 416
     Width = 73
-    Height = 25
     Caption = 'Unsubscribe'
     TabOrder = 19
     OnClick = btUnsubscribeClick
   end
   object cbOperationFlag: TComboBox
     Left = 592
+    Height = 21
     Top = 40
     Width = 177
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
     ItemIndex = 0
-    TabOrder = 20
-    Text = 'None'
     Items.Strings = (
       'None'
       'Force Read From Device'
-      'Force Read From Cache')
+      'Force Read From Cache'
+    )
+    Style = csDropDownList
+    TabOrder = 20
+    Text = 'None'
   end
   object btCCCDSubscribe: TButton
     Left = 416
+    Height = 25
     Top = 384
     Width = 129
-    Height = 25
     Caption = 'Write CCCD subscribe'
     TabOrder = 21
     OnClick = btCCCDSubscribeClick
   end
   object btCCCDUnsubscribe: TButton
     Left = 416
+    Height = 25
     Top = 416
     Width = 129
-    Height = 25
     Caption = 'Write CCCD unsubscribe'
     TabOrder = 22
     OnClick = btCCCDUnsubscribeClick
   end
   object btTerminate: TButton
     Left = 88
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Terminate'
     TabOrder = 23
     OnClick = btTerminateClick
   end
   object cbProtection: TComboBox
     Left = 304
+    Height = 21
     Top = 40
     Width = 201
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
     ItemIndex = 0
-    TabOrder = 24
-    Text = 'None'
     Items.Strings = (
       'None'
       'Authentication'
       'Encryption'
-      'Encryption And Authentication')
+      'Encryption And Authentication'
+    )
+    Style = csDropDownList
+    TabOrder = 24
+    Text = 'None'
   end
   object cbConnectOnRead: TCheckBox
     Left = 168
+    Height = 17
     Top = 160
     Width = 97
-    Height = 17
     Caption = 'Connect on read'
     TabOrder = 25
   end
   object btPair: TButton
     Left = 8
+    Height = 25
     Top = 40
     Width = 73
-    Height = 25
     Caption = 'Pair'
     TabOrder = 26
     OnClick = btPairClick
   end
   object cbFastSubscribe: TCheckBox
     Left = 104
-    Top = 392
-    Width = 89
     Height = 17
+    Top = 392
+    Width = 86
     Caption = 'Fast subscribe'
     TabOrder = 27
     OnClick = cbFastSubscribeClick
   end
   object cbForceIndications: TCheckBox
     Left = 168
-    Top = 144
-    Width = 97
     Height = 17
+    Top = 144
+    Width = 98
     Caption = 'Force indications'
     TabOrder = 28
   end
   object btGetParams: TButton
     Left = 280
+    Height = 25
     Top = 144
     Width = 75
-    Height = 25
     Caption = 'Get params'
     TabOrder = 29
     OnClick = btGetParamsClick
   end
   object btSetParams: TButton
     Left = 488
+    Height = 25
     Top = 144
     Width = 75
-    Height = 25
     Caption = 'Set params'
     TabOrder = 30
     OnClick = btSetParamsClick
   end
   object cbParams: TComboBox
     Left = 360
+    Height = 22
     Top = 144
     Width = 121
-    Height = 22
-    Style = csOwnerDrawFixed
     ItemHeight = 16
     ItemIndex = 0
-    TabOrder = 31
-    Text = 'Balanced'
     Items.Strings = (
       'Balanced'
       'PowerOptimized'
       'ThroughputOptimized'
-      'Custom')
+      'Custom'
+    )
+    Style = csOwnerDrawFixed
+    TabOrder = 31
+    Text = 'Balanced'
   end
   object btGetMaxPduSize: TButton
     Left = 608
+    Height = 25
     Top = 384
     Width = 89
-    Height = 25
     Caption = 'Max PDU size'
     TabOrder = 32
     OnClick = btGetMaxPduSizeClick
   end
   object btPhy: TButton
     Left = 608
+    Height = 25
     Top = 416
     Width = 89
-    Height = 25
     Caption = 'Get PHY'
     TabOrder = 33
     OnClick = btPhyClick
   end
   object cbWriteKind: TComboBox
     Left = 648
+    Height = 21
     Top = 264
     Width = 121
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
     ItemIndex = 2
-    TabOrder = 34
-    Text = 'Auto'
     Items.Strings = (
       'With Response'
       'Without Response'
-      'Auto')
+      'Auto'
+    )
+    Style = csDropDownList
+    TabOrder = 34
+    Text = 'Auto'
   end
   object cbSubscribeKind: TComboBox
     Left = 184
+    Height = 21
     Top = 416
     Width = 145
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
     ItemIndex = 2
-    TabOrder = 35
-    Text = 'Manual'
     Items.Strings = (
       'Notification'
       'Indication'
-      'Manual')
+      'Manual'
+    )
+    Style = csDropDownList
+    TabOrder = 35
+    Text = 'Manual'
   end
   object cbIoCap: TComboBox
     Left = 592
+    Height = 21
     Top = 8
     Width = 177
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
     ItemIndex = 1
-    TabOrder = 36
-    Text = 'iocapDisplayYesNo'
     Items.Strings = (
       'iocapDisplayOnly'
       'iocapDisplayYesNo'
       'iocapKeyboardOnly'
       'iocapNoInputNoOutput'
       'iocapDisplayKeyboard'
-      'iocapNotDefined')
+      'iocapNotDefined'
+    )
+    Style = csDropDownList
+    TabOrder = 36
+    Text = 'iocapDisplayYesNo'
   end
   object cbMitmProtection: TComboBox
     Left = 304
+    Height = 21
     Top = 8
     Width = 201
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
     ItemIndex = 0
-    TabOrder = 37
-    Text = 'mitmProtectionNotRequired'
     Items.Strings = (
       'mitmProtectionNotRequired'
       'mitmProtectionRequired'
@@ -610,22 +613,26 @@ object fmMain: TfmMain
       'mitmProtectionRequiredBonding'
       'mitmProtectionNotRequiredGeneralBonding'
       'mitmProtectionRequiredGeneralBonding'
-      'mitmProtectionNotDefined')
+      'mitmProtectionNotDefined'
+    )
+    Style = csDropDownList
+    TabOrder = 37
+    Text = 'mitmProtectionNotRequired'
   end
   object btEnumPaired: TButton
     Left = 168
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Enum paired'
     TabOrder = 38
     OnClick = btEnumPairedClick
   end
   object btUnpair: TButton
     Left = 88
+    Height = 25
     Top = 40
     Width = 75
-    Height = 25
     Caption = 'Unpair'
     TabOrder = 39
     OnClick = btUnpairClick

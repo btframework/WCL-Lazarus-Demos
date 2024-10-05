@@ -5,13 +5,12 @@
     <PathDelim Value="\"/>
     <General>
       <Flags>
-        <MainUnitHasUsesSectionForAllUnits Value="False"/>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
         <MainUnitHasScaledStatement Value="False"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="SerialClient"/>
+      <Title Value="GattClientConsole"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
     </General>
@@ -32,15 +31,12 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="SerialClient.lpr"/>
+        <Filename Value="GattClientConsole.dpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="fmMain"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
       </Unit>
     </Units>
   </ProjectOptions>
@@ -49,7 +45,7 @@
     <PathDelim Value="\"/>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\Libs\Serial;..\..\Libs\Common;..\..\Libs\Communication"/>
+      <OtherUnitFiles Value="..\..\Libs\Bluetooth;..\..\Libs\Common;..\..\Libs\Communication;..\..\Libs\DRI"/>
       <UnitOutputDirectory Value="build"/>
     </SearchPaths>
     <Parsing>
@@ -57,16 +53,6 @@
         <SyntaxMode Value="Delphi"/>
       </SyntaxOptions>
     </Parsing>
-    <Linking>
-      <Debugging>
-        <DebugInfoType Value="dsDwarf3"/>
-      </Debugging>
-      <Options>
-        <Win32>
-          <GraphicApplication Value="True"/>
-        </Win32>
-      </Options>
-    </Linking>
     <Other>
       <CustomOptions Value="-dBorland -dVer150 -dDelphi7 -dCompiler6_Up -dPUREPASCAL"/>
     </Other>

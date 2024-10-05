@@ -740,10 +740,16 @@ begin
   case State of
     psResumeAutomatic:
       TraceEvent(nil, 'Power', 'State', 'psResumeAutomatic');
+
     psResume:
       TraceEvent(nil, 'Power', 'State', 'psResume');
+
     psSuspend:
       TraceEvent(nil, 'Power', 'State', 'psSuspend');
+
+    psPowerStatusChanged:
+      TraceEvent(nil, 'Power', 'State', 'psPowerStatusChanged');
+
     psUnknown:
       TraceEvent(nil, 'Power', 'State', 'psUnknown');
   end;

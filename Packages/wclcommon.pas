@@ -8,8 +8,8 @@ unit wclCommon;
 interface
 
 uses
-  wclErrors, wclHelpers, wclMessaging, wclPowerEvents, wclThread, wclWinAPI, 
-  wclWinUsb, msxml;
+  wclErrors, wclSync, wclMessaging, wclPowerEvents, wclWinAPI, wclWinUsb, 
+  wclOsVer;
 
 implementation
 

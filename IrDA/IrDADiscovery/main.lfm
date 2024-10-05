@@ -1,62 +1,62 @@
 object fmMain: TfmMain
   Left = 348
+  Height = 375
   Top = 178
+  Width = 622
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'IrDA Discovering Demo'
   ClientHeight = 375
   ClientWidth = 622
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
+  Position = poScreenCenter
+  LCLVersion = '3.4.0.0'
   object laClassName: TLabel
     Left = 8
+    Height = 13
     Top = 128
     Width = 54
-    Height = 13
     Caption = 'Class name'
   end
   object laAttributeName: TLabel
     Left = 224
+    Height = 13
     Top = 128
     Width = 68
-    Height = 13
     Caption = 'Attribute name'
   end
   object btDiscover: TButton
     Left = 8
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Discover'
     TabOrder = 0
     OnClick = btDiscoverClick
   end
   object lvDevices: TListView
     Left = 8
+    Height = 73
     Top = 40
     Width = 601
-    Height = 73
-    Columns = <
+    Columns = <    
       item
         Caption = 'Address'
         Width = 80
-      end
+      end    
       item
         Caption = 'Name'
         Width = 150
-      end
+      end    
       item
         Caption = 'Hints'
         Width = 250
-      end
+      end    
       item
         Caption = 'CharSet'
         Width = 80
@@ -71,87 +71,88 @@ object fmMain: TfmMain
   end
   object ntSubscribe: TButton
     Left = 136
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Subscribe'
     TabOrder = 1
     OnClick = ntSubscribeClick
   end
   object btUnsubscribe: TButton
     Left = 216
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Unsubscribe'
     TabOrder = 2
     OnClick = btUnsubscribeClick
   end
   object lbEvents: TListBox
     Left = 8
+    Height = 153
     Top = 216
     Width = 601
-    Height = 153
-    ItemHeight = 13
+    ItemHeight = 0
     TabOrder = 9
   end
   object btClear: TButton
     Left = 536
+    Height = 25
     Top = 184
     Width = 75
-    Height = 25
     Caption = 'Clear'
     TabOrder = 10
     OnClick = btClearClick
   end
   object btQuery: TButton
     Left = 456
+    Height = 25
     Top = 120
     Width = 75
-    Height = 25
     Caption = 'Query'
     TabOrder = 6
     OnClick = btQueryClick
   end
   object cbClassName: TComboBox
     Left = 72
+    Height = 21
     Top = 120
     Width = 145
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 4
-    OnChange = cbClassNameChange
     Items.Strings = (
       'Device'
       'IrDA:IrCOMM'
       'IrDA:IrOBEX'
       'IrLPT'
-      'IrDAFramework')
+      'IrDAFramework'
+    )
+    Style = csDropDownList
+    TabOrder = 4
+    OnChange = cbClassNameChange
   end
   object cbAttributeName: TComboBox
     Left = 304
+    Height = 21
     Top = 120
     Width = 145
-    Height = 21
-    Style = csDropDownList
     ItemHeight = 13
+    Style = csDropDownList
     TabOrder = 5
   end
   object btStartLazyDiscovering: TButton
     Left = 8
+    Height = 25
     Top = 152
     Width = 129
-    Height = 25
     Caption = 'Start Lazy Discovering'
     TabOrder = 7
     OnClick = btStartLazyDiscoveringClick
   end
   object btStopLazyDiscovering: TButton
     Left = 144
+    Height = 25
     Top = 152
     Width = 129
-    Height = 25
     Caption = 'Stop Lazy Discovering'
     TabOrder = 8
     OnClick = btStopLazyDiscoveringClick
