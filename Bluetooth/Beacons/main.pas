@@ -2,6 +2,7 @@ unit main;
 
 {$MODE Delphi}
 {$WARN 5057 off : Local variable "$1" does not seem to be initialized}
+
 interface
 
 uses

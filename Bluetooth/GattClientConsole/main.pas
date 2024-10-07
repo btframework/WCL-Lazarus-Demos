@@ -2,6 +2,7 @@ unit main;
 
 {$MODE Delphi}
 {$WARN 5024 off : Parameter "$1" not used}
+
 interface
 
 uses
@@ -232,8 +233,6 @@ end;
 
 constructor TGattClientApplication.Create;
 begin
-  TwclMessageBroadcaster.SetMessageProcessingMethod(mpAsync);
-
   FClient := TwclGattClient.Create(nil);
   FClient.OnCharacteristicChanged := ClientCharacteristicChanged;
   FClient.OnConnect := ClientConnect;
@@ -243,6 +242,7 @@ begin
   FClient.OnMaxPduSizeChanged := ClientMaxPduSizeChanged;
 
   FManager := TwclBluetoothManager.Create(nil);
+  FManager.MessageProcessing := mpAsync;
   FManager.AfterOpen := BluetoothManagerAfterOpen;
   FManager.BeforeClose := BluetoothManagerBeforeClose;
   FManager.OnClosed := BluetoothManagerClosed;

@@ -71,11 +71,9 @@ begin
   WriteLn('Press ENTER to continue');
   ReadLn;
 
-  // Change default synchronization method.
-  TwclMessageBroadcaster.SetMessageProcessingMethod(mpAsync);
-
   // Create classes we have to use.
   Manager := TwclBluetoothManager.Create(nil);
+  Manager.MessageProcessing := mpAsync;
   Manager.AfterOpen := ManagerAfterOpen;
   Manager.OnClosed := ManagerClosed;
   Manager.OnDeviceFound := ManagerDeviceFound;
