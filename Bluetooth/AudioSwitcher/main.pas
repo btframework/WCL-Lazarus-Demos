@@ -330,7 +330,7 @@ begin
       Res := AudioSwitcher.Disconnect(lvDevices.Selected.Caption);
 
     if Res <> WCL_E_SUCCESS then
-      ShowMessage('Connect error: 0x' + IntToHex(Res, 8));
+      ShowMessage('Disconnect error: 0x' + IntToHex(Res, 8));
   end;
 end;
 

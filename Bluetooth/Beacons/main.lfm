@@ -106,9 +106,9 @@ object fmMain: TfmMain
     OnClick = btWatcherStopClick
   end
   object lbLog: TListBox
-    Left = 16
+    Left = 24
     Height = 185
-    Top = 592
+    Top = 600
     Width = 761
     ItemHeight = 0
     TabOrder = 2

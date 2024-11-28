@@ -29,7 +29,22 @@ type
     afEddystoneUrl,
     afManufacturerRaw,
     afMicrosoftCdpBeacon,
-    afProximityBeacon,
+    afAppleAirdrop,
+    afAppleAirplaySource,
+    afAppleAirplayTarget,
+    afAppleAirprint,
+    afAppleHomeKit,
+    afAppleiBeacon,
+    afAppleNearbyAction,
+    afAppleNearbyInfo,
+    afAppleProximityPairing,
+    afAppleUnknown,
+    afAppleFindMy,
+    afAppleHandoff,
+    afAppleHeySiri,
+    afAppleMagicSwitch,
+    afAppleTetheringSource,
+    afAppleTetheringTarget,
     afDriAsd,
     afUnknown
   );
@@ -291,12 +306,186 @@ type
     property Version: Byte read FVersion;
   end;
 
-  TProximityBeaconFrame = class(TBeaconFrame)
+  TAppleFrame = class(TFrameStorage)
   public
-    constructor Create(const Address: Int64; const Timestamp: Int64;
-      const Rssi: SByte; const Data: TwclBluetoothLeAdvertisementFrameRawData;
-      const Uuid: TGUID; const CompanyId: Word; const Major: Word;
-      const Minor: Word; const TxRssi: SByte);
+    constructor Create(const Frame: TAdvertisementFrame;
+      const Info: TwclBluetoothLeAdvertisementInfo);
+  end;
+
+  TAppleAirdropFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleAirdropFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleAirdropFrameData);
+
+    property Data: TwclBluetoothLeAppleAirdropFrameData read FData;
+  end;
+
+  TAppleAirplaySourceFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleAirplaySourceFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleAirplaySourceFrameData);
+
+    property Data: TwclBluetoothLeAppleAirplaySourceFrameData read FData;
+  end;
+
+  TAppleAirplayTargetFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleAirplayTargetFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleAirplayTargetFrameData);
+
+    property Data: TwclBluetoothLeAppleAirplayTargetFrameData read FData;
+  end;
+
+  TAppleAirprintFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleAirprintFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleAirprintFrameData);
+
+    property Data: TwclBluetoothLeAppleAirprintFrameData read FData;
+  end;
+
+  TAppleHomeKitFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleHomeKitFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleHomeKitFrameData);
+
+    property Data: TwclBluetoothLeAppleHomeKitFrameData read FData;
+  end;
+
+  TAppleiBeaconFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleiBeaconFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleiBeaconFrameData);
+
+    property Data: TwclBluetoothLeAppleiBeaconFrameData read FData;
+  end;
+
+  TAppleNearbyActionFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleNearbyActionFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleNearbyActionFrameData);
+
+    property Data: TwclBluetoothLeAppleNearbyActionFrameData read FData;
+  end;
+
+  TAppleNearbyInfoFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleNearbyInfoFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleNearbyInfoFrameData);
+
+    property Data: TwclBluetoothLeAppleNearbyInfoFrameData read FData;
+  end;
+
+  TAppleProximityPairingFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleProximityPairingFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleProximityPairingFrameData);
+
+    property Data: TwclBluetoothLeAppleProximityPairingFrameData read FData;
+  end;
+
+  TAppleUnknownFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleUnknownFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleUnknownFrameData);
+
+    property Data: TwclBluetoothLeAppleUnknownFrameData read FData;
+  end;
+
+  TAppleFindMyFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleFindMyFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleFindMyFrameData);
+
+    property Data: TwclBluetoothLeAppleFindMyFrameData read FData;
+  end;
+
+  TAppleHandoffFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleHandoffFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleHandoffFrameData);
+
+    property Data: TwclBluetoothLeAppleHandoffFrameData read FData;
+  end;
+
+  TAppleHeySiriFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleHeySiriFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleHeySiriFrameData);
+
+    property Data: TwclBluetoothLeAppleHeySiriFrameData read FData;
+  end;
+
+  TAppleMagicSwitchFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleMagicSwitchFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleMagicSwitchFrameData);
+
+    property Data: TwclBluetoothLeAppleMagicSwitchFrameData read FData;
+  end;
+
+  TAppleTetheringSourceFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleTetheringSourceFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleTetheringSourceFrameData);
+
+    property Data: TwclBluetoothLeAppleTetheringSourceFrameData read FData;
+  end;
+
+  TAppleTetheringTargetFrame = class(TAppleFrame)
+  private
+    FData: TwclBluetoothLeAppleTetheringTargetFrameData;
+
+  public
+    constructor Create(const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleTetheringTargetFrameData);
+
+    property Data: TwclBluetoothLeAppleTetheringTargetFrameData read FData;
   end;
 
   TEddystoneTlmFrame = class(TDataFrameStorage)
@@ -506,11 +695,54 @@ type
       const Hash: TwclBluetoothLeCdpBeaconHash);
     procedure BeaconWatcherDriAsdMessage(Sender: TObject; const Address: Int64;
       const Timestamp: Int64; const Rssi: SByte; const Raw: TwclDriRawData);
-    procedure BeaconWatcherProximityBeaconFrame(Sender: TObject;
-      const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
-      const CompanyId: Word; const Major: Word; const Minor: Word;
-      const Uuid: TGUID; const TxRssi: SByte;
-      const Data: TwclBluetoothLeAdvertisementFrameRawData);
+    procedure BeaconWatcherAppleiBeaconFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleiBeaconFrameData);
+    procedure BeaconWatcherAppleNearbyActionFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleNearbyActionFrameData);
+    procedure BeaconWatcherAppleNearbyInfoFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleNearbyInfoFrameData);
+    procedure BeaconWatcherAppleHomeKitFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleHomeKitFrameData);
+    procedure BeaconWatcherAppleUnknownFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleUnknownFrameData);
+    procedure BeaconWatcherAppleAirplaySourceFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleAirplaySourceFrameData);
+    procedure BeaconWatcherAppleAirplayTargetFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleAirplayTargetFrameData);
+    procedure BeaconWatcherAppleAirdropFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleAirdropFrameData);
+    procedure BeaconWatcherAppleAirprintFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleAirprintFrameData);
+    procedure BeaconWatcherAppleProximityPairingFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleProximityPairingFrameData);
+    procedure BeaconWatcherAppleFindMyFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleFindMyFrameData);
+    procedure BeaconWatcherAppleHandoffFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleHandoffFrameData);
+    procedure BeaconWatcherAppleHeySiriFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleHeySiriFrameData);
+    procedure BeaconWatcherAppleMagicSwitchFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleMagicSwitchFrameData);
+    procedure BeaconWatcherAppleTetheringSourceFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleTetheringSourceFrameData);
+    procedure BeaconWatcherAppleTetheringTargetFrame(Sender: TObject;
+      const Info: TwclBluetoothLeAdvertisementInfo;
+      const Data: TwclBluetoothLeAppleTetheringTargetFrameData);
 
     procedure LeAdvertiserStarted(Sender: TObject);
     procedure LeAdvertiserStopped(Sender: TObject);
@@ -556,7 +788,22 @@ type
     procedure ShowEddystoneUrlFrame(const Frame: TEddystoneUrlFrame);
     procedure ShowManufacturerFrame(const Frame: TManufacturerFrame);
     procedure ShowMicrosoftCdpBeaconFrame(const Frame: TMicrosoftCdpBeaconFrame);
-    procedure ShowProximityBeaconFrame(const Frame: TProximityBeaconFrame);
+    procedure ShowAppleAirdropFrame(const Frame: TAppleAirdropFrame);
+    procedure ShowAppleAirplaySourceFrame(const Frame: TAppleAirplaySourceFrame);
+    procedure ShowAppleAirplayTargetFrame(const Frame: TAppleAirplayTargetFrame);
+    procedure ShowAppleAirprintFrame(const Frame: TAppleAirprintFrame);
+    procedure ShowAppleHomeKitFrame(const Frame: TAppleHomeKitFrame);
+    procedure ShowAppleiBeaconFrame(const Frame: TAppleiBeaconFrame);
+    procedure ShowAppleNearbyActionFrame(const Frame: TAppleNearbyActionFrame);
+    procedure ShowAppleNearbyInfoFrame(const Frame: TAppleNearbyInfoFrame);
+    procedure ShowAppleProximityPairingFrame(const Frame: TAppleProximityPairingFrame);
+    procedure ShowAppleUnknownFrame(const Frame: TAppleUnknownFrame);
+    procedure ShowAppleFindMyFrame(const Frame: TAppleFindMyFrame);
+    procedure ShowAppleHandoffFrame(const Frame: TAppleHandoffFrame);
+    procedure ShowAppleHeySiriFrame(const Frame: TAppleHeySiriFrame);
+    procedure ShowAppleMagicSwitchFrame(const Frame: TAppleMagicSwitchFrame);
+    procedure ShowAppleTetheringSourceFrame(const Frame: TAppleTetheringSourceFrame);
+    procedure ShowAppleTetheringTargetFrame(const Frame: TAppleTetheringTargetFrame);
     procedure ShowFrameData(const Frame: TFrameStorage);
     procedure ShowDriAsdFrame(const Frame: TDriAsdFrame);
 
@@ -804,16 +1051,188 @@ begin
   FVersion := Version;
 end;
 
-{ TProximityBeaconFrame }
+{ TAppleFrame }
 
-constructor TProximityBeaconFrame.Create(const Address: Int64;
-  const Timestamp: Int64; const Rssi: SByte;
-  const Data: TwclBluetoothLeAdvertisementFrameRawData; const Uuid: TGUID;
-  const CompanyId: Word; const Major: Word; const Minor: Word;
-  const TxRssi: SByte);
+constructor TAppleFrame.Create(const Frame: TAdvertisementFrame;
+  const Info: TwclBluetoothLeAdvertisementInfo);
 begin
-  inherited Create(afProximityBeacon, Address, Timestamp, Rssi, Data, Uuid,
-    CompanyId, Major, Minor, TxRssi);
+  inherited Create(Frame, Info.Address, Info.Timestamp, Info.Rssi);
+end;
+
+{ TAppleAirdropFrame }
+
+constructor TAppleAirdropFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleAirdropFrameData);
+begin
+  inherited Create(afAppleAirdrop, Info);
+
+  FData := Data;
+end;
+
+{ TAppleAirplaySourceFrame }
+
+constructor TAppleAirplaySourceFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleAirplaySourceFrameData);
+begin
+  inherited Create(afAppleAirplaySource, Info);
+
+  FData := Data;
+end;
+
+{ TAppleAirplayTargetFrame }
+
+constructor TAppleAirplayTargetFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleAirplayTargetFrameData);
+begin
+  inherited Create(afAppleAirplayTarget, Info);
+
+  FData := Data;
+end;
+
+{ TAppleAirprintFrame }
+
+constructor TAppleAirprintFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleAirprintFrameData);
+begin
+  inherited Create(afAppleAirprint, Info);
+
+  FData := Data;
+end;
+
+{ TAppleHomeKitFrame }
+
+constructor TAppleHomeKitFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleHomeKitFrameData);
+begin
+  inherited Create(afAppleHomeKit, Info);
+
+  FData := Data;
+end;
+
+{ TAppleiBeaconFrame }
+
+constructor TAppleiBeaconFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleiBeaconFrameData);
+begin
+  inherited Create(afAppleiBeacon, Info);
+
+  FData := Data;
+end;
+
+{ TAppleNearbyActionFrame }
+
+constructor TAppleNearbyActionFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleNearbyActionFrameData);
+begin
+  inherited Create(afAppleNearbyAction, Info);
+
+  FData := Data;
+end;
+
+{ TAppleNearbyInfoFrame }
+
+constructor TAppleNearbyInfoFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleNearbyInfoFrameData);
+begin
+  inherited Create(afAppleNearbyInfo, Info);
+
+  FData := Data;
+end;
+
+{ TAppleProximityPairingFrame }
+
+constructor TAppleProximityPairingFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleProximityPairingFrameData);
+begin
+  inherited Create(afAppleProximityPairing, Info);
+
+  FData := Data;
+end;
+
+{ TAppleUnknownFrame }
+
+constructor TAppleUnknownFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleUnknownFrameData);
+begin
+  inherited Create(afAppleUnknown, Info);
+
+  FData := Data;
+end;
+
+{ TAppleFindMyFrame }
+
+constructor TAppleFindMyFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleFindMyFrameData);
+begin
+  inherited Create(afAppleFindMy, Info);
+
+  FData := Data;
+end;
+
+{ TAppleHandoffFrame }
+
+constructor TAppleHandoffFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleHandoffFrameData);
+begin
+  inherited Create(afAppleHandoff, Info);
+
+  FData := Data;
+end;
+
+{ TAppleHeySiriFrame }
+
+constructor TAppleHeySiriFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleHeySiriFrameData);
+begin
+  inherited Create(afAppleHeySiri, Info);
+
+  FData := Data;
+end;
+
+{ TAppleMagicSwitchFrame }
+
+constructor TAppleMagicSwitchFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleMagicSwitchFrameData);
+begin
+  inherited Create(afAppleMagicSwitch, Info);
+
+  FData := Data;
+end;
+
+{ TAppleTetheringSourceFrame }
+
+constructor TAppleTetheringSourceFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleTetheringSourceFrameData);
+begin
+  inherited Create(afAppleTetheringSource, Info);
+
+  FData := Data;
+end;
+
+{ TAppleTetheringTargetFrame }
+
+constructor TAppleTetheringTargetFrame.Create(
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleTetheringTargetFrameData);
+begin
+  inherited Create(afAppleTetheringTarget, Info);
+
+  FData := Data;
 end;
 
 { TEddystoneTlmFrame }
@@ -1066,7 +1485,22 @@ begin
       afEddystoneUrl: FrameItem.SubItems.Add('Eddystone URL');
       afManufacturerRaw: FrameItem.SubItems.Add('Manufacturer');
       afMicrosoftCdpBeacon: FrameItem.SubItems.Add('Microsoft CDP');
-      afProximityBeacon: FrameItem.SubItems.Add('Proximity');
+      afAppleAirdrop: FrameItem.SubItems.Add('Apple AirDrop');
+      afAppleAirplaySource: FrameItem.SubItems.Add('Apple Airplay Source');
+      afAppleAirplayTarget: FrameItem.SubItems.Add('Apple Airplay Target');
+      afAppleAirprint: FrameItem.SubItems.Add('Apple AirPrint');
+      afAppleHomeKit: FrameItem.SubItems.Add('Apple Home Kit');
+      afAppleiBeacon: FrameItem.SubItems.Add('Apple iBeacon');
+      afAppleNearbyAction: FrameItem.SubItems.Add('Apple Nearby Action');
+      afAppleNearbyInfo: FrameItem.SubItems.Add('Apple Nearby Info');
+      afAppleProximityPairing: FrameItem.SubItems.Add('Apple Proximity Pairing');
+      afAppleUnknown: FrameItem.SubItems.Add('Apple Unknown');
+      afAppleFindMy: FrameItem.SubItems.Add('Apple Find My');
+      afAppleHandoff: FrameItem.SubItems.Add('Apple Handoff');
+      afAppleHeySiri: FrameItem.SubItems.Add('Apple Hey Siri');
+      afAppleMagicSwitch: FrameItem.SubItems.Add('Apple Magic Switch');
+      afAppleTetheringSource: FrameItem.SubItems.Add('Apple Tethering Source');
+      afAppleTetheringTarget: FrameItem.SubItems.Add('Apple Tethering Target');
       afDriAsd: FrameItem.SubItems.Add('DRI ASD');
       else FrameItem.SubItems.Add('Unknown');
     end;
@@ -1421,17 +1855,237 @@ begin
   ShowData('Version', IntToHex(Frame.Version, 2));
 end;
 
-procedure TfmMain.ShowProximityBeaconFrame(const Frame: TProximityBeaconFrame);
+procedure TfmMain.ShowAppleiBeaconFrame(const Frame: TAppleiBeaconFrame);
 begin
   ShowFrameBaseData(Frame);
 
-  ShowData('UUID', GUIDToString(Frame.Uuid));
-  ShowData('Company ID', IntToHex(Frame.CompanyId, 4));
-  ShowData('Major', IntToHex(Frame.Major, 4));
-  ShowData('Minor', IntToHex(Frame.Minor, 4));
-  ShowData('TX RSSI', IntToStr(Frame.TxRssi));
+  ShowData('UUID', GUIDToString(Frame.Data.Uuid));
+  ShowData('Major', IntToHex(Frame.Data.Major, 4));
+  ShowData('Minor', IntToHex(Frame.Data.Minor, 4));
+  ShowData('TX RSSI', IntToStr(Frame.Data.TxRssi));
+end;
 
-  ShowFrameRawData(Frame.Data);
+procedure TfmMain.ShowAppleNearbyActionFrame(
+  const Frame: TAppleNearbyActionFrame);
+var
+  Str: string;
+  i: Integer;
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Flags', IntToHex(Frame.Data.Flags, 2));
+
+  case Frame.Data.Action of
+    $01: ShowData('Action', 'Apple TV Setup');
+    $04: ShowData('Action', 'Mobile Backup');
+    $05: ShowData('Action', 'Watch Setup');
+    $06: ShowData('Action', 'Apple TV Pair');
+    $07: ShowData('Action', 'Internet Relay');
+    $08: ShowData('Action', 'WiFi Password');
+    $09: ShowData('Action', 'iOS Setup');
+    $0A: ShowData('Action', 'Repair');
+    $0B: ShowData('Action', 'Speaker Setupd');
+    $0C: ShowData('Action', 'Apple Pay');
+    $0D: ShowData('Action', 'Whole Home Audio Setup');
+    $0E: ShowData('Action', 'Developer Tools Pairing Request');
+    $0F: ShowData('Action', 'Answered Call');
+    $10: ShowData('Action', 'Ended Call');
+    $11: ShowData('Action', 'DD Ping');
+    $12: ShowData('Action', 'DD Pong');
+    $13: ShowData('Action', 'Remote Auto Fill');
+    $14: ShowData('Action', 'Companion Link Proximity');
+    $15: ShowData('Action', 'Remote Management');
+    $16: ShowData('Action', 'Remote Auto Fill Pong');
+    $17: ShowData('Action', 'Remote Display');
+    else ShowData('Action', 'Unknown: 0x' + IntToHex(Frame.Data.Action, 2));
+  end;
+
+  ShowData('Tag', IntToHex(Frame.Data.Tag, 6));
+
+  case Frame.Data.Device of
+    $02: ShowData('Device', 'iPhone');
+    $04: ShowData('Device', 'iPod');
+    $06: ShowData('Device', 'iPad');
+    $08: ShowData('Device', 'Audio accessory (HomePod)');
+    $0A: ShowData('Device', 'Mac');
+    $0C: ShowData('Device', 'AppleTV');
+    $0E: ShowData('Device', 'Watch');
+    else ShowData('Device', 'Unknown: 0x' + IntToHex(Frame.Data.Device, 2));
+  end;
+
+  if Length(Frame.Data.Params) > 0 then begin
+    Str := '';
+    for i := 0 to Length(Frame.Data.Params) - 1 do
+      Str := Str + IntToHex(Frame.Data.Params[i], 2);
+    ShowData('Params', Str);
+  end;
+end;
+
+procedure TfmMain.ShowAppleNearbyInfoFrame(const Frame: TAppleNearbyInfoFrame);
+begin
+  ShowFrameBaseData(Frame);
+
+  if (Frame.Data.Status and $01) <> 0 then
+    ShowData('Primary device', 'YES')
+  else
+    ShowData('Primary device', 'NO');
+  if (Frame.Data.Status and $04) <> 0 then
+    ShowData('AirDrop', 'RECEIVING')
+  else
+    ShowData('AirDrop', 'NOT ACTIVE');
+
+  case Frame.Data.Action of
+    $00: ShowData('Action', 'None');
+    $01: ShowData('Action', 'Activity reporting disabled');
+    $03: ShowData('Action', 'Idle user');
+    $05: ShowData('Action', 'Audio playing while screen locked');
+    $07: ShowData('Action', 'Active user (screen on)');
+    $09: ShowData('Action', 'Screen on with video playing');
+    $0A: ShowData('Action', 'Watch on wrist and unlocked');
+    $0B: ShowData('Action', 'Recent user interaction');
+    $0D: ShowData('Action', 'User is driving a vehicle');
+    $0E: ShowData('Action', 'Phone or Facetime Call');
+    else ShowData('Action', 'Unknown: 0x' + IntToHex(Frame.Data.Action, 2));
+  end;
+
+  if (Frame.Data.Flags and $01) <> 0 then
+    ShowData('AirDrop state', 'Connected and Screen ON')
+  else
+    ShowData('AirDrop state', 'Disconnected');
+
+  if (Frame.Data.Flags and $02) <> 0 then
+    ShowData('Auth tag length', '4 bytes')
+  else
+    ShowData('Auth tag length', '3 bytes');
+
+  if (Frame.Data.Flags and $04) <> 0 then
+    ShowData('WiFi', 'ON')
+  else
+    ShowData('WiFi', 'OFF');
+
+  if (Frame.Data.Flags and $10) <> 0 then
+    ShowData('Auth Tag Present', 'YES')
+  else
+    ShowData('Auth Tag Present', 'NO');
+
+  if (Frame.Data.Flags and $20) <> 0 then
+    ShowData('Apple Watch', 'LOCKED')
+  else
+    ShowData('Apple Watch', 'UNLOCKED');
+
+  if (Frame.Data.Flags and $40) <> 0 then
+    ShowData('Apple Watch AutoLock', 'ENABLED')
+  else
+    ShowData('Apple Watch AutoLock', 'DISABLED');
+
+  if (Frame.Data.Flags and $80) <> 0 then
+    ShowData('AutoLock', 'ENABLED')
+  else
+    ShowData('AutoLock', 'DISABLED');
+
+  if (Frame.Data.Flags and $10) <> 0 then begin
+    if (Frame.Data.Flags and $02) <> 0 then
+      ShowData('Auth Tag', IntToHex(Frame.Data.Tag, 8))
+    else
+      ShowData('Auth Tag', IntToHex(Frame.Data.Tag, 6));
+  end;
+end;
+
+procedure TfmMain.ShowAppleProximityPairingFrame(
+  const Frame: TAppleProximityPairingFrame);
+var
+  Str: string;
+  i: Byte;
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Prefix', IntToHex(Frame.Data.Prefix, 2));
+
+  case Frame.Data.DeviceModel of
+    $2002: ShowData('Device mode', 'AirPods');
+    $2003: ShowData('Device mode', 'Powerbeats 3');
+    $2005: ShowData('Device mode', 'BeatsX');
+    $2006: ShowData('Device mode', 'Beats Solo 3');
+    $2007: ShowData('Device mode', 'Beats Studio 3');
+    $2009: ShowData('Device mode', 'Beats Studio 3');
+    $200A: ShowData('Device mode', 'AirPods Max');
+    $200B: ShowData('Device mode', 'Powerbeats Pro');
+    $200C: ShowData('Device mode', 'Beats Solo Pro');
+    $200D: ShowData('Device mode', 'Powerbeats 4');
+    $200E: ShowData('Device mode', 'AirPods Pro');
+    $200F: ShowData('Device mode', 'AirPods 2');
+    $2010: ShowData('Device mode', 'Beats Flex');
+    $2011: ShowData('Device mode', 'Beats Studio Buds');
+    $2012: ShowData('Device mode', 'Beats Fit Pro');
+    $2013: ShowData('Device mode', 'AirPods 3');
+    $2014: ShowData('Device mode', 'AirPods Pro 2');
+    else ShowData('Device mode', 'Unknown: 0x' + IntToHex(Frame.Data.DeviceModel, 4));
+  end;
+
+  case Frame.Data.Status of
+    $01: ShowData('Status', 'AirPods: Both out of case, not in ear');
+    $02: ShowData('Status', 'Right in ear, Left in case');
+    $03: ShowData('Status', 'AirPods: Right in ear, Left out of case');
+    $0B: ShowData('Status', 'Both AirPods in ear');
+    $11: ShowData('Status', 'AirPods: Right out of case, Left in case');
+    $13: ShowData('Status', 'AirPods: Right in ear, Left in case');
+    $21: ShowData('Status', 'Both taken out of ears, Pause Audio');
+    $22: ShowData('Status', 'Left in ear, Right in case');
+    $23: ShowData('Status', 'AirPods: Left in ear, Right out of case');
+    $2B: ShowData('Status', 'Both AirPods in ear');
+    $31: ShowData('Status', 'AirPods: Left out of case, Right in case');
+    $33: ShowData('Status', 'AirPods: Left in ear, Right in case');
+    $51: ShowData('Status', 'Case: Left out of case, Right in case');
+    $53: ShowData('Status', 'Case: Left in ear, Right in case');
+    $55: ShowData('Status', 'Case: Both AirPods in case');
+    $71: ShowData('Status', 'Case: Right out of case, Left in case');
+    $73: ShowData('Status', 'Case: Right in ear, Left in case');
+    $75: ShowData('Status', 'Case: Both AirPods in case');
+    else ShowData('Status', 'Unknown: 0x' + IntToHex(Frame.Data.Status, 2));
+  end;
+
+  ShowData('Left Battery', IntToStr(Frame.Data.LeftBattery));
+  ShowData('Right Battery', IntToStr(Frame.Data.RightBattery));
+
+  if Frame.Data.CaseCharging then
+    ShowData('Case charging', 'Yes')
+  else
+    ShowData('Case charging', 'No');
+  if Frame.Data.RightCharging then
+    ShowData('Right charging', 'Yes')
+  else
+    ShowData('Right charging', 'No');
+  if Frame.Data.LeftCharging then
+    ShowData('Left charging', 'Yes')
+  else
+    ShowData('Left charging', 'No');
+
+  ShowData('Case Battery', IntToStr(Frame.Data.CaseBattery));
+  ShowData('Lid open counter', IntToStr(Frame.Data.Counter));
+
+  case Frame.Data.Color of
+    $00: ShowData('Color', 'White');
+    $01: ShowData('Color', 'Black');
+    $02: ShowData('Color', 'Red');
+    $03: ShowData('Color', 'Blue');
+    $04: ShowData('Color', 'Pink');
+    $05: ShowData('Color', 'Gray');
+    $06: ShowData('Color', 'Silver');
+    $07: ShowData('Color', 'Gold');
+    $08: ShowData('Color', 'Rose Gold');
+    $09: ShowData('Color', 'Space Gray');
+    $0A: ShowData('Color', 'Dark Blue');
+    $0B: ShowData('Color', 'Light Blue');
+    $0C: ShowData('Color', 'Yellow');
+    else ShowData('Color', 'Unknown: 0x' + IntToHex(Frame.Data.Color, 2))
+  end;
+
+  ShowData('Suffix', IntToHex(Frame.Data.Suffix, 2));
+
+  Str := '';
+  for i := 0 to 15 do
+    Str := Str + IntToHex(Frame.Data.Data[i], 2);
+  ShowData('Encrypted', Str);
 end;
 
 procedure TfmMain.ShowDriAsdFrame(const Frame: TDriAsdFrame);
@@ -1465,7 +2119,22 @@ begin
     afEddystoneUrl: ShowEddystoneUrlFrame(TEddystoneUrlFrame(Frame));
     afManufacturerRaw: ShowManufacturerFrame(TManufacturerFrame(Frame));
     afMicrosoftCdpBeacon: ShowMicrosoftCdpBeaconFrame(TMicrosoftCdpBeaconFrame(Frame));
-    afProximityBeacon: ShowProximityBeaconFrame(TProximityBeaconFrame(Frame));
+    afAppleAirdrop: ShowAppleAirdropFrame(TAppleAirdropFrame(Frame));
+    afAppleAirplaySource: ShowAppleAirplaySourceFrame(TAppleAirplaySourceFrame(Frame));
+    afAppleAirplayTarget: ShowAppleAirplayTargetFrame(TAppleAirplayTargetFrame(Frame));
+    afAppleAirprint: ShowAppleAirprintFrame(TAppleAirprintFrame(Frame));
+    afAppleHomeKit: ShowAppleHomeKitFrame(TAppleHomeKitFrame(Frame));
+    afAppleiBeacon: ShowAppleiBeaconFrame(TAppleiBeaconFrame(Frame));
+    afAppleNearbyAction: ShowAppleNearbyActionFrame(TAppleNearbyActionFrame(Frame));
+    afAppleNearbyInfo: ShowAppleNearbyInfoFrame(TAppleNearbyInfoFrame(Frame));
+    afAppleProximityPairing: ShowAppleProximityPairingFrame(TAppleProximityPairingFrame(Frame));
+    afAppleUnknown: ShowAppleUnknownFrame(TAppleUnknownFrame(Frame));
+    afAppleFindMy: ShowAppleFindMyFrame(TAppleFindMyFrame(Frame));
+    afAppleHandoff: ShowAppleHandoffFrame(TAppleHandoffFrame(Frame));
+    afAppleHeySiri: ShowAppleHeySiriFrame(TAppleHeySiriFrame(Frame));
+    afAppleMagicSwitch: ShowAppleMagicSwitchFrame(TAppleMagicSwitchFrame(Frame));
+    afAppleTetheringSource: ShowAppleTetheringSourceFrame(TAppleTetheringSourceFrame(Frame));
+    afAppleTetheringTarget: ShowAppleTetheringTargetFrame(TAppleTetheringTargetFrame(Frame));
     afDriAsd: ShowDriAsdFrame(TDriAsdFrame(Frame));
   end;
 end;
@@ -1519,7 +2188,22 @@ begin
   BeaconWatcher.OnEddystoneUrlFrame := BeaconWatcherEddystoneUrlFrame;
   BeaconWatcher.OnManufacturerRawFrame := BeaconWatcherManufacturerRawFrame;
   BeaconWatcher.OnMicrosoftCdpBeaconFrame := BeaconWatcherMicrosoftCdpBeaconFrame;
-  BeaconWatcher.OnProximityBeaconFrame := BeaconWatcherProximityBeaconFrame;
+  BeaconWatcher.OnAppleAirdropFrame := BeaconWatcherAppleAirdropFrame;
+  BeaconWatcher.OnAppleAirplaySourceFrame := BeaconWatcherAppleAirplaySourceFrame;
+  BeaconWatcher.OnAppleAirplayTargetFrame := BeaconWatcherAppleAirplayTargetFrame;
+  BeaconWatcher.OnAppleAirprintFrame := BeaconWatcherAppleAirprintFrame;
+  BeaconWatcher.OnAppleiBeaconFrame := BeaconWatcherAppleiBeaconFrame;
+  BeaconWatcher.OnAppleNearbyActionFrame := BeaconWatcherAppleNearbyActionFrame;
+  BeaconWatcher.OnAppleNearbyInfoFrame := BeaconWatcherAppleNearbyInfoFrame;
+  BeaconWatcher.OnAppleHomeKitFrame := BeaconWatcherAppleHomeKitFrame;
+  BeaconWatcher.OnAppleProximityPairingFrame := BeaconWatcherAppleProximityPairingFrame;
+  BeaconWatcher.OnAppleUnknownFrame := BeaconWatcherAppleUnknownFrame;
+  BeaconWatcher.OnAppleFindMyFrame := BeaconWatcherAppleFindMyFrame;
+  BeaconWatcher.OnAppleHandoffFrame := BeaconWatcherAppleHandoffFrame;
+  BeaconWatcher.OnAppleHeySiriFrame := BeaconWatcherAppleHeySiriFrame;
+  BeaconWatcher.OnAppleMagicSwitchFrame := BeaconWatcherAppleMagicSwitchFrame;
+  BeaconWatcher.OnAppleTetheringSourceFrame := BeaconWatcherAppleTetheringSourceFrame;
+  BeaconWatcher.OnAppleTetheringTargetFrame := BeaconWatcherAppleTetheringTargetFrame;
 
   LeAdvertiser := TwclBluetoothLeAdvertiser.Create(nil);
   LeAdvertiser.OnStarted := LeAdvertiserStarted;
@@ -1857,19 +2541,6 @@ begin
   AddFrame(Frame);
 end;
 
-procedure TfmMain.BeaconWatcherProximityBeaconFrame(Sender: TObject;
-  const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
-  const CompanyId: Word; const Major: Word; const Minor: Word;
-  const Uuid: TGUID; const TxRssi: SByte;
-  const Data: TwclBluetoothLeAdvertisementFrameRawData);
-var
-  Frame: TFrameStorage;
-begin
-  Frame := TProximityBeaconFrame.Create(Address, Timestamp, Rssi, Data, Uuid,
-    CompanyId, Major, Minor, TxRssi);
-  AddFrame(Frame);
-end;
-
 procedure TfmMain.BeaconWatcherDriAsdMessage(Sender: TObject;
   const Address: Int64; const Timestamp: Int64; const Rssi: SByte;
   const Raw: TwclDriRawData);
@@ -2070,6 +2741,377 @@ begin
   Trace('LE Advertiser stopped');
 
   AdvertiserEnableControls(True);
+end;
+
+procedure TfmMain.BeaconWatcherAppleiBeaconFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleiBeaconFrameData);
+begin
+  AddFrame(TAppleiBeaconFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.BeaconWatcherAppleNearbyInfoFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleNearbyInfoFrameData);
+begin
+  AddFrame(TAppleNearbyInfoFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.BeaconWatcherAppleNearbyActionFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleNearbyActionFrameData);
+begin
+  AddFrame(TAppleNearbyActionFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.BeaconWatcherAppleHomeKitFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleHomeKitFrameData);
+begin
+  AddFrame(TAppleHomeKitFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.ShowAppleAirplaySourceFrame(
+  const Frame: TAppleAirplaySourceFrame);
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Data byte', IntToHex(Frame.Data.Data, 2));
+end;
+
+procedure TfmMain.ShowAppleAirplayTargetFrame(
+  const Frame: TAppleAirplayTargetFrame);
+var
+  Str: string;
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Flags', IntToHex(Frame.Data.Flags, 2));
+  ShowData('Seed', IntToHex(Frame.Data.Seed, 2));
+
+  Str := IntToStr(Frame.Data.Address shr 24) + '.';
+  Str := Str + IntToStr((Frame.Data.Address and $00FF0000) shr 16) + '.';
+  Str := Str + IntToStr((Frame.Data.Address and $0000FF00) shr 8) + '.';
+  Str := Str + IntToStr(Frame.Data.Address and $000000FF);
+  ShowData('IPv4 address', Str);
+end;
+
+procedure TfmMain.ShowAppleHomeKitFrame(const Frame: TAppleHomeKitFrame);
+var
+  Str: string;
+  i: Byte;
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Status', IntToHex(Frame.Data.Status, 2));
+
+  Str := '';
+  for i := 0 to 5 do
+    Str := Str + IntToHex(Frame.Data.DeviceId[i], 2);
+  ShowData('Device ID', Str);
+
+  case Frame.Data.Category of
+    $0000: ShowData('Category', 'Unknown');
+    $0001: ShowData('Category', 'Other');
+    $0002: ShowData('Category', 'Bridge');
+    $0003: ShowData('Category', 'Fan');
+    $0004: ShowData('Category', 'Garage Door Opener');
+    $0005: ShowData('Category', 'Lightbulb');
+    $0006: ShowData('Category', 'Door Lock');
+    $0007: ShowData('Category', 'Outlet');
+    $0008: ShowData('Category', 'Switch');
+    $0009: ShowData('Category', 'Thermostat');
+    $000A: ShowData('Category', 'Sensor');
+    $000B: ShowData('Category', 'Security System');
+    $000C: ShowData('Category', 'Door');
+    $000D: ShowData('Category', 'Window');
+    $000E: ShowData('Category', 'Window Covering');
+    $000F: ShowData('Category', 'Programmable Switch');
+    $0010: ShowData('Category', 'Range Extender');
+    $0011: ShowData('Category', 'IP Camera');
+    $0012: ShowData('Category', 'Video Doorbell');
+    $0013: ShowData('Category', 'Air Purifier');
+    $0014: ShowData('Category', 'Heater');
+    $0015: ShowData('Category', 'Air Conditioner');
+    $0016: ShowData('Category', 'Humidifier');
+    $0017: ShowData('Category', 'Dehumidifier');
+    $001C: ShowData('Category', 'Sprinklers');
+    $001D: ShowData('Category', 'Faucets');
+    $001E: ShowData('Category', 'Shower Systems');
+    else ShowData('Category', 'Unknown: 0x' + IntToHex(Frame.Data.Category, 4));
+  end;
+
+  ShowData('State Number', IntToHex(Frame.Data.StateNumber, 4));
+  ShowData('Config Number', IntToHex(Frame.Data.ConfigNumber, 2));
+  ShowData('Version', IntToHex(Frame.Data.Version, 2));
+end;
+
+procedure TfmMain.ShowAppleUnknownFrame(const Frame: TAppleUnknownFrame);
+var
+  Str: string;
+  i: Integer;
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Message ID', IntToHex(Frame.Data.Id, 2));
+
+  if Length(Frame.Data.Payload) > 0 then begin
+    Str := '';
+    for i := 0 to Length(Frame.Data.Payload) - 1 do
+      Str := Str + IntToHex(Frame.Data.Payload[i], 2);
+    ShowData('Payload', Str);
+  end;
+end;
+
+procedure TfmMain.BeaconWatcherAppleUnknownFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleUnknownFrameData);
+begin
+  AddFrame(TAppleUnknownFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.BeaconWatcherAppleAirplaySourceFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleAirplaySourceFrameData);
+begin
+  AddFrame(TAppleAirplaySourceFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.BeaconWatcherAppleAirplayTargetFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleAirplayTargetFrameData);
+begin
+  AddFrame(TAppleAirplayTargetFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.ShowAppleAirdropFrame(const Frame: TAppleAirdropFrame);
+var
+  Str: string;
+  i: Byte;
+begin
+  ShowFrameBaseData(Frame);
+
+  Str := '';
+  for i := 0 to 7 do
+    Str := Str + IntToHex(Frame.Data.Prefix[i], 2);
+  ShowData('Prefix', Str);
+
+  ShowData('Version', IntToHex(Frame.Data.Version, 2));
+  ShowData('Apple ID', IntToHex(Frame.Data.AppleId, 4));
+  ShowData('Phone', IntToHex(Frame.Data.PhoneNumber, 4));
+  ShowData('E-Mail', IntToHex(Frame.Data.Email, 4));
+  ShowData('E-Mail 2', IntToHex(Frame.Data.Email2, 4));
+  ShowData('Suffix', IntToHex(Frame.Data.Suffix, 2));
+end;
+
+procedure TfmMain.ShowAppleAirprintFrame(const Frame: TAppleAirprintFrame);
+var
+  Str: string;
+  i: Byte;
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Address type', IntToHex(Frame.Data.AddressType, 2));
+  ShowData('Resource type', IntToHex(Frame.Data.ResourceType, 2));
+  ShowData('Security type', IntToHex(Frame.Data.SecurityType, 2));
+  ShowData('Port', IntToStr(Frame.Data.Port));
+
+  Str := '';
+  for i := 0 to 14 do
+    Str := Str + IntToStr(Frame.Data.Address[i]) + '.';
+  Str := Str + IntToStr(Frame.Data.Address[15]);
+  ShowData('Address', Str);
+
+  ShowData('Power', IntToStr(Frame.Data.Power));
+end;
+
+procedure TfmMain.BeaconWatcherAppleAirdropFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleAirdropFrameData);
+begin
+  AddFrame(TAppleAirdropFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.BeaconWatcherAppleAirprintFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleAirprintFrameData);
+begin
+  AddFrame(TAppleAirprintFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.BeaconWatcherAppleProximityPairingFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleProximityPairingFrameData);
+begin
+  AddFrame(TAppleProximityPairingFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.BeaconWatcherAppleFindMyFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleFindMyFrameData);
+begin
+  AddFrame(TAppleFindMyFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.ShowAppleFindMyFrame(const Frame: TAppleFindMyFrame);
+var
+  Str: string;
+  i: Byte;
+begin
+  ShowFrameBaseData(Frame);
+
+  case Frame.Data.Status of
+    $00: ShowData('Status', 'Owner did not connect within key rotation period (15 min.)');
+    $24: ShowData('Status', 'Owner connected with key roation period, Battery Full');
+    $64: ShowData('Status', 'Owner connected with key roation period, Battery Medium');
+    $A4: ShowData('Status', 'Owner connected with key roation period, Battery Low');
+    $E4: ShowData('Status', 'Owner connected with key roation period, Battery Critically Low');
+    else ShowData('Status', IntToHex(Frame.Data.Status, 2));
+  end;
+
+  Str := '';
+  for i := 0 to 21 do
+    Str := Str + IntToHex(Frame.Data.Key[i], 2);
+  ShowData('Key', Str);
+
+  case Frame.Data.KeyBits of
+    $00: ShowData('Key bits', 'bits 6 and 7 not set in public key');
+    $01: ShowData('Key bits', 'bit 6 set in public key');
+    $02: ShowData('Key bits', 'bit 7 set in public key');
+    $03: ShowData('Key bits', 'bits 6 and 7 set in public key');
+    else ShowData('Key bits', IntToHex(Frame.Data.KeyBits, 2));
+  end;
+
+  ShowData('Hint', IntToHex(Frame.Data.Hint, 2));
+end;
+
+procedure TfmMain.ShowAppleHandoffFrame(const Frame: TAppleHandoffFrame);
+var
+  Str: string;
+  i: Byte;
+begin
+  ShowFrameBaseData(Frame);
+
+  if Frame.Data.Clipboard then
+    ShowData('Clipboard', 'Yes')
+  else
+    ShowData('Clipboard', 'No');
+
+  ShowData('Sequence', IntToStr(Frame.Data.Sequence));
+  ShowData('Auth tag', IntToHex(Frame.Data.AuthTag, 2));
+
+  Str := '';
+  for i := 0 to 9 do
+    Str := Str + IntToHex(Frame.Data.Data[i], 2);
+  ShowData('Data', Str);
+end;
+
+procedure TfmMain.BeaconWatcherAppleHandoffFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleHandoffFrameData);
+begin
+  AddFrame(TAppleHandoffFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.ShowAppleHeySiriFrame(const Frame: TAppleHeySiriFrame);
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Hash', IntToHex(Frame.Data.Hash, 4));
+  ShowData('Snr', IntToStr(Frame.Data.Snr));
+
+  case Frame.Data.Confidence of
+    $03: ShowData('Confidence', 'Not on Wrist');
+    $1F: ShowData('Confidence', 'Wrist detection disabled');
+    $3F: ShowData('Confidence', 'On Wrist');
+    else ShowData('Confidence', IntToHex(Frame.Data.Confidence, 2));
+  end;
+
+  case Frame.Data.DeviceClass of
+    $0002: ShowData('Device class', 'iPhone');
+    $0003: ShowData('Device class', 'iPad');
+    $0007: ShowData('Device class', 'HomePod');
+    $0009: ShowData('Device class', 'MacBook');
+    $000A: ShowData('Device class', 'Watch');
+    else ShowData('Device class', IntToHex(Frame.Data.DeviceClass, 4));
+  end;
+
+  ShowData('Rand', IntToHex(Frame.Data.Rand, 2));
+end;
+
+procedure TfmMain.BeaconWatcherAppleHeySiriFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleHeySiriFrameData);
+begin
+  AddFrame(TAppleHeySiriFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.ShowAppleMagicSwitchFrame(
+  const Frame: TAppleMagicSwitchFrame);
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Data', IntToHex(Frame.Data.Data, 4));
+
+  case Frame.Data.Confidence of
+    $03: ShowData('Confidence', 'Not on Wrist');
+    $1F: ShowData('Confidence', 'Wrist detection disabled');
+    $3F: ShowData('Confidence', 'On Wrist');
+    else ShowData('Confidence', IntToHex(Frame.Data.Confidence, 2));
+  end;
+end;
+
+procedure TfmMain.BeaconWatcherAppleMagicSwitchFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleMagicSwitchFrameData);
+begin
+  AddFrame(TAppleMagicSwitchFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.ShowAppleTetheringSourceFrame(
+  const Frame: TAppleTetheringSourceFrame);
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Version', IntToHex(Frame.Data.Version, 2));
+  ShowData('Flags', IntToHex(Frame.Data.Flags, 2));
+  ShowData('Battery', IntToStr(Frame.Data.Battery));
+
+  case Frame.Data.CellType of
+    $0000: ShowData('Cell type', '4G (GSM)');
+    $0001: ShowData('Cell type', '1xRTT');
+    $0002: ShowData('Cell type', 'GPRS');
+    $0003: ShowData('Cell type', 'EDGE');
+    $0004: ShowData('Cell type', '3G (EV-DO)');
+    $0005: ShowData('Cell type', '3G');
+    $0006: ShowData('Cell type', '4G');
+    $0007: ShowData('Cell type', 'LTE');
+    else ShowData('Cell type', IntToHex(Frame.Data.CellType, 4));
+  end;
+
+  ShowData('Bars', IntToStr(Frame.Data.Bars));
+end;
+
+procedure TfmMain.BeaconWatcherAppleTetheringSourceFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleTetheringSourceFrameData);
+begin
+  AddFrame(TAppleTetheringSourceFrame.Create(Info, Data));
+end;
+
+procedure TfmMain.ShowAppleTetheringTargetFrame(
+  const Frame: TAppleTetheringTargetFrame);
+begin
+  ShowFrameBaseData(Frame);
+
+  ShowData('Id', IntToHex(Frame.Data.Id, 8));
+end;
+
+procedure TfmMain.BeaconWatcherAppleTetheringTargetFrame(Sender: TObject;
+  const Info: TwclBluetoothLeAdvertisementInfo;
+  const Data: TwclBluetoothLeAppleTetheringTargetFrameData);
+begin
+  AddFrame(TAppleTetheringTargetFrame.Create(Info, Data));
 end;
 
 end.

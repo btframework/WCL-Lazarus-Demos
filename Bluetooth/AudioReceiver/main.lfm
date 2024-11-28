@@ -1,0 +1,100 @@
+object fmMain: TfmMain
+  Left = 606
+  Height = 420
+  Top = 257
+  Width = 609
+  BorderStyle = bsSingle
+  Caption = 'Bluetooth Audio Receiver Demo'
+  ClientHeight = 420
+  ClientWidth = 609
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '3.4.0.0'
+  object lvDevices: TListView
+    Left = 8
+    Height = 105
+    Top = 40
+    Width = 593
+    Columns = <    
+      item
+        Caption = 'Device ID'
+        Width = 250
+      end    
+      item
+        Caption = 'Name'
+        Width = 150
+      end>
+    GridLines = True
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 0
+    ViewStyle = vsReport
+  end
+  object btStart: TButton
+    Left = 8
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Start'
+    TabOrder = 1
+    OnClick = btStartClick
+  end
+  object btStop: TButton
+    Left = 88
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Stop'
+    TabOrder = 2
+    OnClick = btStopClick
+  end
+  object lbLog: TListBox
+    Left = 8
+    Height = 225
+    Top = 184
+    Width = 593
+    ItemHeight = 0
+    TabOrder = 3
+  end
+  object btClear: TButton
+    Left = 520
+    Height = 25
+    Top = 152
+    Width = 75
+    Caption = 'Clear'
+    TabOrder = 4
+    OnClick = btClearClick
+  end
+  object btOpen: TButton
+    Left = 358
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Open'
+    TabOrder = 5
+    OnClick = btOpenClick
+  end
+  object btClose: TButton
+    Left = 438
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Close'
+    TabOrder = 6
+    OnClick = btCloseClick
+  end
+  object btConnect: TButton
+    Left = 526
+    Height = 25
+    Top = 8
+    Width = 75
+    Caption = 'Connect'
+    TabOrder = 7
+    OnClick = btConnectClick
+  end
+end
