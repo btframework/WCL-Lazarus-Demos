@@ -4,6 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="wclDri"/>
     <Type Value="RunTimeOnly"/>
+    <Author Value="Copyright (C) 2006-2025 Mike Petrichenko"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -24,6 +25,8 @@
         </OtherDefines>
       </Other>
     </CompilerOptions>
+    <Description Value="Wireless Communication Library Drone Remote ID Framework"/>
+    <Version Major="7" Release="1"/>
     <Files>
       <Item>
         <Filename Value="..\..\..\..\WCL7\VCL\Source\DRI\wclDriCommon.pas"/>
