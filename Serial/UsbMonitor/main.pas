@@ -33,6 +33,8 @@ type
       const Device: TwclUsbDevice);
     procedure UsbMonitorRemoved(Sender: TObject;
       const Device: TwclUsbDevice);
+    procedure UsbMonitorStarted(Sender: TObject);
+    procedure UsbMonitorStopped(Sender: TObject);
   end;
 
 var
@@ -88,8 +90,7 @@ begin
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Start monitoring failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
-  end else
-    lbEvents.Items.Add('Monitoring started');
+  end;
 end;
 
 procedure TfmMain.btStopClick(Sender: TObject);
@@ -100,8 +101,7 @@ begin
   if Res <> WCL_E_SUCCESS then begin
     MessageDlg('Stop monitoring failed: 0x' + IntToHex(Res, 8), mtError,
       [mbOK], 0);
-  end else
-    lbEvents.Items.Add('Monitoring stopped');
+  end;
 end;
 
 procedure TfmMain.UsbMonitorInserted(Sender: TObject;
@@ -121,6 +121,8 @@ begin
   UsbMonitor := TwclUsbMonitor.Create(nil);
   UsbMonitor.OnInserted := UsbMonitorInserted;
   UsbMonitor.OnRemoved := UsbMonitorRemoved;
+  UsbMonitor.OnStarted := UsbMonitorStarted;
+  UsbMonitor.OnStopped := UsbMonitorStopped;
 end;
 
 procedure TfmMain.btEnableClick(Sender: TObject);
@@ -154,6 +156,16 @@ end;
 procedure TfmMain.FormDestroy(Sender: TObject);
 begin
  UsbMonitor.Stop;
+end;
+
+procedure TfmMain.UsbMonitorStarted(Sender: TObject);
+begin
+  lbEvents.Items.Add('Monitoring started');
+end;
+
+procedure TfmMain.UsbMonitorStopped(Sender: TObject);
+begin
+  lbEvents.Items.Add('Monitoring stopped');
 end;
 
 end.

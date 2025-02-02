@@ -33,6 +33,8 @@ type
       const Device: TwclSerialDevice);
     procedure SerialMonitorRemoved(Sender: TObject;
       const Device: TwclSerialDevice);
+    procedure SerialMonitorStarted(Sender: TObject);
+    procedure SerialMonitorStopped(Sender: TObject);
   end;
 
 var
@@ -85,7 +87,8 @@ var
   Res: Integer;
 begin
   Res := SerialMonitor.Start;
-  lbEvents.Items.Add('Monitoring started: 0x' + IntToHex(Res, 8));
+  if Res <> WCL_E_SUCCESS then
+    lbEvents.Items.Add('Start monitoring failed: 0x' + IntToHex(Res, 8));
 end;
 
 procedure TfmMain.btStopClick(Sender: TObject);
@@ -93,7 +96,8 @@ var
   Res: Integer;
 begin
   Res := SerialMonitor.Stop;
-  lbEvents.Items.Add('Monitoring stopped: 0x' + IntToHex(Res, 8));
+  if Res <> WCL_E_SUCCESS then
+    lbEvents.Items.Add('Stop monitoring failed: 0x' + IntToHex(Res, 8));
 end;
 
 procedure TfmMain.SerialMonitorInserted(Sender: TObject;
@@ -119,6 +123,8 @@ begin
   SerialMonitor := TwclSerialMonitor.Create(nil);
   SerialMonitor.OnInserted := SerialMonitorInserted;
   SerialMonitor.OnRemoved := SerialMonitorRemoved;
+  SerialMonitor.OnStarted := SerialMonitorStarted;
+  SerialMonitor.OnStopped := SerialMonitorStopped;
 
   PowerMonitor := TwclPowerEventsMonitor.Create;
   PowerMonitor.OnPowerStateChanged := PowerStateChanged;
@@ -160,6 +166,16 @@ begin
     psUnknown:
       lbEvents.Items.Add('Power changed: psUnknown');
   end;
+end;
+
+procedure TfmMain.SerialMonitorStarted(Sender: TObject);
+begin
+  lbEvents.Items.Add('Monitoring started');
+end;
+
+procedure TfmMain.SerialMonitorStopped(Sender: TObject);
+begin
+  lbEvents.Items.Add('Monitoring stopped');
 end;
 
 end.

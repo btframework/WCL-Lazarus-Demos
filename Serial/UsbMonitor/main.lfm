@@ -1,67 +1,67 @@
 object fmMain: TfmMain
   Left = 623
+  Height = 401
   Top = 298
+  Width = 683
   BorderStyle = bsSingle
   Caption = 'USB Devices Monitor'
   ClientHeight = 401
   ClientWidth = 683
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
+  Position = poScreenCenter
+  LCLVersion = '3.4.0.0'
   object btEnum: TButton
     Left = 8
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Enumerate'
     TabOrder = 0
     OnClick = btEnumClick
   end
   object lvDevices: TListView
     Left = 8
+    Height = 150
     Top = 40
     Width = 665
-    Height = 150
-    Columns = <
+    Columns = <    
       item
         Caption = 'Friendly name'
         Width = 150
-      end
+      end    
       item
         Caption = 'Hardware ID'
         Width = 100
-      end
+      end    
       item
         Caption = 'VID'
         Width = 60
-      end
+      end    
       item
         Caption = 'PID'
         Width = 60
-      end
+      end    
       item
         Caption = 'REV'
         Width = 60
-      end
+      end    
       item
         Caption = 'Manufacturer'
         Width = 100
-      end
+      end    
       item
         Caption = 'Instance string'
         Width = 200
-      end
+      end    
       item
         Caption = 'Class GUID'
         Width = 250
-      end
+      end    
       item
         Caption = 'Enabled'
       end>
@@ -73,53 +73,53 @@ object fmMain: TfmMain
   end
   object btStart: TButton
     Left = 8
+    Height = 25
     Top = 200
     Width = 105
-    Height = 25
     Caption = 'Start monitoring'
     TabOrder = 2
     OnClick = btStartClick
   end
   object btStop: TButton
     Left = 120
+    Height = 25
     Top = 200
     Width = 105
-    Height = 25
     Caption = 'Stop monitoring'
     TabOrder = 3
     OnClick = btStopClick
   end
   object lbEvents: TListBox
     Left = 8
+    Height = 161
     Top = 232
     Width = 665
-    Height = 161
-    ItemHeight = 13
+    ItemHeight = 0
     TabOrder = 4
   end
   object btClear: TButton
     Left = 592
+    Height = 25
     Top = 200
     Width = 75
-    Height = 25
     Caption = 'Clear'
     TabOrder = 5
     OnClick = btClearClick
   end
   object btEnable: TButton
     Left = 120
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Enable'
     TabOrder = 6
     OnClick = btEnableClick
   end
   object btDisable: TButton
     Left = 208
+    Height = 25
     Top = 8
     Width = 75
-    Height = 25
     Caption = 'Disable'
     TabOrder = 7
     OnClick = btDisableClick
