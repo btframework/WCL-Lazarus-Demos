@@ -8,6 +8,9 @@ uses
   Forms, Controls, StdCtrls, Classes, wclWiFi, ComCtrls, Dialogs;
 
 type
+
+  { TfmMain }
+
   TfmMain = class(TForm)
     btClientOpen: TButton;
     btClientClose: TButton;
@@ -25,7 +28,6 @@ type
     cbClientUseSSID: TCheckBox;
     laClientBssType: TLabel;
     cbClientBssType: TComboBox;
-    cbClientSecurityEnabled: TCheckBox;
     btclientDisconnect: TButton;
     btClientGetShowDeniedNetworks: TButton;
     btClientSetShowDeniedNetworks: TButton;
@@ -131,6 +133,8 @@ type
 
     procedure WiFiClientAfterOpen(Sender: TObject);
     procedure WiFiClientBeforeClose(Sender: TObject);
+
+    procedure UpdateUI(const Enable: Boolean);
   end;
 
 var
@@ -327,9 +331,9 @@ end;
 
 procedure TfmMain.WiFiClientAfterOpen(Sender: TObject);
 begin
-  ShowInfo('WiFi client opened');
-
   WiFiProfilesManager.Open;
+
+  UpdateUI(True);
 end;
 
 procedure TfmMain.WiFiClientBeforeClose(Sender: TObject);
@@ -341,7 +345,7 @@ begin
   ClientClearBss;
   ClientClearProfiles;
 
-  ShowInfo('WiFi client is closing');
+  UpdateUI(False);
 end;
 
 procedure TfmMain.ClientClearInterfaces;
@@ -471,11 +475,14 @@ var
   j: TwclWiFiBssCap;
   x: Integer;
   Res: Integer;
+  SecurityEnabled: Boolean;
 begin
   ClientClearBss;
 
   if ClientGetInterfaceId(Id) then begin
     Ssid := '';
+    SecurityEnabled := False;
+    BssType := bssAny;
 
     if cbClientUseSSID.Checked then begin
       if lvClientNetworks.Selected = nil then begin
@@ -484,12 +491,11 @@ begin
       end;
 
       Ssid := lvClientNetworks.Selected.SubItems[0];
+      SecurityEnabled := StrToBool(lvClientNetworks.Selected.SubItems[8]);
+      BssType := ClientGetNetworkBss;
     end;
 
-    BssType := TwclWiFiBssType(cbClientBssType.ItemIndex);
-
-    Res := WiFiClient.EnumBss(Id, Ssid, BssType,
-      cbClientSecurityEnabled.Checked, BssList);
+    Res := WiFiClient.EnumBss(Id, Ssid, BssType, SecurityEnabled, BssList);
     if ShowResult(Res) then begin
       try
         for i := 0 to Length(BssList) - 1 do begin
@@ -1108,7 +1114,7 @@ var
   Id: TGUID;
   Iface: TwclWiFiInterface;
   Res: Integer;
-  Static: Boolean;
+  StaticIp: Boolean;
   Dns1: string;
   Dns2: string;
   Address: string;
@@ -1119,9 +1125,9 @@ begin
   if ClientGetInterfaceId(Id) then begin
     Iface := TwclWiFiInterface.Create(Id);
     if ShowResult(Iface.Open) then begin
-      Res := Iface.GetCurrentIp(Static, Address, Mask, Gateway, Dns1, Dns2);
+      Res := Iface.GetCurrentIp(StaticIp, Address, Mask, Gateway, Dns1, Dns2);
       if ShowResult(Res) then begin
-        if Static then
+        if StaticIp then
           Msg := 'Static IP' + #13#10
         else
           Msg := 'DHCP' + #13#10;
@@ -1143,7 +1149,7 @@ var
   Id: TGUID;
   Iface: TwclWiFiInterface;
   Res: Integer;
-  Static: Boolean;
+  StaticIp: Boolean;
   Dns1: string;
   Dns2: string;
   Address: string;
@@ -1154,9 +1160,9 @@ begin
   if ClientGetInterfaceId(Id) then begin
     Iface := TwclWiFiInterface.Create(Id);
     if ShowResult(Iface.Open) then begin
-      Res := Iface.GetIpSettings(Static, Address, Mask, Gateway, Dns1, Dns2);
+      Res := Iface.GetIpSettings(StaticIp, Address, Mask, Gateway, Dns1, Dns2);
       if ShowResult(Res) then begin
-        if Static then
+        if StaticIp then
           Msg := 'Static IP' + #13#10
         else
           Msg := 'DHCP' + #13#10;
@@ -1334,6 +1340,48 @@ begin
 
   WiFiClient.AfterOpen := WiFiClientAfterOpen;
   WiFiClient.BeforeClose := WiFiClientBeforeClose;
+
+  UpdateUI(False);
+end;
+
+procedure TfmMain.UpdateUI(const Enable: Boolean);
+begin
+  btClientOpen.Enabled := not Enable;
+  btClientClose.Enabled := Enable;
+  btClientEnumInterfaces.Enabled := Enable;
+  btClientEnumNetworks.Enabled := Enable;
+  btClientScan.Enabled := Enable;
+  btClientEnumBSS.Enabled := Enable;
+  btClientDisconnect.Enabled := Enable;
+  btClientGetShowDeniedNetworks.Enabled := Enable;
+  btClientSetShowDeniedNetworks.Enabled := Enable;
+  btClientGetPowerSettings.Enabled := Enable;
+  btClientGetOnlyUseGpProfiles.Enabled := Enable;
+  btClientGetAllowExplicitCreds.Enabled := Enable;
+  btClientSetAllowExplicitCreds.Enabled := Enable;
+  btClientGetBlockPeriod.Enabled := Enable;
+  btClientSetBlockPeriod.Enabled := Enable;
+  btClientGetVirtualStationExtensibility.Enabled := Enable;
+  btClientSetVirtualStationExtensibility.Enabled := Enable;
+  btClientGetInterfaceState.Enabled := Enable;
+  btClientEnumProfiles.Enabled := Enable;
+  btClientDeleteProfile.Enabled := Enable;
+  btClientRenameProfile.Enabled := Enable;
+  btClientGetProfileXml.Enabled := Enable;
+  btClientSetProfileXml.Enabled := Enable;
+  btClientConnect.Enabled := Enable;
+  btTunrOn.Enabled := Enable;
+  btTurnOff.Enabled := Enable;
+  btCurrentIp.Enabled := Enable;
+  btGetIpSettings.Enabled := Enable;
+  btEnableDhcp.Enabled := Enable;
+  btEnableStaticIp.Enabled := Enable;
+  btEditUi.Enabled := Enable;
+  btSetProfileXmlUserData.Enabled := Enable;
+  btGetDualStaState.Enabled := Enable;
+  btEnableDualSta.Enabled := Enable;
+  btDisableDualSta.Enabled := Enable;
+  btEnumSecondaryInterfaces.Enabled := Enable;
 end;
 
 end.
