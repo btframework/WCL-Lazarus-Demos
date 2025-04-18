@@ -26,7 +26,7 @@
       </Other>
     </CompilerOptions>
     <Description Value="Wireless Communication Library Communication Framework"/>
-    <Version Major="7" Minor="9"/>
+    <Version Major="7" Minor="9" Release="1"/>
     <Files>
       <Item>
         <Filename Value="..\..\..\..\WCL7\VCL\Source\Communication\wclConnectionErrors.pas"/>

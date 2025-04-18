@@ -26,7 +26,7 @@
       </Other>
     </CompilerOptions>
     <Description Value="Wireless Communication Library Serial Framework"/>
-    <Version Major="7" Minor="8" Release="1"/>
+    <Version Major="7" Minor="8" Release="5"/>
     <Files>
       <Item>
         <Filename Value="..\..\..\..\WCL7\VCL\Source\Serial\wclSerialClients.pas"/>
