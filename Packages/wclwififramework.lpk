@@ -26,7 +26,7 @@
       </Other>
     </CompilerOptions>
     <Description Value="Wireless Communication Library WiFi Framework"/>
-    <Version Major="7" Minor="12" Release="4"/>
+    <Version Major="7" Minor="12" Release="5"/>
     <Files>
       <Item>
         <Filename Value="..\..\..\..\WCL7\VCL\Source\WiFi\wclNlm.pas"/>
