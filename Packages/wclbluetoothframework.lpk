@@ -26,7 +26,7 @@
       </Other>
     </CompilerOptions>
     <Description Value="Wireless Communication Library Bluetooth Framework"/>
-    <Version Major="7" Minor="19" Release="14"/>
+    <Version Major="7" Minor="19" Release="15"/>
     <Files>
       <Item>
         <Filename Value="..\..\..\..\WCL7\VCL\Source\Bluetooth\wclAudio.pas"/>
