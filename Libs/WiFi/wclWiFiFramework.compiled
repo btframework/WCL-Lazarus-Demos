@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Lazarus Version="3.4"/>
-  <Compiler Value="C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe" Date="1488546183"/>
-  <Params Value=" -MDelphi -Scghi -O1 -g -gl -l -vewnhibq -FiD:\Projects\WCL7\VCL\Source -FuD:\Projects\WCL7\VCL\Source\WiFi -FuC:\lazarus\packager\units\x86_64-win64 &quot;-FuD:\Projects\Shared Projects\Windows\WCL Lazarus Demos\Libs\Common&quot; &quot;-FuD:\Projects\Shared Projects\Windows\WCL Lazarus Demos\Libs\Dri&quot; &quot;-FuD:\Projects\Shared Projects\Windows\WCL Lazarus Demos\Packages\&quot; &quot;-FUD:\Projects\Shared Projects\Windows\WCL Lazarus Demos\Libs\WiFi\&quot; -d_WCL_DEMO_ wclwififramework.pas"/>
-</CONFIG>
