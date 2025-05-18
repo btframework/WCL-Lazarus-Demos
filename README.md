@@ -1,6 +1,6 @@
 # Wireless Communication Library Demos for Lazarus
 
-Wireless Communication Library **VCL Edition** can be used with **Lazarus**/**Free Pascal**.
+[Wireless Communication Library](https://www.btframework.com) **VCL Edition** can be used with **Lazarus**/**Free Pascal**.
 
 **Starting from Bluetooth Framework 7.19.15.1, IrDA Framework 7.9.4.1, Serial Framework 7.8.5.1, Timeline Framework 7.2.4.1, WiFi Framework 7.12.5.1 the Wireless Communication Library packegs include pre-compiled binariesd for Lazarus/FreePascal.**
 
